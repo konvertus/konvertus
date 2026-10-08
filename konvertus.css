@@ -1,0 +1,855 @@
+/* цвета — меняй только здесь */
+:root {
+  --bg: #f1e3c0;
+  --header: #7a8c77;
+  --text: #fffaf0;
+  --accent: #ab5e4b;
+  --menu-bg: #f9f9f9;
+  --menu-text: #2b2b2b;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  font-family: 'Montserrat', Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* шапка */
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 0 24px;
+  background-color: var(--header);
+}
+
+/* логотип */
+.logo{
+  color: var(--text);
+  text-decoration: none;
+  margin-right: 40px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.logo:hover{
+  color: var(--accent);
+}
+
+.arrows_symbol{
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 600,
+  'GRAD' 0,
+  'opsz' 25;
+  font-size: 24px;
+  color: inherit;
+}
+
+/* блок с кнопками слева */
+.menu {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* ссылки и кнопка "Инструменты" */
+.menu a,
+.dropbtn {
+  font-family: inherit;
+  font-size: 16px;
+  color: var(--text);
+  text-decoration: none;
+  padding: 0 18px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.menu a:hover,
+.dropdown:hover .dropbtn {
+  color: var(--accent);
+  background-color: var(--menu-bg);
+}
+
+/* выпадающий блок */
+.dropdown {
+  height: 100%;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--menu-bg);
+  padding: 24px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  gap: 24px 40px;
+  flex-wrap: wrap;
+}
+
+.dropdown:hover .dropdown-content {
+  display: flex;
+}
+
+/* колонки внутри меню */
+.column {
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+}
+
+.column h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  color: var(--accent);
+}
+
+.column a {
+  color: var(--menu-text);
+  text-decoration: none;
+  padding: 6px 0;
+  height: auto;
+}
+
+.column a:hover {
+  color: var(--accent);
+}
+
+/* кнопка "Войти/Регистрация" */
+.login-btn {
+  margin-left: auto;
+  padding: 10px 20px;
+  background-color: var(--accent);
+  color: var(--text);
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.login-btn:hover {
+  opacity: 0.85;
+}
+
+/* Содержимое страницы по центру */
+main {
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px 73px;
+}
+
+/* Описание сайта */
+.hero {
+  text-align: center;
+  padding: 60px 0 20px;
+}
+
+.hero h1 {
+  margin: 0 0 16px;
+  font-size: 47px;
+  color: var(--accent);
+}
+
+.hero p {
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--menu-text);
+}
+
+/* Заголовки блоков */
+.block h2 {
+  margin: 40px 0 16px;
+  font-size: 26px;
+  color: var(--menu-text);
+}
+
+/* Сетка карточек: сама подстраивается под ширину экрана */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+/* Карточка */
+.card {
+  padding: 28px 16px;
+  background-color: var(--menu-bg);
+  color: var(--menu-text);
+  text-align: center;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  background-color: var(--accent);
+  color: var(--text);
+}
+
+/* Страница конвертера */
+.converter {
+  max-width: 500px;
+  margin: 0 auto;
+  padding-top: 60px;
+}
+
+.converter h1 {
+  text-align: center;
+  color: var(--accent);
+  margin: 0 0 30px;
+  font-size: 36px;
+}
+
+.converter-box {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  background-color: var(--menu-bg);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.converter-box input {
+  margin-bottom: 20px;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 18px;
+  border: 2px solid var(--header);
+  border-radius: 6px;
+}
+
+.converter-box input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* убираем стрелки в полях ввода (Chrome, Safari, Edge) */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* убираем стрелки в Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* кнопка "поменять местами" */
+.swap-btn {
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 20px;
+  background-color: var(--header);
+  color: var(--text);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.swap-btn:hover {
+  background-color: var(--accent);
+}
+
+/* поворачиваем стрелки на 90 градусов */
+.swap-btn span {
+  transform: rotate(90deg);
+}
+
+/* поле результата */
+#output {
+  background-color: var(--bg);
+  margin-bottom: 0;
+}
+
+/* строка: результат + кнопка копирования */
+.output-row {
+  display: flex;
+  gap: 8px;
+}
+
+.output-row #output {
+  flex: 1;
+  min-width: 0;
+}
+
+.copy-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  background-color: var(--header);
+  color: var(--text);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.copy-btn:hover {
+  background-color: var(--accent);
+}
+
+/* выпадающие списки величин */
+.converter-box select {
+  margin-bottom: 8px;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--menu-text);
+  background-color: var(--menu-bg);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.converter-box select:hover {
+  color: var(--accent);
+}
+
+/* Интересные факты */
+.facts {
+  margin-top: 60px;
+}
+
+.facts h2 {
+  margin: 0 0 16px;
+  font-size: 26px;
+  color: var(--menu-text);
+}
+
+.facts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.fact {
+  padding: 20px;
+  background-color: var(--menu-bg);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.fact h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: var(--accent);
+}
+
+.fact p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--menu-text);
+}
+
+/* Как удобно считать */
+.tips {
+  margin-top: 60px;
+}
+
+.tips h2 {
+  margin: 0 0 16px;
+  font-size: 26px;
+  color: var(--menu-text);
+}
+
+.tips p {
+  line-height: 1.5;
+  color: var(--menu-text);
+}
+
+.tips-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--menu-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tips-table th {
+  padding: 12px 16px;
+  text-align: left;
+  background-color: var(--header);
+  color: var(--text);
+}
+
+.tips-table td {
+  padding: 12px 16px;
+  color: var(--menu-text);
+  border-top: 1px solid var(--bg);
+}
+
+.tips-note {
+  margin-top: 16px;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 30px 24px;
+  background-color: var(--header);
+  color: var(--text);
+}
+
+.footer p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.footer a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: var(--accent);
+}
+
+.footer-logo {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 24px;
+}
+
+/* Курсы валют */
+.rates {
+  margin-top: 60px;
+}
+
+.rates-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.rates-head h2 {
+  margin: 0;
+  font-size: 26px;
+  color: var(--menu-text);
+}
+
+.refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--text);
+  background-color: var(--header);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.refresh-btn:hover {
+  background-color: var(--accent);
+}
+
+.refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+  background-color: var(--header);
+}
+
+.refresh-btn.loading span {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.rates-status {
+  margin: 8px 0 16px;
+  font-size: 14px;
+  color: var(--menu-text);
+}
+
+.rates-status.error {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.rates-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.rate-card {
+  padding: 20px;
+  background-color: var(--menu-bg);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.rate-code {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.rate-name {
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--menu-text);
+  opacity: 0.7;
+}
+
+.rate-value {
+  margin: 12px 0 4px;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--menu-text);
+}
+
+.rate-change {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--menu-text);
+  opacity: 0.6;
+}
+
+.rate-change.up {
+  color: var(--header);
+  opacity: 1;
+}
+
+.rate-change.down {
+  color: var(--accent);
+  opacity: 1;
+}
+
+
+/* Переключатель языка */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.lang-current {
+  font-weight: 800;
+}
+
+.lang-sep {
+  opacity: 0.6;
+}
+
+
+/* ===== Адаптация под телефоны и планшеты ===== */
+
+/* на компьютере панель меню «растворяется»: меню и кнопка входа лежат прямо в шапке, как раньше */
+.nav-panel {
+  display: contents;
+}
+
+.nav-toggle {
+  display: none;
+}
+
+/* выпадающее меню по клику/тапу (на компьютере ещё работает наведение) */
+.dropdown.open .dropdown-content {
+  display: flex;
+}
+
+/* планшеты и телефоны: меню-гамбургер */
+@media (max-width: 800px) {
+  .header {
+    padding: 0 16px;
+  }
+
+  .logo {
+    margin-right: 0;
+  }
+
+  .nav-toggle {
+    display: block;
+    position: relative;
+    width: 44px;
+    height: 44px;
+    margin-left: auto;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  /* три полоски, которые превращаются в крестик */
+  .nav-toggle span,
+  .nav-toggle span::before,
+  .nav-toggle span::after {
+    position: absolute;
+    width: 24px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: transform 0.2s, top 0.2s, background-color 0.2s;
+  }
+
+  .nav-toggle span {
+    top: 21px;
+    left: 10px;
+  }
+
+  .nav-toggle span::before,
+  .nav-toggle span::after {
+    content: "";
+    left: 0;
+  }
+
+  .nav-toggle span::before { top: -7px; }
+  .nav-toggle span::after  { top: 7px; }
+
+  .nav-toggle[aria-expanded="true"] span {
+    background: transparent;
+  }
+
+  .nav-toggle[aria-expanded="true"] span::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+
+  .nav-toggle[aria-expanded="true"] span::after {
+    top: 0;
+    transform: rotate(-45deg);
+  }
+
+  /* раскрывающаяся панель под шапкой */
+  .nav-panel {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 8px 20px 24px;
+    background-color: var(--menu-bg);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    max-height: calc(100vh - 60px);
+    max-height: calc(100dvh - 60px);
+    overflow-y: auto;
+  }
+
+  .header.nav-open .nav-panel {
+    display: flex;
+  }
+
+  body.nav-lock {
+    overflow: hidden;
+  }
+
+  .nav-panel .menu {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+  }
+
+  .nav-panel .menu a {
+    height: auto;
+    padding: 14px 0;
+    color: var(--menu-text);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .nav-panel .dropdown {
+    height: auto;
+  }
+
+  /* «Инструменты» не нужна как кнопка: список разделов показан сразу */
+  .nav-panel .dropbtn {
+    display: none;
+  }
+
+  .nav-panel .dropdown-content,
+  .nav-panel .dropdown:hover .dropdown-content {
+    display: block;
+    position: static;
+    padding: 8px 0 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .nav-panel .column {
+    min-width: 0;
+    margin-bottom: 12px;
+  }
+
+  .nav-panel .column h3 {
+    margin: 8px 0 4px;
+  }
+
+  .nav-panel .column a {
+    padding: 9px 0;
+    border-top: none;
+  }
+
+  .nav-panel .login-btn {
+    margin: 16px 0 0;
+    padding: 14px 20px;
+    text-align: center;
+  }
+}
+
+/* телефоны */
+@media (max-width: 600px) {
+  .logo {
+    font-size: 20px;
+    letter-spacing: 1px;
+  }
+
+  main {
+    padding: 0 16px 48px;
+  }
+
+  .hero {
+    padding: 36px 0 8px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .block h2,
+  .facts h2,
+  .tips h2,
+  .rates-head h2 {
+    font-size: 22px;
+  }
+
+  .block h2 {
+    margin-top: 32px;
+  }
+
+  .facts,
+  .tips,
+  .rates {
+    margin-top: 40px;
+  }
+
+  /* карточки в две колонки */
+  .cards {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+
+  .card {
+    padding: 22px 10px;
+    font-size: 15px;
+  }
+
+  /* конвертер */
+  .converter {
+    padding-top: 28px;
+  }
+
+  .converter h1 {
+    margin-bottom: 20px;
+    font-size: 28px;
+  }
+
+  .converter-box {
+    padding: 20px;
+  }
+
+  /* таблицы подсказок: меньше шрифт, перенос длинных слов */
+  .tips-table th,
+  .tips-table td {
+    padding: 8px 10px;
+    font-size: 13px;
+    overflow-wrap: break-word;
+  }
+
+  .facts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* табло валют: две колонки */
+  .rates-board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .rate-card {
+    padding: 14px;
+  }
+
+  .rate-value {
+    font-size: 20px;
+  }
+
+  .refresh-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .footer {
+    padding: 24px 16px;
+  }
+
+  .footer-links {
+    gap: 16px;
+  }
+}
+
+/* на сенсорных экранах «залипшее» наведение не нужно */
+@media (hover: none) {
+  .card:hover {
+    background-color: var(--menu-bg);
+    color: var(--menu-text);
+  }
+
+  .swap-btn:hover,
+  .copy-btn:hover,
+  .refresh-btn:hover:not(:disabled) {
+    background-color: var(--header);
+  }
+}
