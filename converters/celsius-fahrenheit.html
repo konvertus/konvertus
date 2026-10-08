@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../konvertus.css">
+
+    <!-- Шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <!-- Значки google -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=check,content_copy,currency_ruble,sync_alt" />
+
+    <title>Цельсий в Фаренгейт — Конвертус</title>
+</head>
+    <body>
+
+        <!-- шапка (скопируй сюда свою, но к ссылкам на страницы добавь ../ ) -->
+        <header class="header">
+
+            <a href="../index.html" class="logo">
+                <span class="material-symbols-outlined arrows_symbol">sync_alt</span>
+                <span>КОНВЕ₽ТУС</span>
+            </a>
+
+            <!-- кнопки слева -->
+            <nav class="menu">
+                <div class="dropdown">
+                    <button class="dropbtn">Инструменты ▾</button>
+
+                    <div class="dropdown-content">
+                        <div class="column">
+                            <h3>Длина</h3>
+                            <a href="meters-feet.html">Метры в футы</a>
+                            <a href="miles-km.html">Мили в километры</a>
+                            <a href="inches-cm.html">Дюймы в сантиметры</a>
+                        </div>
+                        <div class="column">
+                            <h3>Вес</h3>
+                            <a href="#">Килограммы в фунты</a>
+                            <a href="#">Граммы в унции</a>
+                        </div>
+                        <div class="column">
+                            <h3>Температура</h3>
+                            <a href="celsius-fahrenheit.html">Цельсий в Фаренгейт</a>
+                            <a href="celsius-kelvin.html">Цельсий в Кельвин</a>
+                        </div>
+                        <div class="column">
+                            <h3>Валюты</h3>
+                            <a href="rub-usd.html">Рубли в доллары</a>
+                            <a href="eur-rub.html">Евро в рубли</a>
+                        </div>
+                        <div class="column">
+                            <h3>Данные</h3>
+                            <a href="mb-gb.html">Мегабайты в гигабайты</a>
+                            <a href="mbit-mb.html">Мегабиты в мегабайты</a>
+                        </div>
+                        <div class="column">
+                            <h3>Системы счисления</h3>
+                            <a href="bin-dec.html">Двоичная в десятичную</a>
+                            <a href="dec-hex.html">Десятичная в шестнадцатеричную</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="../about.html">О нас</a>
+            </nav>
+
+            <!-- кнопка справа -->
+            <a href="#login" class="login-btn">Войти / Регистрация</a>
+
+        </header>
+
+        <main>
+            <section class="converter">
+                <h1 id="title">Цельсий в Фаренгейт</h1>
+
+                <div class="converter-box">
+                    <select id="select-top">
+                        <option value="c" selected>Цельсий</option>
+                        <option value="f">Фаренгейт</option>
+                        <option value="k">Кельвин</option>
+                        <option value="r">Ранкин</option>
+                        <option value="re">Реомюр</option>
+                    </select>
+                    <input type="number" id="input" placeholder="Введите число">
+
+                    <button type="button" id="swap" class="swap-btn" aria-label="Поменять местами">
+                        <span class="material-symbols-outlined">sync_alt</span>
+                    </button>
+
+                    <select id="select-bottom">
+                        <option value="c">Цельсий</option>
+                        <option value="f" selected>Фаренгейт</option>
+                        <option value="k">Кельвин</option>
+                        <option value="r">Ранкин</option>
+                        <option value="re">Реомюр</option>
+                    </select>
+                    <div class="output-row">
+                        <input type="text" id="output" placeholder="Результат" readonly tabindex="-1">
+                        <button type="button" id="copy" class="copy-btn" aria-label="Скопировать результат">
+                            <span class="material-symbols-outlined">content_copy</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Как удобно считать -->
+            <section class="tips">
+                <h2>Как удобно считать в уме</h2>
+                <p>Точный результат покажет конвертер выше. А для быстрой прикидки хватит этих правил:</p>
+
+                <table class="tips-table">
+                    <tr>
+                        <th>Перевод</th>
+                        <th>В уме</th>
+                        <th>Точно</th>
+                    </tr>
+                    <tr><td>Цельсий в Фаренгейт</td><td>умножить на 2 и прибавить 30</td><td>× 1,8 + 32</td></tr>
+                    <tr><td>Фаренгейт в Цельсий</td><td>вычесть 30 и разделить на 2</td><td>(°F − 32) ÷ 1,8</td></tr>
+                    <tr><td>Цельсий в Кельвин</td><td>прибавить 273</td><td>+ 273,15</td></tr>
+                    <tr><td>Кельвин в Цельсий</td><td>вычесть 273</td><td>− 273,15</td></tr>
+                    <tr><td>Цельсий в Реомюр</td><td>умножить на 0,8</td><td>× 0,8</td></tr>
+                </table>
+
+                <p class="tips-note">
+                    <strong>Почему не просто умножение:</strong> у шкал разный ноль, поэтому конвертеры длины и веса тут не подойдут.
+                    Наш конвертер сначала переводит значение в градусы Цельсия, а потом из Цельсия в нужную шкалу.
+                </p>
+            </section>
+
+            <!-- Интересные факты -->
+            <section class="facts">
+                <h2>Интересные факты</h2>
+                <div class="facts-grid">
+
+                    <div class="fact">
+                        <h3>Цельсий</h3>
+                        <p>Андерс Цельсий в 1742 году сделал шкалу перевёрнутой: 0° было точкой кипения воды, а 100° — точкой замерзания. Позже порядок поменяли.</p>
+                    </div>
+
+                    <div class="fact">
+                        <h3>Фаренгейт</h3>
+                        <p>Нуль по Фаренгейту — температура смеси воды, льда и соли. Вода замерзает при 32 °F и кипит при 212 °F.</p>
+                    </div>
+
+                    <div class="fact">
+                        <h3>Кельвин</h3>
+                        <p>0 K — абсолютный нуль, это −273,15 °C. Ниже температуры не бывает. Слово «градус» для кельвинов не используют: говорят просто «300 кельвинов».</p>
+                    </div>
+
+                    <div class="fact">
+                        <h3>Ранкин</h3>
+                        <p>Шкала Ранкина устроена как кельвины, только шаг у неё как у Фаренгейта. Её применяют в некоторых американских инженерных расчётах.</p>
+                    </div>
+
+                    <div class="fact">
+                        <h3>Реомюр</h3>
+                        <p>В России шкала Реомюра использовалась до начала XX века: вода кипит при 80 °Re. Её можно встретить в старых книгах.</p>
+                    </div>
+
+                    <div class="fact">
+                        <h3>−40°</h3>
+                        <p>Это единственная точка, где шкалы Цельсия и Фаренгейта показывают одно и то же число: −40 °C = −40 °F.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <a href="../index.html" class="footer-logo">КОНВЕ₽ТУС</a>
+            <nav class="footer-links">
+                <a href="../about.html">О нас</a>
+                <a href="../about.html#contacts">Контакты</a>
+            </nav>
+            <p>© 2026 Конвертус</p>
+        </footer>
+        <script src="../temperature.js"></script>
+    </body>
+</html>
