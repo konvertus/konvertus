@@ -10,8 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const DIGITS = "0123456789abcdefghijklmnopqrstuvwxyz";
     const MAX_LENGTH = 200;
-    let valid = false;
+    let valid = false; // можно ли копировать то, что сейчас в поле результата
 
+    // Строка -> BigInt. BigInt не теряет точность на больших числах.
     function parse(text, base) {
         let s = text.trim().replace(/[\s_]/g, "").toLowerCase();
         let negative = false;
