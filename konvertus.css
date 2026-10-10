@@ -1,4 +1,4 @@
-/* цвета — меняй только здесь */
+/* все цвета */
 :root {
   --bg: #f1e3c0;
   --header: #7a8c77;
@@ -852,4 +852,46 @@ input[type="number"] {
   .refresh-btn:hover:not(:disabled) {
     background-color: var(--header);
   }
+}
+
+
+/* Иконки валют над конвертером */
+.currency-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 48px;
+  margin: -12px 0 24px;
+}
+
+.currency-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: var(--header);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* иконки чёрные, на зелёном кружке делаем их светлыми, как значки на кнопках */
+.currency-badge img {
+  width: 24px;
+  height: 24px;
+  filter: invert(1);
+}
+
+.currency-badge.text {
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.currency-arrow {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--menu-text);
 }

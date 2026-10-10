@@ -1,3 +1,5 @@
+const ICON_BASE = new URL("icons/", document.currentScript.src).href;
+
 document.addEventListener("DOMContentLoaded", () => {
     const EN = document.documentElement.lang === "en";
     const t = (ru, en) => (EN ? en : ru);
@@ -17,6 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ["TRY", "Турецкая лира", "Turkish Lira"],
         ["KZT", "Казахстанский тенге", "Kazakhstani Tenge"]
     ];
+
+    const ICONS = { RUB: "ruble.png", USD: "dollar.png", EUR: "euro.png" };
+    const iconsBox = document.getElementById("currency-icons");
 
     const title = document.getElementById("title");
     const input = document.getElementById("input");
@@ -66,12 +71,38 @@ document.addEventListener("DOMContentLoaded", () => {
         return s.charAt(0).toUpperCase() + s.slice(1);
     }
 
+    function badge(code) {
+        const el = document.createElement("span");
+        el.className = "currency-badge";
+        if (ICONS[code]) {
+            const img = new Image();
+            img.src = ICON_BASE + ICONS[code];
+            img.alt = "";
+            img.width = 24;
+            img.height = 24;
+            el.append(img);
+        } else {
+            el.classList.add("text");
+            el.textContent = code;
+        }
+        return el;
+    }
+
+    function renderIcons() {
+        if (!iconsBox) return;
+        const arrow = document.createElement("span");
+        arrow.className = "currency-arrow";
+        arrow.textContent = "→";
+        iconsBox.replaceChildren(badge(selectTop.value), arrow, badge(selectBottom.value));
+    }
+
     function update() {
         if (title) {
             const first = selectTop.options[selectTop.selectedIndex].dataset.short;
             const second = selectBottom.options[selectBottom.selectedIndex].dataset.short;
             title.textContent = `${capitalize(first)} ${t("в", "to")} ${second}`;
         }
+        renderIcons();
         calculate();
     }
 
