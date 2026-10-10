@@ -1,3 +1,4 @@
+// папка с иконками лежит рядом со скриптом, поэтому путь верный и для русской, и для английской версии
 const ICON_BASE = new URL("icons/", document.currentScript.src).href;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -20,7 +21,20 @@ document.addEventListener("DOMContentLoaded", () => {
         ["KZT", "Казахстанский тенге", "Kazakhstani Tenge"]
     ];
 
-    const ICONS = { RUB: "ruble.png", USD: "dollar.png", EUR: "euro.png" };
+    // если для валюты не будет иконки, показываем её код в таком же кружке
+    const ICONS = {
+        RUB: "ruble.png",
+        USD: "dollar.png",
+        EUR: "euro.png",
+        CNY: "yuan.png",
+        JPY: "yuan.png", // у иены и юаня знак один и тот же: ¥
+        GBP: "pound.png",
+        CHF: "franc.png",
+        TRY: "lira.png",
+        KZT: "tenge.png",
+        BYN: "belarusian-ruble.png",
+        AED: "dirham.png"
+    };
     const iconsBox = document.getElementById("currency-icons");
 
     const title = document.getElementById("title");
@@ -33,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const status = document.getElementById("rates-status");
     const board = document.getElementById("rates-board");
 
+    // rates[код] = { rub: сколько рублей за 1 единицу, prev: то же на прошлую дату, nominal, value }
     let rates = null;
 
     function buildRates(data) {
@@ -138,7 +153,14 @@ document.addEventListener("DOMContentLoaded", () => {
             changeEl.className = "rate-change " + dir;
             changeEl.textContent = `${arrow} ${diff > 0 ? "+" : ""}${EN ? diff.toFixed(2) : diff.toFixed(2).replace(".", ",")}%`;
 
-            card.append(codeEl, nameEl, valueEl, changeEl);
+            // код валюты слева, значок справа
+            const top = document.createElement("div");
+            top.className = "rate-top";
+            const icon = badge(code);
+            icon.classList.add("small");
+            top.append(codeEl, icon);
+
+            card.append(top, nameEl, valueEl, changeEl);
             board.append(card);
         }
     }
@@ -180,6 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             localStorage.setItem(CACHE_KEY, JSON.stringify(data));
         } catch {
+            // хранилище недоступно — не страшно
         }
     }
 

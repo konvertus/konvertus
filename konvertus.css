@@ -1,4 +1,4 @@
-/* цвета */
+/* цвета — меняй только здесь */
 :root {
   --bg: #f1e3c0;
   --header: #7a8c77;
@@ -34,7 +34,7 @@ body {
 }
 
 /* логотип */
-.logo {
+.logo{
   color: var(--text);
   text-decoration: none;
   margin-right: 40px;
@@ -46,16 +46,16 @@ body {
   letter-spacing: 2px;
 }
 
-.logo:hover {
+.logo:hover{
   color: var(--accent);
 }
 
-.arrows_symbol {
+.arrows_symbol{
   font-variation-settings:
-    'FILL' 0,
-    'wght' 600,
-    'GRAD' 0,
-    'opsz' 25;
+  'FILL' 0,
+  'wght' 600,
+  'GRAD' 0,
+  'opsz' 25;
   font-size: 24px;
   color: inherit;
 }
@@ -252,12 +252,14 @@ main {
   border-color: var(--accent);
 }
 
+/* убираем стрелки в полях ввода (Chrome, Safari, Edge) */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
+/* убираем стрелки в Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;
@@ -283,6 +285,7 @@ input[type="number"] {
   background-color: var(--accent);
 }
 
+/* поворачиваем стрелки на 90 градусов */
 .swap-btn span {
   transform: rotate(90deg);
 }
@@ -502,9 +505,7 @@ input[type="number"] {
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 .rates-status {
@@ -588,6 +589,7 @@ input[type="number"] {
 
 /* ===== Адаптация под телефоны и планшеты ===== */
 
+/* на компьютере панель меню «растворяется»: меню и кнопка входа лежат прямо в шапке, как раньше */
 .nav-panel {
   display: contents;
 }
@@ -596,6 +598,7 @@ input[type="number"] {
   display: none;
 }
 
+/* выпадающее меню по клику/тапу (на компьютере ещё работает наведение) */
 .dropdown.open .dropdown-content {
   display: flex;
 }
@@ -646,13 +649,8 @@ input[type="number"] {
     left: 0;
   }
 
-  .nav-toggle span::before {
-    top: -7px;
-  }
-
-  .nav-toggle span::after {
-    top: 7px;
-  }
+  .nav-toggle span::before { top: -7px; }
+  .nav-toggle span::after  { top: 7px; }
 
   .nav-toggle[aria-expanded="true"] span {
     background: transparent;
@@ -851,6 +849,7 @@ input[type="number"] {
   }
 }
 
+/* на сенсорных экранах «залипшее» наведение не нужно */
 @media (hover: none) {
   .card:hover {
     background-color: var(--menu-bg);
@@ -886,6 +885,7 @@ input[type="number"] {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* иконки чёрные, на зелёном кружке делаем их светлыми, как значки на кнопках */
 .currency-badge img {
   width: 24px;
   height: 24px;
@@ -903,4 +903,29 @@ input[type="number"] {
   font-size: 22px;
   font-weight: 600;
   color: var(--menu-text);
+}
+
+
+/* Значок валюты на карточках табло */
+.rate-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.currency-badge.small {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  box-shadow: none;
+}
+
+.currency-badge.small img {
+  width: 18px;
+  height: 18px;
+}
+
+.currency-badge.small.text {
+  font-size: 10px;
 }

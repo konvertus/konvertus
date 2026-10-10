@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const from = Number(selectTop.value);
         const to = Number(selectBottom.value);
 
+        // Расчет и округление без лишних преобразований
         const result = (val * from) / to;
         output.value = Number(result.toFixed(8)); // Автоматически убирает лишние нули в конце
     }
@@ -48,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             await navigator.clipboard.writeText(output.value);
         } catch {
+            // запасной вариант, если страница открыта без https/localhost
             output.select();
             document.execCommand("copy");
         }
@@ -56,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
         icon.textContent = "check";
         setTimeout(() => (icon.textContent = "content_copy"), 1500);
     });
-
+    
+    // Инициализация стартового заголовка при загрузке
     update();
 });
