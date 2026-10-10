@@ -1,70 +1,70 @@
-# Конвертус
+# Konvertus
 
-Сайт для быстрого перевода единиц измерения и валют. Без рекламы, без аналитики, без регистрации. Все расчёты выполняются в браузере.
+[Русская версия](README.ru.md)
 
-Итоговый проект по веб-разработке.
+A website for quickly converting units of measurement and currencies. No ads, no analytics, no sign-up. All calculations run in your browser.
 
-**Демо:** https://konvertus.github.io/konvertus/
+Final project for a web development course.
 
-[English version](README.en.md)
+**Live demo:** https://konvertus.github.io/konvertus/en/index.html (Russian version: https://konvertus.github.io/konvertus/)
 
-## Что умеет сайт
+## Features
 
-| Категория | Страницы | Что внутри |
+| Category | Pages | What's inside |
 |---|---|---|
-| Длина | метры в футы, мили в километры, дюймы в сантиметры | 12 единиц: от нанометров до километров, мили, морские мили, ярды, футы, дюймы |
-| Вес | килограммы в фунты, граммы в унции | 11 единиц: тонны, центнеры, караты, унции, фунты, стоуны, пуды и другие |
-| Температура | Цельсий в Фаренгейт, Цельсий в Кельвин | Цельсий, Фаренгейт, Кельвин, Ранкин, Реомюр |
-| Валюты | рубли в доллары, евро в рубли | 11 валют по курсу ЦБ РФ, табло курсов, кнопка «Обновить курс» |
-| Данные | мегабайты в гигабайты, мегабиты в мегабайты | биты, байты, десятичные (КБ, МБ…) и двоичные (КиБ, МиБ…) единицы, мегабиты как в тарифах интернета |
-| Системы счисления | двоичная в десятичную, десятичная в шестнадцатеричную | двоичная, восьмеричная, десятичная, шестнадцатеричная; большие числа без потери точности |
+| Length | meters to feet, miles to kilometers, inches to centimeters | 12 units: from nanometers to kilometers, miles, nautical miles, yards, feet, inches |
+| Weight | kilograms to pounds, grams to ounces | 11 units: metric tons, quintals, carats, ounces, pounds, stones, poods and more |
+| Temperature | Celsius to Fahrenheit, Celsius to Kelvin | Celsius, Fahrenheit, Kelvin, Rankine, Réaumur |
+| Currencies | rubles to dollars, euros to rubles | 11 currencies at the Bank of Russia rate, a rates board, an "Update rate" button |
+| Data | megabytes to gigabytes, megabits to megabytes | bits, bytes, decimal (KB, MB...) and binary (KiB, MiB...) units, megabits as used in internet plans |
+| Number systems | binary to decimal, decimal to hexadecimal | binary, octal, decimal, hexadecimal; large numbers without losing precision |
 
-Всё остальное:
+Also included:
 
-- русская и английская версии с переключателем языка в подвале;
-- адаптация под телефоны: меню-гамбургер, компактные размеры, сетки в две колонки;
-- закреплённая шапка, которая не исчезает при прокрутке;
-- кнопка копирования результата и кнопка «поменять местами»;
-- на каждой странице блок с подсказками («Как удобно считать в уме», на страницах валют — «Откуда берётся курс») и интересные факты.
+- Russian and English versions with a language switcher in the footer;
+- mobile-friendly layout: hamburger menu, compact sizes, two-column grids;
+- a sticky header that stays on screen while you scroll;
+- a button to copy the result and a button to swap the units;
+- a tips block on every page ("Quick mental math", or "Where the rate comes from" on currency pages) plus fun facts.
 
-## Технологии
+## Tech stack
 
-- HTML5 и CSS3 (flexbox, grid, переменные CSS, медиазапросы), без фреймворков и сборщиков
-- JavaScript (ES2020), без библиотек
-- Шрифт [Montserrat](https://fonts.google.com/specimen/Montserrat) и значки [Material Symbols](https://fonts.google.com/icons) от Google Fonts
-- Курсы валют: [cbr-xml-daily.ru](https://www.cbr-xml-daily.ru/), данные Банка России в формате JSON
-- Хостинг: GitHub Pages
+- HTML5 and CSS3 (flexbox, grid, CSS variables, media queries), no frameworks or build tools
+- JavaScript (ES2020), no libraries
+- [Montserrat](https://fonts.google.com/specimen/Montserrat) font and [Material Symbols](https://fonts.google.com/icons) icons from Google Fonts
+- Currency rates: [cbr-xml-daily.ru](https://www.cbr-xml-daily.ru/), Bank of Russia data in JSON format
+- Hosting: GitHub Pages
 
-## Структура проекта
+## Project structure
 
 ```
 konvertus/
-├── index.html            главная (русская версия)
-├── about.html            страница «О нас»
-├── konvertus.css         все стили сайта
-├── converter.js          конвертеры длины, веса, данных (через коэффициенты)
-├── temperature.js        температура (шкалы с разным нулём)
-├── currency.js           валюты: загрузка курса ЦБ, табло, иконки
-├── numbers.js            системы счисления (BigInt)
-├── menu.js               мобильное меню и выпадающий список «Инструменты»
-├── icons/                иконки валют (PNG, 128×128, прозрачный фон)
-├── converters/           страницы конвертеров (русская версия)
+├── index.html            home page (Russian version)
+├── about.html            "About" page
+├── konvertus.css         all site styles
+├── converter.js          length, weight and data converters (ratio-based)
+├── temperature.js        temperature (scales with different zero points)
+├── currency.js           currencies: fetching the CBR rate, rates board, icons
+├── numbers.js            number systems (BigInt)
+├── menu.js               mobile menu and the "Tools" dropdown
+├── icons/                currency icons (PNG, 128×128, transparent background)
+├── converters/           converter pages (Russian version)
 │   ├── meters-feet.html, miles-km.html, inches-cm.html
 │   ├── kg-pounds.html, grams-ounces.html
 │   ├── celsius-fahrenheit.html, celsius-kelvin.html
 │   ├── rub-usd.html, eur-rub.html
 │   ├── mb-gb.html, mbit-mb.html
 │   └── bin-dec.html, dec-hex.html
-└── en/                   английская версия, структура та же
+└── en/                   English version, same structure
     ├── index.html, about.html
     └── converters/
 ```
 
-Стили, скрипты и иконки общие для обеих языковых версий. Страницы подключают их по относительным путям: из `converters/` это `../konvertus.css`, из `en/converters/` — `../../konvertus.css`. Если перенести папки, пути придётся поправить.
+Styles, scripts and icons are shared by both language versions. Pages load them through relative paths: from `converters/` that is `../konvertus.css`, from `en/converters/` it is `../../konvertus.css`. If you move folders around, the paths need to be updated.
 
-## Запуск на своём компьютере
+## Running locally
 
-Достаточно открыть `index.html` в браузере. Но лучше поднять локальный сервер, чтобы всё работало как на хостинге:
+You can simply open `index.html` in a browser. It is better to start a local server so everything behaves as it does on the hosting:
 
 ```bash
 git clone https://github.com/konvertus/konvertus.git
@@ -72,41 +72,41 @@ cd konvertus
 python3 -m http.server 8000
 ```
 
-После этого сайт откроется по адресу http://localhost:8000. Для курсов валют нужен интернет.
+The site will then be available at http://localhost:8000. An internet connection is required for currency rates.
 
-## Как это работает
+## How it works
 
-**Длина, вес, данные.** Каждая единица в списке хранится как число: сколько базовых единиц в ней содержится (метров, килограммов или байтов). Результат считается по формуле `значение × (база исходной) ÷ (база нужной)`. Коэффициенты взяты из определений: дюйм равен ровно 25,4 мм, фунт равен ровно 0,45359237 кг.
+**Length, weight, data.** Every unit in a list is stored as a number: how many base units it contains (meters, kilograms or bytes). The result is calculated as `value × (base of the source) ÷ (base of the target)`. The coefficients come from official definitions: an inch is exactly 25.4 mm and a pound is exactly 0.45359237 kg.
 
-**Температура.** У шкал разный ноль, поэтому простое умножение не подходит. Значение сначала переводится в градусы Цельсия, потом в нужную шкалу. Температуры ниже абсолютного нуля отклоняются.
+**Temperature.** The scales have different zero points, so plain multiplication does not work. The value is first converted to degrees Celsius and then to the target scale. Temperatures below absolute zero are rejected.
 
-**Валюты.** Скрипт запрашивает `daily_json.js` у cbr-xml-daily.ru, считает курс одной единицы в рублях (учитывая, что иена и тенге даются за 100 единиц) и переводит через рубль. Последний полученный курс сохраняется в `localStorage`: если связи нет, сайт покажет его с пометкой.
+**Currencies.** The script requests `daily_json.js` from cbr-xml-daily.ru, works out the rate of one unit in rubles (taking into account that the yen and tenge are quoted per 100 units) and converts through the ruble. The last received rate is saved in `localStorage`: if there is no connection, the site shows it with a note.
 
-**Системы счисления.** Число разбирается в `BigInt`, поэтому длинные значения не теряют точность. Поддерживаются только целые числа; на неверные символы страница отвечает понятным сообщением.
+**Number systems.** The number is parsed into a `BigInt`, so long values keep full precision. Only integers are supported; invalid characters produce a clear message.
 
-## Как добавить новый конвертер
+## Adding a new converter
 
-Для величин, которые переводятся умножением (площадь, объём, скорость):
+For quantities that convert by multiplication (area, volume, speed):
 
-1. Скопируйте любую страницу из `converters/`, например `kg-pounds.html`, под новым именем.
-2. Замените заголовок, `<title>`, оба списка единиц (`value` — это число базовых единиц) и блоки с подсказками и фактами. Атрибут `selected` задаёт единицы по умолчанию.
-3. Добавьте ссылку в меню «Инструменты» на всех страницах и карточку на главной.
-4. Сделайте то же в `en/converters/` с английскими текстами.
+1. Copy any page from `converters/`, for example `kg-pounds.html`, under a new name.
+2. Change the heading, the `<title>`, both unit lists (`value` is the number of base units) and the tips and facts blocks. The `selected` attribute sets the default units.
+3. Add a link to the "Tools" menu on every page and a card on the home page.
+4. Do the same in `en/converters/` with English text.
 
-Скрипт `converter.js` менять не нужно.
+`converter.js` does not need to be changed.
 
-## Приватность
+## Privacy
 
-На сайте нет рекламы, счётчиков, аналитики и cookies. Введённые числа никуда не отправляются.
+The site has no ads, counters, analytics or cookies. The numbers you enter are never sent anywhere.
 
-Для работы сайт обращается к двум внешним сервисам: шрифты и значки загружаются с серверов Google, курсы валют — с cbr-xml-daily.ru. Как и при заходе на любой сайт, эти сервисы видят IP-адрес посетителя. Сам Конвертус эти данные не получает.
+To work, the site contacts two external services: fonts and icons are loaded from Google's servers, and currency rates come from cbr-xml-daily.ru. As with any website, these services can see the visitor's IP address. Konvertus itself does not receive this data.
 
-## Ограничения
+## Limitations
 
-- Курсы валют справочные, по данным ЦБ РФ. В банках и обменниках курс другой.
-- Меню и подвал дублируются в каждом HTML-файле, потому что сайт собран без шаблонизатора. При изменении меню его нужно править на всех страницах.
-- Кнопка «Войти / Регистрация» пока ведёт на заглушку.
+- Currency rates are for reference only and come from the Bank of Russia. Banks and exchange offices use different rates.
+- The menu and footer are duplicated in every HTML file because the site is built without a template engine. When the menu changes, it has to be edited on all pages.
+- The "Log in / Sign up" button currently leads to a placeholder.
 
-## Автор
+## Author
 
-Учебный проект. Предложения и найденные ошибки присылайте через раздел Issues репозитория.
+A student project. Send suggestions and bug reports through the repository's Issues section.
