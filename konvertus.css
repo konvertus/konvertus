@@ -1,4 +1,4 @@
-/* все цвета */
+/* цвета — меняй только здесь */
 :root {
   --bg: #f1e3c0;
   --header: #7a8c77;
@@ -28,7 +28,7 @@ body {
 }
 
 /* логотип */
-.logo{
+.logo {
   color: var(--text);
   text-decoration: none;
   margin-right: 40px;
@@ -40,16 +40,16 @@ body {
   letter-spacing: 2px;
 }
 
-.logo:hover{
+.logo:hover {
   color: var(--accent);
 }
 
-.arrows_symbol{
+.arrows_symbol {
   font-variation-settings:
-  'FILL' 0,
-  'wght' 600,
-  'GRAD' 0,
-  'opsz' 25;
+    'FILL' 0,
+    'wght' 600,
+    'GRAD' 0,
+    'opsz' 25;
   font-size: 24px;
   color: inherit;
 }
@@ -191,6 +191,9 @@ main {
 
 /* Карточка */
 .card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 28px 16px;
   background-color: var(--menu-bg);
   color: var(--menu-text);
@@ -496,7 +499,9 @@ input[type="number"] {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .rates-status {
@@ -640,8 +645,13 @@ input[type="number"] {
     left: 0;
   }
 
-  .nav-toggle span::before { top: -7px; }
-  .nav-toggle span::after  { top: 7px; }
+  .nav-toggle span::before {
+    top: -7px;
+  }
+
+  .nav-toggle span::after {
+    top: 7px;
+  }
 
   .nav-toggle[aria-expanded="true"] span {
     background: transparent;
@@ -853,7 +863,6 @@ input[type="number"] {
     background-color: var(--header);
   }
 }
-
 
 /* Иконки валют над конвертером */
 .currency-icons {
