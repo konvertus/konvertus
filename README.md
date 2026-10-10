@@ -47,6 +47,7 @@ konvertus/
 ├── currency.js           currencies: fetching the CBR rate, rates board, icons
 ├── numbers.js            number systems (BigInt)
 ├── menu.js               mobile menu and the "Tools" dropdown
+├── select.js             custom dropdown lists (animation, currency icons and search)
 ├── icons/                currency icons (PNG, 128×128, transparent background)
 ├── converters/           converter pages (Russian version)
 │   ├── meters-feet.html, miles-km.html, inches-cm.html

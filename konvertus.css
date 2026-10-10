@@ -929,3 +929,309 @@ input[type="number"] {
 .currency-badge.small.text {
   font-size: 10px;
 }
+
+
+/* Выпадающие списки (select.js) */
+.converter-box select.cselect-native {
+  display: none;
+}
+
+.cselect {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.cselect.open {
+  z-index: 30;
+}
+
+.cselect-svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* кнопка в закрытом состоянии */
+.cselect-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+  color: var(--menu-text);
+  background-color: var(--menu-bg);
+  border: 2px solid var(--header);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.cselect-trigger:hover {
+  color: var(--accent);
+}
+
+.cselect-trigger:focus-visible,
+.cselect.open .cselect-trigger {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.cselect.open .cselect-trigger {
+  box-shadow: 0 0 0 3px rgba(171, 94, 75, 0.15);
+}
+
+.cselect-trigger-icon {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.cselect-name {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.cselect-code {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--header);
+}
+
+.cselect-trigger .cselect-chevron {
+  color: var(--header);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.2s;
+}
+
+.cselect.open .cselect-chevron {
+  color: var(--accent);
+  transform: rotate(180deg);
+}
+
+/* «щелчок» значка при смене значения (в том числе кнопкой «поменять местами») */
+.cselect-trigger.pop .cselect-trigger-icon,
+.cselect-trigger.pop .cselect-name {
+  animation: cselect-pop 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes cselect-pop {
+  0% {
+    opacity: 0.3;
+    transform: translateY(-6px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* выпадающая панель: плавно появляется и едет вниз */
+.cselect-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: min(340px, 55vh);
+  box-sizing: border-box;
+  padding: 6px;
+  background-color: var(--menu-bg);
+  border: 2px solid var(--header);
+  border-radius: 10px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-10px) scale(0.97);
+  transform-origin: top center;
+  transition:
+    opacity 0.18s ease,
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    visibility 0s linear 0.25s;
+}
+
+.cselect.up .cselect-panel {
+  top: auto;
+  bottom: calc(100% + 6px);
+  transform: translateY(10px) scale(0.97);
+  transform-origin: bottom center;
+}
+
+.cselect.open .cselect-panel {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  transition-delay: 0s;
+}
+
+/* поиск по валютам */
+.cselect-search {
+  position: relative;
+  flex-shrink: 0;
+  margin-bottom: 6px;
+}
+
+.cselect-search .cselect-search-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  width: 18px;
+  height: 18px;
+  color: var(--header);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.converter-box .cselect-search input {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 10px 12px 10px 38px;
+  font-size: 16px;
+  background-color: var(--bg);
+  border: 2px solid transparent;
+  border-radius: 6px;
+}
+
+.converter-box .cselect-search input:focus {
+  border-color: var(--header);
+}
+
+/* список */
+.cselect-list {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+}
+
+.cselect-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--menu-text);
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+/* пункты по очереди выезжают при открытии, задержка растёт с номером пункта (но не больше 10 шагов) */
+.cselect.open .cselect-option {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.22s ease calc(min(var(--i), 10) * 25ms + 40ms),
+    transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) calc(min(var(--i), 10) * 25ms + 40ms),
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.cselect-option[hidden],
+.cselect-empty[hidden] {
+  display: none;
+}
+
+.cselect-option.is-active {
+  background-color: rgba(122, 140, 119, 0.18);
+}
+
+.cselect-option.is-selected {
+  color: var(--accent);
+}
+
+.cselect-option .cselect-check {
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.2s, transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.cselect-option.is-selected .cselect-check {
+  opacity: 1;
+  transform: none;
+}
+
+.cselect-empty {
+  padding: 14px 10px;
+  font-size: 15px;
+  text-align: center;
+  color: var(--header);
+}
+
+/* значки валют в списке и на кнопке */
+.cselect .currency-badge {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  box-shadow: none;
+}
+
+.cselect .currency-badge img {
+  width: 16px;
+  height: 16px;
+}
+
+.cselect .currency-badge.text {
+  font-size: 10px;
+}
+
+.cselect-trigger .currency-badge {
+  transition: background-color 0.2s;
+}
+
+.cselect-trigger:hover .currency-badge,
+.cselect.open .cselect-trigger .currency-badge {
+  background-color: var(--accent);
+}
+
+@media (hover: none) {
+  .cselect-trigger:hover {
+    color: var(--menu-text);
+  }
+
+  .cselect-trigger:hover .currency-badge {
+    background-color: var(--header);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cselect-panel,
+  .cselect-option,
+  .cselect-chevron,
+  .cselect-check {
+    transition-duration: 0.01s !important;
+    transition-delay: 0s !important;
+  }
+
+  .cselect-trigger.pop .cselect-trigger-icon,
+  .cselect-trigger.pop .cselect-name {
+    animation: none;
+  }
+}
