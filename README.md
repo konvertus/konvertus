@@ -6,7 +6,7 @@
 
 **Демо:** https://konvertus.github.io/konvertus/
 
-*English: Konvertus is a small static website for converting units and currencies. No ads, no analytics, no sign-up; everything is calculated in your browser. The English version lives in the `en/` folder: https://konvertus.github.io/konvertus/en/index.html*
+[English version](README.en.md)
 
 ## Что умеет сайт
 
