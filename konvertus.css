@@ -8,6 +8,10 @@
   --menu-text: #2b2b2b;
 }
 
+html {
+  scroll-padding-top: 72px;
+}
+
 body {
   margin: 0;
   background-color: var(--bg);
@@ -17,9 +21,11 @@ body {
   flex-direction: column;
 }
 
-/* шапка */
+/* шапка: остаётся наверху при прокрутке */
 .header {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 40;
   display: flex;
   align-items: center;
   height: 60px;
@@ -28,7 +34,7 @@ body {
 }
 
 /* логотип */
-.logo {
+.logo{
   color: var(--text);
   text-decoration: none;
   margin-right: 40px;
@@ -40,16 +46,16 @@ body {
   letter-spacing: 2px;
 }
 
-.logo:hover {
+.logo:hover{
   color: var(--accent);
 }
 
-.arrows_symbol {
+.arrows_symbol{
   font-variation-settings:
-    'FILL' 0,
-    'wght' 600,
-    'GRAD' 0,
-    'opsz' 25;
+  'FILL' 0,
+  'wght' 600,
+  'GRAD' 0,
+  'opsz' 25;
   font-size: 24px;
   color: inherit;
 }
@@ -499,9 +505,7 @@ input[type="number"] {
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 .rates-status {
@@ -645,13 +649,8 @@ input[type="number"] {
     left: 0;
   }
 
-  .nav-toggle span::before {
-    top: -7px;
-  }
-
-  .nav-toggle span::after {
-    top: 7px;
-  }
+  .nav-toggle span::before { top: -7px; }
+  .nav-toggle span::after  { top: 7px; }
 
   .nav-toggle[aria-expanded="true"] span {
     background: transparent;
@@ -863,6 +862,7 @@ input[type="number"] {
     background-color: var(--header);
   }
 }
+
 
 /* Иконки валют над конвертером */
 .currency-icons {
