@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const status = document.getElementById("rates-status");
     const board = document.getElementById("rates-board");
 
-    // rates[код] = { rub: сколько рублей за 1 единицу, prev: то же на прошлую дату, nominal, value }
     let rates = null;
 
     function buildRates(data) {
@@ -181,7 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             localStorage.setItem(CACHE_KEY, JSON.stringify(data));
         } catch {
-            // хранилище недоступно — не страшно
         }
     }
 

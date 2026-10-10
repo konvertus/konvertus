@@ -8,20 +8,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectBottom = document.getElementById("select-bottom");
     const swap = document.getElementById("swap");
 
-    // Температуры нельзя просто умножать: у шкал разный ноль.
-    // Поэтому всё переводим через Цельсий: из исходной шкалы в °C, потом из °C в нужную.
     const toC = {
-        c:  v => v,
-        f:  v => (v - 32) * 5 / 9,
-        k:  v => v - 273.15,
-        r:  v => (v - 491.67) * 5 / 9,
+        c: v => v,
+        f: v => (v - 32) * 5 / 9,
+        k: v => v - 273.15,
+        r: v => (v - 491.67) * 5 / 9,
         re: v => v * 5 / 4
     };
     const fromC = {
-        c:  v => v,
-        f:  v => v * 9 / 5 + 32,
-        k:  v => v + 273.15,
-        r:  v => (v + 273.15) * 9 / 5,
+        c: v => v,
+        f: v => v * 9 / 5 + 32,
+        k: v => v + 273.15,
+        r: v => (v + 273.15) * 9 / 5,
         re: v => v * 4 / 5
     };
 
@@ -34,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const celsius = toC[selectTop.value](val);
 
-        // ниже абсолютного нуля температуры не бывает
         if (celsius < -273.15 - 1e-9) {
             output.value = t("Ниже абсолютного нуля", "Below absolute zero");
             return;
@@ -48,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (title) {
             const first = selectTop.options[selectTop.selectedIndex].textContent;
             const second = selectBottom.options[selectBottom.selectedIndex].textContent;
-            // названия шкал — имена собственные, поэтому с большой буквы
             title.textContent = `${first} ${t("в", "to")} ${second}`;
         }
         calculate();

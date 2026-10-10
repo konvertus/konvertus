@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,27 +10,30 @@
     <!-- Шрифты -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 
     <!-- Значки google -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=check,content_copy,currency_ruble,sync_alt" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=check,content_copy,currency_ruble,sync_alt" />
 
     <title>Kilograms to pounds — Konvertus</title>
 </head>
-    <body>
 
-        <!-- шапка (скопируй сюда свою, но к ссылкам на страницы добавь ../ ) -->
-        <header class="header">
+<body>
 
-            <a href="../index.html" class="logo">
-                <span class="material-symbols-outlined arrows_symbol">sync_alt</span>
-                <span>KONVERTUS</span>
-            </a>
+    <header class="header">
 
-            <!-- left buttons -->
-            <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-panel"><span></span></button>
+        <a href="../index.html" class="logo">
+            <span class="material-symbols-outlined arrows_symbol">sync_alt</span>
+            <span>KONVERTUS</span>
+        </a>
 
-            <div class="nav-panel" id="nav-panel">
+        <!-- left buttons -->
+        <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false"
+            aria-controls="nav-panel"><span></span></button>
+
+        <div class="nav-panel" id="nav-panel">
             <nav class="menu">
                 <div class="dropdown">
                     <button class="dropbtn">Tools ▾</button>
@@ -74,132 +78,161 @@
 
             <!-- right button -->
             <a href="#login" class="login-btn">Log in / Sign up</a>
-            </div>
+        </div>
 
-        </header>
+    </header>
 
-        <main>
-            <section class="converter">
-                <h1 id="title">Kilograms to pounds</h1>
+    <main>
+        <section class="converter">
+            <h1 id="title">Kilograms to pounds</h1>
 
-                <div class="converter-box">
-                    <select id="select-top">
-                        <option value="1000">Tonnes</option>
-                        <option value="100">Quintals</option>
-                        <option value="1" selected>Kilograms</option>
-                        <option value="0.001">Grams</option>
-                        <option value="0.000001">Milligrams</option>
-                        <option value="0.000000001">Micrograms</option>
-                        <option value="0.0002">Carats</option>
-                        <option value="0.028349523125">Ounces</option>
-                        <option value="0.45359237">Pounds</option>
-                        <option value="6.35029318">Stones</option>
-                        <option value="16.3804964">Poods</option>
-                    </select>
-                    <input type="number" id="input" placeholder="Enter a number">
+            <div class="converter-box">
+                <select id="select-top">
+                    <option value="1000">Tonnes</option>
+                    <option value="100">Quintals</option>
+                    <option value="1" selected>Kilograms</option>
+                    <option value="0.001">Grams</option>
+                    <option value="0.000001">Milligrams</option>
+                    <option value="0.000000001">Micrograms</option>
+                    <option value="0.0002">Carats</option>
+                    <option value="0.028349523125">Ounces</option>
+                    <option value="0.45359237">Pounds</option>
+                    <option value="6.35029318">Stones</option>
+                    <option value="16.3804964">Poods</option>
+                </select>
+                <input type="number" id="input" placeholder="Enter a number">
 
-                    <button type="button" id="swap" class="swap-btn" aria-label="Swap">
-                        <span class="material-symbols-outlined">sync_alt</span>
+                <button type="button" id="swap" class="swap-btn" aria-label="Swap">
+                    <span class="material-symbols-outlined">sync_alt</span>
+                </button>
+
+                <select id="select-bottom">
+                    <option value="1000">Tonnes</option>
+                    <option value="100">Quintals</option>
+                    <option value="1">Kilograms</option>
+                    <option value="0.001">Grams</option>
+                    <option value="0.000001">Milligrams</option>
+                    <option value="0.000000001">Micrograms</option>
+                    <option value="0.0002">Carats</option>
+                    <option value="0.028349523125">Ounces</option>
+                    <option value="0.45359237" selected>Pounds</option>
+                    <option value="6.35029318">Stones</option>
+                    <option value="16.3804964">Poods</option>
+                </select>
+                <div class="output-row">
+                    <input type="text" id="output" placeholder="Result" readonly tabindex="-1">
+                    <button type="button" id="copy" class="copy-btn" aria-label="Copy result">
+                        <span class="material-symbols-outlined">content_copy</span>
                     </button>
-
-                    <select id="select-bottom">
-                        <option value="1000">Tonnes</option>
-                        <option value="100">Quintals</option>
-                        <option value="1">Kilograms</option>
-                        <option value="0.001">Grams</option>
-                        <option value="0.000001">Milligrams</option>
-                        <option value="0.000000001">Micrograms</option>
-                        <option value="0.0002">Carats</option>
-                        <option value="0.028349523125">Ounces</option>
-                        <option value="0.45359237" selected>Pounds</option>
-                        <option value="6.35029318">Stones</option>
-                        <option value="16.3804964">Poods</option>
-                    </select>
-                    <div class="output-row">
-                        <input type="text" id="output" placeholder="Result" readonly tabindex="-1">
-                        <button type="button" id="copy" class="copy-btn" aria-label="Copy result">
-                            <span class="material-symbols-outlined">content_copy</span>
-                        </button>
-                    </div>
                 </div>
-            </section>
-
-            <!-- Как удобно считать -->
-            <section class="tips">
-                <h2>Easy mental math</h2>
-                <p>The converter above gives the exact result. For a quick estimate, these rules are enough:</p>
-
-                <table class="tips-table">
-                    <tr>
-                        <th>Conversion</th>
-                        <th>In your head</th>
-                        <th>Exact</th>
-                    </tr>
-                    <tr><td>Pounds to kilograms</td><td>multiply by 0.45 (about half)</td><td>0.45359237</td></tr>
-                    <tr><td>Kilograms to pounds</td><td>multiply by 2.2</td><td>2.204623</td></tr>
-                    <tr><td>Ounces to grams</td><td>multiply by 28</td><td>28.349523</td></tr>
-                    <tr><td>Grams to ounces</td><td>divide by 28</td><td>0.035274</td></tr>
-                    <tr><td>Stones to kilograms</td><td>multiply by 6.35</td><td>6.350293</td></tr>
-                </table>
-
-                <p class="tips-note">
-                    <strong>General formula:</strong> value × (kilograms in the source unit) ÷ (kilograms in the target unit). This is how our converter works too: everything is converted to kilograms first, then to the unit you need.
-                </p>
-            </section>
-
-            <!-- Интересные факты -->
-            <section class="facts">
-                <h2>Interesting facts</h2>
-                <div class="facts-grid">
-
-                    <div class="fact">
-                        <h3>Kilogram</h3>
-                        <p>Since 2019 the kilogram has been defined through the Planck constant. Before that, for almost 130 years, it was a platinum-iridium cylinder kept near Paris.</p>
-                    </div>
-
-                    <div class="fact">
-                        <h3>Pound</h3>
-                        <p>Today a pound is exactly 0.45359237 kg. This was fixed in 1959 so that the US and Commonwealth countries would use the same value.</p>
-                    </div>
-
-                    <div class="fact">
-                        <h3>Ounce</h3>
-                        <p>A regular ounce is about 28.35 g, while the troy ounce used for gold is about 31.1 g. Be careful not to mix them up.</p>
-                    </div>
-
-                    <div class="fact">
-                        <h3>Carat</h3>
-                        <p>One carat is 200 mg. The word comes from the seeds of the carob tree, which were once used to weigh gemstones.</p>
-                    </div>
-
-                    <div class="fact">
-                        <h3>Pood</h3>
-                        <p>The Russian pood is about 16.38 kg. It went out of use after the switch to the metric system in the 1920s.</p>
-                    </div>
-
-                    <div class="fact">
-                        <h3>Stone</h3>
-                        <p>In the UK a person’s weight is still often given in stones: one stone is 14 pounds, or about 6.35 kg.</p>
-                    </div>
-
-                </div>
-            </section>
-        </main>
-
-        <footer class="footer">
-            <a href="../index.html" class="footer-logo">KONVERTUS</a>
-            <nav class="footer-links">
-                <a href="../about.html">About</a>
-                <a href="../about.html#contacts">Contacts</a>
-            </nav>
-            <div class="lang-switch">
-                <a href="../../converters/kg-pounds.html" hreflang="ru" lang="ru">Русский</a>
-                <span class="lang-sep">·</span>
-                <span class="lang-current">English</span>
             </div>
-            <p>© 2026 Konvertus</p>
-        </footer>
-        <script src="../../converter.js"></script>
-        <script src="../../menu.js"></script>
+        </section>
+
+        <!-- Как удобно считать -->
+        <section class="tips">
+            <h2>Easy mental math</h2>
+            <p>The converter above gives the exact result. For a quick estimate, these rules are enough:</p>
+
+            <table class="tips-table">
+                <tr>
+                    <th>Conversion</th>
+                    <th>In your head</th>
+                    <th>Exact</th>
+                </tr>
+                <tr>
+                    <td>Pounds to kilograms</td>
+                    <td>multiply by 0.45 (about half)</td>
+                    <td>0.45359237</td>
+                </tr>
+                <tr>
+                    <td>Kilograms to pounds</td>
+                    <td>multiply by 2.2</td>
+                    <td>2.204623</td>
+                </tr>
+                <tr>
+                    <td>Ounces to grams</td>
+                    <td>multiply by 28</td>
+                    <td>28.349523</td>
+                </tr>
+                <tr>
+                    <td>Grams to ounces</td>
+                    <td>divide by 28</td>
+                    <td>0.035274</td>
+                </tr>
+                <tr>
+                    <td>Stones to kilograms</td>
+                    <td>multiply by 6.35</td>
+                    <td>6.350293</td>
+                </tr>
+            </table>
+
+            <p class="tips-note">
+                <strong>General formula:</strong> value × (kilograms in the source unit) ÷ (kilograms in the target
+                unit). This is how our converter works too: everything is converted to kilograms first, then to the unit
+                you need.
+            </p>
+        </section>
+
+        <!-- Интересные факты -->
+        <section class="facts">
+            <h2>Interesting facts</h2>
+            <div class="facts-grid">
+
+                <div class="fact">
+                    <h3>Kilogram</h3>
+                    <p>Since 2019 the kilogram has been defined through the Planck constant. Before that, for almost 130
+                        years, it was a platinum-iridium cylinder kept near Paris.</p>
+                </div>
+
+                <div class="fact">
+                    <h3>Pound</h3>
+                    <p>Today a pound is exactly 0.45359237 kg. This was fixed in 1959 so that the US and Commonwealth
+                        countries would use the same value.</p>
+                </div>
+
+                <div class="fact">
+                    <h3>Ounce</h3>
+                    <p>A regular ounce is about 28.35 g, while the troy ounce used for gold is about 31.1 g. Be careful
+                        not to mix them up.</p>
+                </div>
+
+                <div class="fact">
+                    <h3>Carat</h3>
+                    <p>One carat is 200 mg. The word comes from the seeds of the carob tree, which were once used to
+                        weigh gemstones.</p>
+                </div>
+
+                <div class="fact">
+                    <h3>Pood</h3>
+                    <p>The Russian pood is about 16.38 kg. It went out of use after the switch to the metric system in
+                        the 1920s.</p>
+                </div>
+
+                <div class="fact">
+                    <h3>Stone</h3>
+                    <p>In the UK a person’s weight is still often given in stones: one stone is 14 pounds, or about 6.35
+                        kg.</p>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <a href="../index.html" class="footer-logo">KONVERTUS</a>
+        <nav class="footer-links">
+            <a href="../about.html">About</a>
+            <a href="../about.html#contacts">Contacts</a>
+        </nav>
+        <div class="lang-switch">
+            <a href="../../converters/kg-pounds.html" hreflang="ru" lang="ru">Русский</a>
+            <span class="lang-sep">·</span>
+            <span class="lang-current">English</span>
+        </div>
+        <p>© 2026 Konvertus</p>
+    </footer>
+    <script src="../../converter.js"></script>
+    <script src="../../menu.js"></script>
 </body>
+
 </html>
