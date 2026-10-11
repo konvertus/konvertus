@@ -15,7 +15,7 @@ Final project for a web development course.
 | Length | meters to feet, miles to kilometers, inches to centimeters | 12 units: from nanometers to kilometers, miles, nautical miles, yards, feet, inches |
 | Weight | kilograms to pounds, grams to ounces | 11 units: metric tons, quintals, carats, ounces, pounds, stones, poods and more |
 | Temperature | Celsius to Fahrenheit, Celsius to Kelvin | Celsius, Fahrenheit, Kelvin, Rankine, Réaumur |
-| Currencies | rubles to dollars, euros to rubles | 11 currencies at the Bank of Russia rate, a rates board, an "Update rate" button |
+| Currencies | rubles to dollars, euros to rubles | 11 currencies at the Bank of Russia rate, a rates board, an "Update rate" button, a rate chart for the selected pair for a week, month, 3 months, a year or a custom period |
 | Data | megabytes to gigabytes, megabits to megabytes | bits, bytes, decimal (KB, MB...) and binary (KiB, MiB...) units, megabits as used in internet plans |
 | Number systems | binary to decimal, decimal to hexadecimal | binary, octal, decimal, hexadecimal; large numbers without losing precision |
 
@@ -45,6 +45,7 @@ konvertus/
 ├── converter.js          length, weight and data converters (ratio-based)
 ├── temperature.js        temperature (scales with different zero points)
 ├── currency.js           currencies: fetching the CBR rate, rates board, icons
+├── rate-chart.js         rate chart for a currency pair (SVG, history from the CBR archive, cached in localStorage)
 ├── numbers.js            number systems (BigInt)
 ├── menu.js               mobile menu and the "Tools" dropdown
 ├── select.js             custom dropdown lists (animation, currency icons and search)
@@ -53,6 +54,7 @@ konvertus/
 ├── search.js             site-wide search (Ctrl/⌘+K or "/")
 ├── search-index.js       search index: add every new page here
 ├── favicon.ico, favicon.svg, favicon-96x96.png, apple-touch-icon.png, site.webmanifest, web-app-manifest-*.png   site icon (made with realfavicongenerator.net)
+├── og-image.png          link preview image for social networks (1200×630)
 ├── icons/                currency icons (PNG, 128×128, transparent background)
 │   └── categories/       category icons (also embedded into konvertus.css as masks, so they work without a server)
 ├── converters/           converter pages (Russian version)
@@ -89,6 +91,8 @@ The site will then be available at http://localhost:8000. An internet connection
 
 **Currencies.** The script requests `daily_json.js` from cbr-xml-daily.ru, works out the rate of one unit in rubles (taking into account that the yen and tenge are quoted per 100 units) and converts through the ruble. The last received rate is saved in `localStorage`: if there is no connection, the site shows it with a note.
 
+**Rate chart.** `rate-chart.js` takes history from the cbr-xml-daily.ru archive (`archive/YYYY/MM/DD/daily_json.js`, one file per day) and draws an SVG chart for the two currencies selected in the converter. To avoid hundreds of requests, long periods use selected dates (up to 48 points) and weekends are skipped. Loaded days are saved in `localStorage` (a past day's rate never changes), so switching periods again needs no requests.
+
 **Number systems.** The number is parsed into a `BigInt`, so long values keep full precision. Only integers are supported; invalid characters produce a clear message.
 
 ## Adding a new converter
@@ -112,7 +116,6 @@ To work, the site contacts two external services: fonts and icons are loaded fro
 
 - Currency rates are for reference only and come from the Bank of Russia. Banks and exchange offices use different rates.
 - The menu and footer are duplicated in every HTML file because the site is built without a template engine. When the menu changes, it has to be edited on all pages.
-- The "Log in / Sign up" button currently leads to a placeholder.
 
 ## Author
 

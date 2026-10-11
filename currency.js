@@ -116,6 +116,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         renderIcons();
         calculate();
+        // сообщаем графику курса, что пара валют изменилась
+        document.dispatchEvent(new CustomEvent("konvertus:pair", {
+            detail: { from: selectTop.value, to: selectBottom.value }
+        }));
     }
 
     function renderBoard() {

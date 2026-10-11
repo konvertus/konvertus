@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const output = document.getElementById("output");
     if (!box || !input || !output) return;
 
-    if (getComputedStyle(document.documentElement).getPropertyValue("--konvertus-css").trim() !== "8") return;
+    if (getComputedStyle(document.documentElement).getPropertyValue("--konvertus-css").trim() !== "9") return;
 
     const label = document.documentElement.lang === "en" ? "Change sign" : "Сменить знак";
 

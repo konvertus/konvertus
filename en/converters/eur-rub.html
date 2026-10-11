@@ -11,8 +11,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png?v=2">
     <meta name="apple-mobile-web-app-title" content="konvertus">
     <link rel="manifest" href="../../site.webmanifest?v=2">
-    <script src="../../theme.js?v=8"></script>
-    <link rel="stylesheet" href="../../konvertus.css?v=8">
+    <script src="../../theme.js?v=9"></script>
+    <link rel="stylesheet" href="../../konvertus.css?v=9">
 
     <!-- Шрифты -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,7 +24,32 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=check,content_copy,currency_ruble,refresh,sync_alt" />
 
-    <title>Euro to rubles — Konvertus</title>
+    <title>Euro to rubles — CBR rate and chart | Konvertus</title>
+    <meta name="description" content="Convert euros to rubles at the official Bank of Russia rate, with a rate chart for a week, month, 3 months, a year or a custom period. 9 more currencies available.">
+    <link rel="canonical" href="https://konvertus.github.io/konvertus/en/converters/eur-rub.html">
+    <link rel="alternate" hreflang="ru" href="https://konvertus.github.io/konvertus/converters/eur-rub.html">
+    <link rel="alternate" hreflang="en" href="https://konvertus.github.io/konvertus/en/converters/eur-rub.html">
+    <link rel="alternate" hreflang="x-default" href="https://konvertus.github.io/konvertus/converters/eur-rub.html">
+
+    <!-- Open Graph (social networks and messengers) -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Konvertus">
+    <meta property="og:title" content="Euro to rubles — CBR rate and chart | Konvertus">
+    <meta property="og:description" content="Convert euros to rubles at the official Bank of Russia rate, with a rate chart for a week, month, 3 months, a year or a custom period. 9 more currencies available.">
+    <meta property="og:url" content="https://konvertus.github.io/konvertus/en/converters/eur-rub.html">
+    <meta property="og:image" content="https://konvertus.github.io/konvertus/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Konvertus — unit and currency converter">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ru_RU">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Euro to rubles — CBR rate and chart | Konvertus">
+    <meta name="twitter:description" content="Convert euros to rubles at the official Bank of Russia rate, with a rate chart for a week, month, 3 months, a year or a custom period. 9 more currencies available.">
+    <meta name="twitter:image" content="https://konvertus.github.io/konvertus/og-image.png">
+    <meta name="twitter:image:alt" content="Konvertus — unit and currency converter">
 </head>
 
 <body>
@@ -82,9 +107,6 @@
 
                 <a href="../about.html">About</a>
             </nav>
-
-            <!-- right button -->
-            <a href="#login" class="login-btn">Log in / Sign up</a>
         </div>
 
     </header>
@@ -134,6 +156,35 @@
                     </button>
                 </div>
             </div>
+        </section>
+
+        <!-- Rate chart -->
+        <section class="rate-chart" id="rate-chart">
+            <div class="rates-head">
+                <h2>Rate history</h2>
+            </div>
+            <p id="chart-pair" class="rates-status chart-pair"></p>
+
+            <div class="range-btns" role="group" aria-label="Period">
+                <button type="button" class="range-btn" data-range="7" aria-pressed="false">Week</button>
+                <button type="button" class="range-btn" data-range="30" aria-pressed="true">Month</button>
+                <button type="button" class="range-btn" data-range="90" aria-pressed="false">3 months</button>
+                <button type="button" class="range-btn" data-range="365" aria-pressed="false">Year</button>
+                <button type="button" class="range-btn" data-range="custom" aria-pressed="false">Custom period</button>
+            </div>
+
+            <div class="range-custom" id="range-custom" hidden>
+                <label>From <input type="date" id="range-from"></label>
+                <label>To <input type="date" id="range-to"></label>
+                <button type="button" id="range-apply" class="refresh-btn">Show</button>
+            </div>
+
+            <div class="chart-box" id="chart-box">
+                <svg id="chart-svg" role="img" aria-label="Exchange rate chart"></svg>
+                <div class="chart-tip" id="chart-tip" hidden></div>
+            </div>
+            <p id="chart-status" class="rates-status" aria-live="polite"></p>
+            <div class="chart-stats" id="chart-stats"></div>
         </section>
 
         <section class="rates">
@@ -222,12 +273,13 @@
         </div>
         <p>© 2026 Konvertus</p>
     </footer>
-    <script src="../../fields.js?v=8"></script>
-    <script src="../../select.js?v=8"></script>
-    <script src="../../currency.js?v=8"></script>
-    <script src="../../search-index.js?v=8"></script>
-    <script src="../../search.js?v=8"></script>
-    <script src="../../menu.js?v=8"></script>
+    <script src="../../fields.js?v=9"></script>
+    <script src="../../select.js?v=9"></script>
+    <script src="../../currency.js?v=9"></script>
+    <script src="../../rate-chart.js?v=9"></script>
+    <script src="../../search-index.js?v=9"></script>
+    <script src="../../search.js?v=9"></script>
+    <script src="../../menu.js?v=9"></script>
 </body>
 
 </html>
