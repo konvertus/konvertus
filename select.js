@@ -6,6 +6,12 @@
 const SELECT_ICON_BASE = new URL("icons/", document.currentScript.src).href;
 
 document.addEventListener("DOMContentLoaded", () => {
+    // если подтянулся старый кэшированный CSS, оставляем обычные списки: так страница не ломается
+    if (getComputedStyle(document.documentElement).getPropertyValue("--konvertus-css").trim() !== "4") {
+        console.warn("konvertus.css устарел (кэш браузера): кастомные списки отключены, обновите страницу без кэша");
+        return;
+    }
+
     const EN = document.documentElement.lang === "en";
     const t = (ru, en) => (EN ? en : ru);
     const NS = "http://www.w3.org/2000/svg";
@@ -96,14 +102,14 @@ document.addEventListener("DOMContentLoaded", () => {
         panel.className = "cselect-panel";
 
         let search = null;
-        if (currency) {
+        {
             const wrap = document.createElement("div");
             wrap.className = "cselect-search";
             search = document.createElement("input");
             search.type = "text";
             search.autocomplete = "off";
             search.spellcheck = false;
-            search.placeholder = t("Найти валюту", "Search currency");
+            search.placeholder = currency ? t("Найти валюту", "Search currency") : t("Поиск", "Search");
             search.setAttribute("aria-label", search.placeholder);
             search.setAttribute("role", "combobox");
             search.setAttribute("aria-controls", id + "-list");
@@ -164,11 +170,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function setActive(li, scroll = true) {
             items.forEach((el) => el.classList.remove("is-active"));
-            const focusEl = search && document.activeElement === search ? search : trigger;
+            const focusEl = document.activeElement === search ? search : trigger;
             if (!li) {
                 active = -1;
                 focusEl.removeAttribute("aria-activedescendant");
-                search?.removeAttribute("aria-activedescendant");
+                search.removeAttribute("aria-activedescendant");
                 return;
             }
             active = items.indexOf(li);
@@ -209,21 +215,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
             root.classList.add("open");
             trigger.setAttribute("aria-expanded", "true");
-            search?.setAttribute("aria-expanded", "true");
+            search.setAttribute("aria-expanded", "true");
 
             const selected = items.find((li) => li.classList.contains("is-selected"));
             setActive(selected || visible()[0], false);
             if (selected) list.scrollTop = Math.max(0, selected.offsetTop - list.clientHeight / 2 + selected.offsetHeight / 2);
 
             // на телефоне поиск не фокусируем, чтобы не выскакивала клавиатура
-            if (search && canHover) setTimeout(() => search.focus({ preventScroll: true }), 0);
+            if (canHover) setTimeout(() => search.focus({ preventScroll: true }), 0);
         }
 
         function close(returnFocus = false) {
             if (!root.classList.contains("open")) return;
             root.classList.remove("open");
             trigger.setAttribute("aria-expanded", "false");
-            search?.setAttribute("aria-expanded", "false");
+            search.setAttribute("aria-expanded", "false");
             setActive(null);
             if (returnFocus) trigger.focus({ preventScroll: true });
         }
@@ -241,7 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const q = query.trim().toLowerCase();
             let shown = 0;
             items.forEach((li, i) => {
-                const text = (options[i].textContent + " " + options[i].value).toLowerCase();
+                const text = (options[i].textContent + (currency ? " " + options[i].value : "")).toLowerCase();
                 li.hidden = q !== "" && !text.includes(q);
                 if (!li.hidden) shown++;
             });
@@ -259,25 +265,11 @@ document.addEventListener("DOMContentLoaded", () => {
             setActive(v[next]);
         }
 
-        // быстрый выбор по первой букве (для списков без поиска)
-        let buffer = "";
-        let bufferTimer;
-        function typeahead(char) {
-            buffer += char.toLowerCase();
-            clearTimeout(bufferTimer);
-            bufferTimer = setTimeout(() => (buffer = ""), 700);
-            const v = visible();
-            const start = Math.max(0, v.indexOf(items[active]) + (buffer.length === 1 ? 1 : 0));
-            const ordered = [...v.slice(start), ...v.slice(0, start)];
-            const hit = ordered.find((li) => li.textContent.toLowerCase().startsWith(buffer));
-            if (hit) setActive(hit);
-        }
-
         trigger.addEventListener("click", () => {
             root.classList.contains("open") ? close() : open();
         });
 
-        search?.addEventListener("input", () => filter(search.value));
+        search.addEventListener("input", () => filter(search.value));
 
         items.forEach((li) => {
             li.addEventListener("click", () => choose(li));
@@ -299,7 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     break;
                 case "Home":
                 case "End":
-                    if (!isOpen || (search && e.target === search)) return;
+                    if (!isOpen || e.target === search) return;
                     e.preventDefault();
                     setActive(e.key === "Home" ? visible()[0] : visible().at(-1));
                     break;
@@ -327,18 +319,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     break;
                 default:
                     if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey && e.target === trigger) {
-                        if (search) {
-                            // печать на закрытой кнопке открывает список и сразу ищет
-                            e.preventDefault();
-                            open();
-                            search.value = e.key;
-                            filter(e.key);
-                            search.focus({ preventScroll: true });
-                        } else {
-                            e.preventDefault();
-                            if (!isOpen) open();
-                            typeahead(e.key);
-                        }
+                        // печать на закрытой кнопке открывает список и сразу ищет
+                        e.preventDefault();
+                        open();
+                        search.value = e.key;
+                        filter(e.key);
+                        search.focus({ preventScroll: true });
                     }
             }
         });

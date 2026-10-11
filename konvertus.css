@@ -6,6 +6,24 @@
   --accent: #ab5e4b;
   --menu-bg: #f9f9f9;
   --menu-text: #2b2b2b;
+  --ink: #000;
+  --input-bg: #fff;
+  --line: rgba(0, 0, 0, 0.08);
+  --konvertus-css: 4; /* версия стилей: JS проверяет её и не рисует новые элементы, если CSS в кэше устарел */
+}
+
+/* тёмная тема (переключатель в шапке, см. theme.js) */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #1a1c19;
+  --header: #5a6b55;
+  --text: #fffaf0;
+  --accent: #c4705a;
+  --menu-bg: #252823;
+  --menu-text: #ebe4d3;
+  --ink: #e9e2d2;
+  --input-bg: #1a1c19;
+  --line: rgba(255, 255, 255, 0.1);
 }
 
 html {
@@ -15,6 +33,7 @@ html {
 body {
   margin: 0;
   background-color: var(--bg);
+  color: var(--ink);
   font-family: 'Montserrat', Arial, sans-serif;
   min-height: 100vh;
   display: flex;
@@ -243,6 +262,8 @@ main {
   padding: 12px;
   font-family: inherit;
   font-size: 18px;
+  color: var(--menu-text);
+  background-color: var(--input-bg);
   border: 2px solid var(--header);
   border-radius: 6px;
 }
@@ -702,7 +723,7 @@ input[type="number"] {
     height: auto;
     padding: 14px 0;
     color: var(--menu-text);
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    border-top: 1px solid var(--line);
   }
 
   .nav-panel .dropdown {
@@ -1101,7 +1122,7 @@ input[type="number"] {
   margin: 0;
   padding: 10px 12px 10px 38px;
   font-size: 16px;
-  background-color: var(--bg);
+  background-color: var(--input-bg);
   border: 2px solid transparent;
   border-radius: 6px;
 }
@@ -1233,5 +1254,328 @@ input[type="number"] {
   .cselect-trigger.pop .cselect-trigger-icon,
   .cselect-trigger.pop .cselect-name {
     animation: none;
+  }
+}
+
+
+/* плавная смена темы (класс ставится на 0,45 с при переключении) */
+.theme-anim,
+.theme-anim *,
+.theme-anim *::before,
+.theme-anim *::after {
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease !important;
+}
+
+/* кнопки в шапке: поиск и тема */
+.header-tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  order: 4;
+  margin-left: auto;
+}
+
+.header.has-tools .login-btn {
+  order: 5;
+  margin-left: 12px;
+}
+
+.tool-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  overflow: hidden;
+  color: var(--text);
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.15s;
+}
+
+.tool-btn:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+.tool-btn:active {
+  transform: scale(0.92);
+}
+
+.tool-btn:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 1px;
+}
+
+.tool-svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* луна и солнце сменяют друг друга с поворотом */
+.theme-toggle .tool-svg {
+  position: absolute;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s;
+}
+
+.theme-toggle .icon-sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-moon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-sun {
+  opacity: 1;
+  transform: none;
+}
+
+/* на телефоне: поиск и тема рядом с гамбургером */
+@media (max-width: 800px) {
+  .header-tools {
+    order: 1;
+    margin-left: auto;
+  }
+
+  .nav-toggle {
+    order: 2;
+    margin-left: 4px;
+  }
+}
+
+/* окно поиска по сайту */
+body.search-lock {
+  overflow: hidden;
+}
+
+.site-search {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 12vh 16px 16px;
+  box-sizing: border-box;
+  visibility: hidden;
+  pointer-events: none;
+  transition: visibility 0s linear 0.25s;
+}
+
+.site-search.open {
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+
+.site-search-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 22, 18, 0.5);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.site-search.open .site-search-backdrop {
+  opacity: 1;
+}
+
+.site-search-dialog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(580px, 100%);
+  max-height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  color: var(--menu-text);
+  background-color: var(--menu-bg);
+  border: 2px solid var(--header);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  transform: translateY(-14px) scale(0.97);
+  transition: opacity 0.2s ease, transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.site-search.open .site-search-dialog {
+  opacity: 1;
+  transform: none;
+}
+
+.site-search-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.site-search-field .search-lens {
+  width: 22px;
+  height: 22px;
+  color: var(--header);
+}
+
+.site-search-field input {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 0;
+  font-family: inherit;
+  font-size: 17px;
+  color: var(--menu-text);
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.site-search-field input::placeholder {
+  color: var(--header);
+  opacity: 0.85;
+}
+
+.site-search kbd {
+  padding: 2px 7px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--header);
+  border: 1px solid var(--header);
+  border-radius: 5px;
+}
+
+.site-search-results {
+  flex: 1;
+  min-height: 0;
+  padding: 8px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.site-search-label {
+  padding: 6px 10px 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--header);
+}
+
+.site-search-empty {
+  padding: 24px 10px;
+  text-align: center;
+  color: var(--header);
+}
+
+.site-search-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--menu-text);
+  text-decoration: none;
+  border-radius: 8px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.site-search.open .site-search-item {
+  animation: search-item-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(min(var(--i), 8) * 25ms + 60ms);
+}
+
+@keyframes search-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.site-search-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.site-search-group {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--header);
+  border: 1px solid var(--header);
+  border-radius: 20px;
+}
+
+.site-search-arrow {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.15s, transform 0.2s;
+}
+
+.site-search-item.is-active {
+  color: var(--accent);
+  background-color: rgba(122, 140, 119, 0.18);
+}
+
+.site-search-item.is-active .site-search-arrow {
+  opacity: 1;
+  transform: none;
+}
+
+.site-search-hint {
+  display: flex;
+  gap: 18px;
+  padding: 10px 16px;
+  font-size: 12px;
+  color: var(--header);
+  border-top: 1px solid var(--line);
+}
+
+.site-search-hint kbd {
+  margin-right: 3px;
+  padding: 0 5px;
+  font-size: 11px;
+}
+
+@media (hover: none) {
+  .site-search-hint,
+  .site-search-field kbd {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-search-dialog,
+  .site-search-backdrop,
+  .theme-toggle .tool-svg {
+    transition-duration: 0.01s !important;
+  }
+
+  .site-search.open .site-search-item {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }

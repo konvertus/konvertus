@@ -48,6 +48,9 @@ konvertus/
 ├── numbers.js            number systems (BigInt)
 ├── menu.js               mobile menu and the "Tools" dropdown
 ├── select.js             custom dropdown lists (animation, currency icons and search)
+├── theme.js              dark theme (applied in <head>, saved in localStorage) and the toggle button
+├── search.js             site-wide search (Ctrl/⌘+K or "/")
+├── search-index.js       search index: add every new page here
 ├── icons/                currency icons (PNG, 128×128, transparent background)
 ├── converters/           converter pages (Russian version)
 │   ├── meters-feet.html, miles-km.html, inches-cm.html
