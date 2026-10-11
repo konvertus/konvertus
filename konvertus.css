@@ -9,7 +9,7 @@
   --ink: #000;
   --input-bg: #fff;
   --line: rgba(0, 0, 0, 0.08);
-  --konvertus-css: 7; /* версия стилей: JS проверяет её и не рисует новые элементы, если CSS в кэше устарел */
+  --konvertus-css: 8; /* версия стилей: JS проверяет её и не рисует новые элементы, если CSS в кэше устарел */
 }
 
 /* тёмная тема (переключатель в шапке, см. theme.js) */
@@ -1870,4 +1870,50 @@ body.search-lock {
 
 body.search-lock .search-toggle {
   background-color: rgba(255, 255, 255, 0.18);
+}
+
+
+/* ===== Кнопка смены и поля ввода ===== */
+
+/* стрелки на кнопке «поменять местами» каждый раз переворачиваются на 180° (угол задаёт fields.js) */
+.swap-btn span {
+  display: inline-block;
+  transform: rotate(calc(90deg + var(--turn, 0deg)));
+  transition: transform 0.5s cubic-bezier(0.3, 1.35, 0.5, 1);
+}
+
+.swap-btn:active {
+  transform: scale(0.92);
+}
+
+/* поле ввода с кнопкой «±» (кнопка видна только на телефоне, на компьютере минус набирается с клавиатуры) */
+.input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.input-row input {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.sign-btn {
+  display: none;
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .sign-btn {
+    display: flex;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swap-btn span {
+    transition-duration: 0.01s !important;
+  }
 }

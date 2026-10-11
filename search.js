@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const t = (ru, en) => (EN ? en : ru);
 
     // если подтянулся старый кэшированный CSS, поиск не рисуем, чтобы не ломать страницу
-    if (getComputedStyle(root).getPropertyValue("--konvertus-css").trim() !== "7") return;
+    if (getComputedStyle(root).getPropertyValue("--konvertus-css").trim() !== "8") return;
 
     const DATA = (window.KONVERTUS_SEARCH || []).filter((e) => e.l === (EN ? "en" : "ru"));
     if (!DATA.length) return;

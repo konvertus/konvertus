@@ -56,7 +56,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // клавиатура на телефоне: для двоичной и десятичной систем хватает цифр, для шестнадцатеричной нужны буквы
+    function updateKeyboards() {
+        const mode = (select) => (Number(select.value) <= 10 ? "numeric" : "text");
+        if (input) input.inputMode = mode(selectTop);
+        if (output) output.inputMode = mode(selectBottom);
+    }
+
     function update() {
+        updateKeyboards();
         if (title) {
             const first = selectTop.options[selectTop.selectedIndex].textContent;
             const second = selectBottom.options[selectBottom.selectedIndex].dataset.short;

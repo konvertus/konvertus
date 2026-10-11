@@ -48,6 +48,7 @@ konvertus/
 ├── numbers.js            number systems (BigInt)
 ├── menu.js               mobile menu and the "Tools" dropdown
 ├── select.js             custom dropdown lists (animation, currency icons and search)
+├── fields.js             swap-button flip animation and the ± button on phones (temperature, number systems)
 ├── theme.js              dark theme (applied in <head>, saved in localStorage) and the toggle button
 ├── search.js             site-wide search (Ctrl/⌘+K or "/")
 ├── search-index.js       search index: add every new page here
