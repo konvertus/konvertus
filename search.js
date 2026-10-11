@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const t = (ru, en) => (EN ? en : ru);
 
     // если подтянулся старый кэшированный CSS, поиск не рисуем, чтобы не ломать страницу
-    if (getComputedStyle(root).getPropertyValue("--konvertus-css").trim() !== "5") return;
+    if (getComputedStyle(root).getPropertyValue("--konvertus-css").trim() !== "7") return;
 
     const DATA = (window.KONVERTUS_SEARCH || []).filter((e) => e.l === (EN ? "en" : "ru"));
     if (!DATA.length) return;
@@ -153,12 +153,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     let opener = null;
+    let searchButton = null;
+
+    // окно «вырастает» из кнопки с лупой: считаем, куда его нужно сдвинуть и насколько уменьшить в закрытом состоянии
+    function placeFromButton() {
+        const rect = searchButton?.getBoundingClientRect();
+        if (!rect || !rect.width) {
+            dialog.style.removeProperty("--tx");
+            dialog.style.removeProperty("--ty");
+            dialog.style.removeProperty("--s");
+            return;
+        }
+        // offsetLeft/offsetTop не зависят от текущего transform
+        const cx = dialog.offsetLeft + dialog.offsetWidth / 2;
+        const cy = dialog.offsetTop + dialog.offsetHeight / 2;
+        dialog.style.setProperty("--tx", rect.left + rect.width / 2 - cx + "px");
+        dialog.style.setProperty("--ty", rect.top + rect.height / 2 - cy + "px");
+        dialog.style.setProperty("--s", Math.max(0.05, rect.width / dialog.offsetWidth).toFixed(3));
+    }
 
     function open() {
         if (wrap.classList.contains("open")) return;
-        opener = document.activeElement;
+        opener = document.activeElement && document.activeElement !== document.body ? document.activeElement : searchButton;
         input.value = "";
         render();
+        // ставим окно на место кнопки без анимации, фиксируем это и только потом запускаем рост
+        dialog.style.transition = "none";
+        placeFromButton();
+        void dialog.offsetWidth;
+        dialog.style.transition = "";
         wrap.classList.add("open");
         document.body.classList.add("search-lock");
         // небольшая задержка, чтобы фокус не мешал началу анимации
@@ -167,6 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function close() {
         if (!wrap.classList.contains("open")) return;
+        placeFromButton();
         wrap.classList.remove("open");
         document.body.classList.remove("search-lock");
         input.blur();
@@ -211,6 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.append(svg("icon-search", MAGNIFIER));
         btn.addEventListener("click", open);
         tools.prepend(btn);
+        searchButton = btn;
     }
 
     // горячие клавиши: Ctrl/⌘ + K и «/» (когда фокус не в поле ввода)

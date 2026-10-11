@@ -41,7 +41,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
         // если подтянулся старый кэшированный CSS, кнопку не рисуем, чтобы не ломать шапку
-        if (getComputedStyle(root).getPropertyValue("--konvertus-css").trim() !== "5") return;
+        if (getComputedStyle(root).getPropertyValue("--konvertus-css").trim() !== "7") return;
         const tools = window.konvertusTools();
         if (!tools) return;
 
