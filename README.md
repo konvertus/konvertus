@@ -52,6 +52,7 @@ konvertus/
 ├── theme.js              dark theme (applied in <head>, saved in localStorage) and the toggle button
 ├── search.js             site-wide search (Ctrl/⌘+K or "/")
 ├── search-index.js       search index: add every new page here
+├── favicon.ico, favicon.svg, favicon-96x96.png, apple-touch-icon.png, site.webmanifest, web-app-manifest-*.png   site icon (made with realfavicongenerator.net)
 ├── icons/                currency icons (PNG, 128×128, transparent background)
 │   └── categories/       category icons (also embedded into konvertus.css as masks, so they work without a server)
 ├── converters/           converter pages (Russian version)

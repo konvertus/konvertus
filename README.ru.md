@@ -52,6 +52,7 @@ konvertus/
 ├── theme.js              тёмная тема (применяется в <head>, выбор хранится в localStorage) и кнопка-переключатель
 ├── search.js             поиск по всему сайту (Ctrl/⌘+K или «/»)
 ├── search-index.js       индекс поиска: сюда добавляется каждая новая страница
+├── favicon.*, apple-touch-icon.png, site.webmanifest   иконка сайта (сделана в realfavicongenerator.net)
 ├── icons/                иконки валют (PNG, 128×128, прозрачный фон)
 │   └── categories/       значки категорий (дополнительно вшиты в konvertus.css как маски, чтобы работали без сервера)
 ├── converters/           страницы конвертеров (русская версия)
