@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function show(text, ok) {
+        output.classList.remove("is-invalid");
         output.value = text;
         valid = ok;
     }
@@ -71,6 +72,38 @@ document.addEventListener("DOMContentLoaded", () => {
     swap?.addEventListener("click", () => {
         [selectTop.value, selectBottom.value] = [selectBottom.value, selectTop.value];
         update();
+    });
+
+    // Поле результата можно редактировать: ввод в нём пересчитывает верхнее поле (в обратную сторону).
+    output?.addEventListener("input", () => {
+        const text = output.value;
+        output.classList.remove("is-invalid");
+
+        if (!text.trim()) {
+            input.value = "";
+            valid = false;
+            return;
+        }
+        if (text.length > MAX_LENGTH) {
+            output.classList.add("is-invalid");
+            valid = false;
+            return;
+        }
+
+        try {
+            const value = parse(text, Number(selectBottom.value));
+            if (value === null) return; // пока набран только «-»
+            input.value = value.toString(Number(selectTop.value)).toUpperCase();
+            valid = true;
+        } catch {
+            output.classList.add("is-invalid");
+            valid = false;
+        }
+    });
+
+    // если в поле сообщение об ошибке, при клике выделяем его, чтобы печать заменила текст
+    output?.addEventListener("focus", () => {
+        if (!valid && output.value) output.select();
     });
 
     const copy = document.getElementById("copy");

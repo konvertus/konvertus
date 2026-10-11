@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     function calculate() {
+        output.classList.remove("is-invalid");
         const val = parseFloat(input.value);
         if (isNaN(val)) {
             output.value = "";
@@ -61,6 +62,38 @@ document.addEventListener("DOMContentLoaded", () => {
     swap?.addEventListener("click", () => {
         [selectTop.value, selectBottom.value] = [selectBottom.value, selectTop.value];
         update();
+    });
+
+    
+    // Поле результата можно редактировать: ввод в нём пересчитывает верхнее поле.
+    // Разбор числа, которое человек печатает: пустая строка, «недописанное» число («-», «1.», «2e») или готовое число.
+    function parseTyped(text) {
+        const raw = text.trim().replace(/\s/g, "").replace(",", ".");
+        if (raw === "") return { empty: true };
+        if (/^[-+]?\.?$|^[-+]?\d*\.?\d*e[-+]?$/i.test(raw)) return { partial: true };
+        const value = Number(raw);
+        return Number.isFinite(value) ? { value } : { invalid: true };
+    }
+
+    // если в поле сообщение («Нет курса» и т.п.), при клике выделяем его, чтобы печать заменила текст
+    output?.addEventListener("focus", () => {
+        if (output.value && isNaN(Number(output.value.replace(",", ".")))) output.select();
+    });
+
+    output?.addEventListener("input", () => {
+        const p = parseTyped(output.value);
+        output.classList.toggle("is-invalid", !!p.invalid);
+        if (p.empty) input.value = "";
+        if (p.value === undefined) return;
+
+        const celsius = toC[selectBottom.value](p.value);
+        // ниже абсолютного нуля температуры не бывает: подсвечиваем поле и не трогаем верхнее
+        if (celsius < -273.15 - 1e-9) {
+            output.classList.add("is-invalid");
+            input.value = "";
+            return;
+        }
+        input.value = Number(fromC[selectTop.value](celsius).toFixed(6));
     });
 
     const copy = document.getElementById("copy");

@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const t = (ru, en) => (EN ? en : ru);
 
     // если подтянулся старый кэшированный CSS, поиск не рисуем, чтобы не ломать страницу
-    if (getComputedStyle(root).getPropertyValue("--konvertus-css").trim() !== "4") return;
+    if (getComputedStyle(root).getPropertyValue("--konvertus-css").trim() !== "5") return;
 
     const DATA = (window.KONVERTUS_SEARCH || []).filter((e) => e.l === (EN ? "en" : "ru"));
     if (!DATA.length) return;
@@ -136,6 +136,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const group = document.createElement("span");
             group.className = "site-search-group";
             group.textContent = e.g;
+            if (e.c) {
+                const ic = document.createElement("span");
+                ic.className = "cat-icon cat-" + e.c;
+                ic.setAttribute("aria-hidden", "true");
+                a.append(ic);
+            }
             a.append(title, group, svg("site-search-arrow", ARROW));
             a.addEventListener("pointermove", () => {
                 if (active !== i) setActive(i, false);

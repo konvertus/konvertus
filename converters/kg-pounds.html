@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#7a8c77">
-    <script src="../theme.js?v=4"></script>
-    <link rel="stylesheet" href="../konvertus.css?v=4">
+    <script src="../theme.js?v=5"></script>
+    <link rel="stylesheet" href="../konvertus.css?v=5">
 
     <!-- Шрифты -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,33 +37,33 @@
 
                     <div class="dropdown-content">
                         <div class="column">
-                            <h3>Длина</h3>
+                            <h3><span class="cat-icon cat-length" aria-hidden="true"></span>Длина</h3>
                             <a href="meters-feet.html">Метры в футы</a>
                             <a href="miles-km.html">Мили в километры</a>
                             <a href="inches-cm.html">Дюймы в сантиметры</a>
                         </div>
                         <div class="column">
-                            <h3>Вес</h3>
+                            <h3><span class="cat-icon cat-mass" aria-hidden="true"></span>Вес</h3>
                             <a href="#">Килограммы в фунты</a>
                             <a href="#">Граммы в унции</a>
                         </div>
                         <div class="column">
-                            <h3>Температура</h3>
+                            <h3><span class="cat-icon cat-temperature" aria-hidden="true"></span>Температура</h3>
                             <a href="celsius-fahrenheit.html">Цельсий в Фаренгейт</a>
                             <a href="celsius-kelvin.html">Цельсий в Кельвин</a>
                         </div>
                         <div class="column">
-                            <h3>Валюты</h3>
+                            <h3><span class="cat-icon cat-currency" aria-hidden="true"></span>Валюты</h3>
                             <a href="rub-usd.html">Рубли в доллары</a>
                             <a href="eur-rub.html">Евро в рубли</a>
                         </div>
                         <div class="column">
-                            <h3>Данные</h3>
+                            <h3><span class="cat-icon cat-data" aria-hidden="true"></span>Данные</h3>
                             <a href="mb-gb.html">Мегабайты в гигабайты</a>
                             <a href="mbit-mb.html">Мегабиты в мегабайты</a>
                         </div>
                         <div class="column">
-                            <h3>Системы счисления</h3>
+                            <h3><span class="cat-icon cat-binary" aria-hidden="true"></span>Системы счисления</h3>
                             <a href="bin-dec.html">Двоичная в десятичную</a>
                             <a href="dec-hex.html">Десятичная в шестнадцатеричную</a>
                         </div>
@@ -82,6 +82,7 @@
         <main>
             <section class="converter">
                 <h1 id="title">Килограммы в фунты</h1>
+                <div class="cat-badge" aria-hidden="true"><span><span class="cat-icon cat-mass" aria-hidden="true"></span></span></div>
 
                 <div class="converter-box">
                     <select id="select-top">
@@ -117,7 +118,7 @@
                         <option value="16.3804964">Пуды</option>
                     </select>
                     <div class="output-row">
-                        <input type="text" id="output" placeholder="Результат" readonly tabindex="-1">
+                        <input type="text" id="output" placeholder="Результат" inputmode="decimal" autocomplete="off">
                         <button type="button" id="copy" class="copy-btn" aria-label="Скопировать результат">
                             <span class="material-symbols-outlined">content_copy</span>
                         </button>
@@ -200,10 +201,10 @@
             </div>
             <p>© 2026 Конвертус</p>
         </footer>
-        <script src="../select.js?v=4"></script>
-        <script src="../converter.js?v=4"></script>
-        <script src="../search-index.js?v=4"></script>
-        <script src="../search.js?v=4"></script>
-        <script src="../menu.js?v=4"></script>
+        <script src="../select.js?v=5"></script>
+        <script src="../converter.js?v=5"></script>
+        <script src="../search-index.js?v=5"></script>
+        <script src="../search.js?v=5"></script>
+        <script src="../menu.js?v=5"></script>
 </body>
 </html>

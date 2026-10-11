@@ -52,6 +52,7 @@ konvertus/
 ├── search.js             поиск по всему сайту (Ctrl/⌘+K или «/»)
 ├── search-index.js       индекс поиска: сюда добавляется каждая новая страница
 ├── icons/                иконки валют (PNG, 128×128, прозрачный фон)
+│   └── categories/       значки категорий (дополнительно вшиты в konvertus.css как маски, чтобы работали без сервера)
 ├── converters/           страницы конвертеров (русская версия)
 │   ├── meters-feet.html, miles-km.html, inches-cm.html
 │   ├── kg-pounds.html, grams-ounces.html

@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#7a8c77">
-    <script src="../../theme.js?v=4"></script>
-    <link rel="stylesheet" href="../../konvertus.css?v=4">
+    <script src="../../theme.js?v=5"></script>
+    <link rel="stylesheet" href="../../konvertus.css?v=5">
 
     <!-- Шрифты -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,33 +37,33 @@
 
                     <div class="dropdown-content">
                         <div class="column">
-                            <h3>Length</h3>
+                            <h3><span class="cat-icon cat-length" aria-hidden="true"></span>Length</h3>
                             <a href="meters-feet.html">Meters to feet</a>
                             <a href="miles-km.html">Miles to kilometers</a>
                             <a href="inches-cm.html">Inches to centimeters</a>
                         </div>
                         <div class="column">
-                            <h3>Weight</h3>
+                            <h3><span class="cat-icon cat-mass" aria-hidden="true"></span>Weight</h3>
                             <a href="kg-pounds.html">Kilograms to pounds</a>
                             <a href="grams-ounces.html">Grams to ounces</a>
                         </div>
                         <div class="column">
-                            <h3>Temperature</h3>
+                            <h3><span class="cat-icon cat-temperature" aria-hidden="true"></span>Temperature</h3>
                             <a href="celsius-fahrenheit.html">Celsius to Fahrenheit</a>
                             <a href="celsius-kelvin.html">Celsius to Kelvin</a>
                         </div>
                         <div class="column">
-                            <h3>Currencies</h3>
+                            <h3><span class="cat-icon cat-currency" aria-hidden="true"></span>Currencies</h3>
                             <a href="rub-usd.html">Rubles to dollars</a>
                             <a href="eur-rub.html">Euro to rubles</a>
                         </div>
                         <div class="column">
-                            <h3>Data</h3>
+                            <h3><span class="cat-icon cat-data" aria-hidden="true"></span>Data</h3>
                             <a href="mb-gb.html">Megabytes to gigabytes</a>
                             <a href="mbit-mb.html">Megabits to megabytes</a>
                         </div>
                         <div class="column">
-                            <h3>Number systems</h3>
+                            <h3><span class="cat-icon cat-binary" aria-hidden="true"></span>Number systems</h3>
                             <a href="bin-dec.html">Binary to decimal</a>
                             <a href="dec-hex.html">Decimal to hexadecimal</a>
                         </div>
@@ -82,6 +82,7 @@
         <main>
             <section class="converter">
                 <h1 id="title">Binary to decimal</h1>
+                <div class="cat-badge" aria-hidden="true"><span><span class="cat-icon cat-binary" aria-hidden="true"></span></span></div>
 
                 <div class="converter-box">
                     <select id="select-top">
@@ -103,7 +104,7 @@
                         <option value="16" data-short="hexadecimal">Hexadecimal</option>
                     </select>
                     <div class="output-row">
-                        <input type="text" id="output" placeholder="Result" readonly tabindex="-1">
+                        <input type="text" id="output" placeholder="Result" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
                         <button type="button" id="copy" class="copy-btn" aria-label="Copy result">
                             <span class="material-symbols-outlined">content_copy</span>
                         </button>
@@ -186,10 +187,10 @@
             </div>
             <p>© 2026 Konvertus</p>
         </footer>
-        <script src="../../select.js?v=4"></script>
-        <script src="../../numbers.js?v=4"></script>
-        <script src="../../search-index.js?v=4"></script>
-        <script src="../../search.js?v=4"></script>
-        <script src="../../menu.js?v=4"></script>
+        <script src="../../select.js?v=5"></script>
+        <script src="../../numbers.js?v=5"></script>
+        <script src="../../search-index.js?v=5"></script>
+        <script src="../../search.js?v=5"></script>
+        <script src="../../menu.js?v=5"></script>
 </body>
 </html>

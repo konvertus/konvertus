@@ -7,7 +7,7 @@ const SELECT_ICON_BASE = new URL("icons/", document.currentScript.src).href;
 
 document.addEventListener("DOMContentLoaded", () => {
     // если подтянулся старый кэшированный CSS, оставляем обычные списки: так страница не ломается
-    if (getComputedStyle(document.documentElement).getPropertyValue("--konvertus-css").trim() !== "4") {
+    if (getComputedStyle(document.documentElement).getPropertyValue("--konvertus-css").trim() !== "5") {
         console.warn("konvertus.css устарел (кэш браузера): кастомные списки отключены, обновите страницу без кэша");
         return;
     }
