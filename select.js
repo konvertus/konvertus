@@ -1,12 +1,6 @@
-// Кастомные выпадающие списки вместо стандартных <select>.
-// Работает поверх обычного <select>: он остаётся в DOM (скрытый), поэтому converter.js, currency.js,
-// temperature.js и numbers.js ничего не замечают: читают select.value и слушают событие "change".
-
-// папка с иконками лежит рядом со скриптом, путь верный и для русской, и для английской версии
 const SELECT_ICON_BASE = new URL("icons/", document.currentScript.src).href;
 
 document.addEventListener("DOMContentLoaded", () => {
-    // если подтянулся старый кэшированный CSS, оставляем обычные списки: так страница не ломается
     if (getComputedStyle(document.documentElement).getPropertyValue("--konvertus-css").trim() !== "8") {
         console.warn("konvertus.css устарел (кэш браузера): кастомные списки отключены, обновите страницу без кэша");
         return;
@@ -16,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const t = (ru, en) => (EN ? en : ru);
     const NS = "http://www.w3.org/2000/svg";
 
-    // значки валют (те же файлы, что и на табло курсов)
     const CURRENCY_ICONS = {
         RUB: "ruble.png",
         USD: "dollar.png",
@@ -31,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
         AED: "dirham.png"
     };
 
-    // на страницах валют есть табло курсов — по нему понимаем, что списки с валютами
     const isCurrencyPage = !!document.getElementById("rates-board");
 
     const canHover = window.matchMedia("(hover: hover)").matches;
@@ -78,7 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const root = document.createElement("div");
         root.className = "cselect" + (currency ? " cselect-currency" : "");
 
-        // кнопка, которую видно в закрытом состоянии
         const trigger = document.createElement("button");
         trigger.type = "button";
         trigger.className = "cselect-trigger";
@@ -97,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (currency) trigger.append(triggerCode);
         trigger.append(chevron());
 
-        // выпадающая панель (её и анимируем)
         const panel = document.createElement("div");
         panel.className = "cselect-panel";
 
@@ -158,7 +148,6 @@ document.addEventListener("DOMContentLoaded", () => {
         panel.append(list);
         root.append(trigger, panel);
 
-        // прячем настоящий select, но оставляем в DOM
         select.classList.add("cselect-native");
         select.tabIndex = -1;
         select.setAttribute("aria-hidden", "true");
@@ -183,7 +172,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (scroll) li.scrollIntoView({ block: "nearest" });
         }
 
-        // перерисовываем кнопку и отметки по текущему значению select
         function sync() {
             const opt = select.options[select.selectedIndex];
             if (!opt) return;
@@ -206,7 +194,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (search) search.value = "";
             filter("");
 
-            // если снизу не хватает места, а сверху больше, открываем вверх
             root.classList.remove("up");
             const rect = trigger.getBoundingClientRect();
             const height = Math.min(panel.scrollHeight, 340);
@@ -221,7 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
             setActive(selected || visible()[0], false);
             if (selected) list.scrollTop = Math.max(0, selected.offsetTop - list.clientHeight / 2 + selected.offsetHeight / 2);
 
-            // на телефоне поиск не фокусируем, чтобы не выскакивала клавиатура
             if (canHover) setTimeout(() => search.focus({ preventScroll: true }), 0);
         }
 
@@ -278,7 +264,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        // клавиатура: работает и с кнопки, и из поля поиска
         root.addEventListener("keydown", (e) => {
             const isOpen = root.classList.contains("open");
 
@@ -319,7 +304,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     break;
                 default:
                     if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey && e.target === trigger) {
-                        // печать на закрытой кнопке открывает список и сразу ищет
                         e.preventDefault();
                         open();
                         search.value = e.key;
@@ -329,8 +313,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // swap-кнопка в скриптах конвертеров меняет select.value напрямую,
-        // поэтому подхватываем присваивание и обновляем вид
         const nativeValue = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, "value");
         Object.defineProperty(select, "value", {
             configurable: true,
@@ -340,7 +322,6 @@ document.addEventListener("DOMContentLoaded", () => {
             set(v) {
                 nativeValue.set.call(this, v);
                 sync();
-                // небольшой «щелчок» на кнопке, чтобы смена была заметна
                 trigger.classList.remove("pop");
                 void trigger.offsetWidth;
                 trigger.classList.add("pop");
@@ -356,7 +337,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelectorAll(".converter-box select").forEach(build);
 
-    // клик или тап вне списка закрывает его
     document.addEventListener("pointerdown", (e) => {
         document.querySelectorAll(".cselect.open").forEach((root) => {
             if (!root.contains(e.target)) root.querySelector(".cselect-trigger").click();

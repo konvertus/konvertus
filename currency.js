@@ -1,4 +1,3 @@
-// папка с иконками лежит рядом со скриптом, поэтому путь верный и для русской, и для английской версии
 const ICON_BASE = new URL("icons/", document.currentScript.src).href;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -21,13 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
         ["KZT", "Казахстанский тенге", "Kazakhstani Tenge"]
     ];
 
-    // если для валюты не будет иконки, показываем её код в таком же кружке
     const ICONS = {
         RUB: "ruble.png",
         USD: "dollar.png",
         EUR: "euro.png",
         CNY: "yuan.png",
-        JPY: "yuan.png", // у иены и юаня знак один и тот же: ¥
+        JPY: "yuan.png",
         GBP: "pound.png",
         CHF: "franc.png",
         TRY: "lira.png",
@@ -47,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const status = document.getElementById("rates-status");
     const board = document.getElementById("rates-board");
 
-    // rates[код] = { rub: сколько рублей за 1 единицу, prev: то же на прошлую дату, nominal, value }
     let rates = null;
 
     function buildRates(data) {
@@ -154,7 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
             changeEl.className = "rate-change " + dir;
             changeEl.textContent = `${arrow} ${diff > 0 ? "+" : ""}${EN ? diff.toFixed(2) : diff.toFixed(2).replace(".", ",")}%`;
 
-            // код валюты слева, значок справа
             const top = document.createElement("div");
             top.className = "rate-top";
             const icon = badge(code);
@@ -203,7 +199,6 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             localStorage.setItem(CACHE_KEY, JSON.stringify(data));
         } catch {
-            // хранилище недоступно — не страшно
         }
     }
 
@@ -247,9 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
         update();
     });
 
-    
-    // Поле результата можно редактировать: ввод в нём пересчитывает верхнее поле.
-    // Разбор числа, которое человек печатает: пустая строка, «недописанное» число («-», «1.», «2e») или готовое число.
+
     function parseTyped(text) {
         const raw = text.trim().replace(/\s/g, "").replace(",", ".");
         if (raw === "") return { empty: true };
@@ -258,7 +251,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return Number.isFinite(value) ? { value } : { invalid: true };
     }
 
-    // если в поле сообщение («Нет курса» и т.п.), при клике выделяем его, чтобы печать заменила текст
     output?.addEventListener("focus", () => {
         if (output.value && isNaN(Number(output.value.replace(",", ".")))) output.select();
     });

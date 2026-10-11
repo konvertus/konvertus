@@ -17,12 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
         setOpen(!header.classList.contains("nav-open"));
     });
 
-    // тап по ссылке закрывает меню (актуально для ссылок на ту же страницу, например #contacts)
     panel.addEventListener("click", (e) => {
         if (e.target.closest("a")) setOpen(false);
     });
 
-    // Выпадающее меню «Инструменты» на широких экранах: работает и по клику, и по тапу
     if (dropdown && dropbtn) {
         dropbtn.addEventListener("click", () => dropdown.classList.toggle("open"));
         document.addEventListener("click", (e) => {
@@ -37,7 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // если окно стало широким (поворот планшета), мобильное меню закрываем
     window.matchMedia("(min-width: 801px)").addEventListener("change", (e) => {
         if (e.matches) setOpen(false);
     });

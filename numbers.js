@@ -10,9 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const DIGITS = "0123456789abcdefghijklmnopqrstuvwxyz";
     const MAX_LENGTH = 200;
-    let valid = false; // можно ли копировать то, что сейчас в поле результата
+    let valid = false;
 
-    // Строка -> BigInt. BigInt не теряет точность на больших числах.
     function parse(text, base) {
         let s = text.trim().replace(/[\s_]/g, "").toLowerCase();
         let negative = false;
@@ -56,7 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // клавиатура на телефоне: для двоичной и десятичной систем хватает цифр, для шестнадцатеричной нужны буквы
     function updateKeyboards() {
         const mode = (select) => (Number(select.value) <= 10 ? "numeric" : "text");
         if (input) input.inputMode = mode(selectTop);
@@ -82,7 +80,6 @@ document.addEventListener("DOMContentLoaded", () => {
         update();
     });
 
-    // Поле результата можно редактировать: ввод в нём пересчитывает верхнее поле (в обратную сторону).
     output?.addEventListener("input", () => {
         const text = output.value;
         output.classList.remove("is-invalid");
@@ -100,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             const value = parse(text, Number(selectBottom.value));
-            if (value === null) return; // пока набран только «-»
+            if (value === null) return;
             input.value = value.toString(Number(selectTop.value)).toUpperCase();
             valid = true;
         } catch {
@@ -109,7 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // если в поле сообщение об ошибке, при клике выделяем его, чтобы печать заменила текст
     output?.addEventListener("focus", () => {
         if (!valid && output.value) output.select();
     });

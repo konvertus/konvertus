@@ -19,9 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const from = Number(selectTop.value);
         const to = Number(selectBottom.value);
 
-        // Расчет и округление без лишних преобразований
         const result = (val * from) / to;
-        output.value = Number(result.toFixed(8)); // Автоматически убирает лишние нули в конце
+        output.value = Number(result.toFixed(8));
     }
 
     function update() {
@@ -42,9 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
         update();
     });
 
-    
-    // Поле результата можно редактировать: ввод в нём пересчитывает верхнее поле.
-    // Разбор числа, которое человек печатает: пустая строка, «недописанное» число («-», «1.», «2e») или готовое число.
+
     function parseTyped(text) {
         const raw = text.trim().replace(/\s/g, "").replace(",", ".");
         if (raw === "") return { empty: true };
@@ -53,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return Number.isFinite(value) ? { value } : { invalid: true };
     }
 
-    // если в поле сообщение («Нет курса» и т.п.), при клике выделяем его, чтобы печать заменила текст
     output?.addEventListener("focus", () => {
         if (output.value && isNaN(Number(output.value.replace(",", ".")))) output.select();
     });
@@ -77,7 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             await navigator.clipboard.writeText(output.value);
         } catch {
-            // запасной вариант, если страница открыта без https/localhost
             output.select();
             document.execCommand("copy");
         }
@@ -86,7 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
         icon.textContent = "check";
         setTimeout(() => (icon.textContent = "content_copy"), 1500);
     });
-    
-    // Инициализация стартового заголовка при загрузке
+
     update();
 });

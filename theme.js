@@ -1,5 +1,3 @@
-// Тёмная тема. Подключается в <head>, чтобы тема применялась до отрисовки страницы (без «вспышки»).
-// Выбор хранится в localStorage; пока человек сам ничего не выбрал, следуем настройке системы.
 (() => {
     const KEY = "konvertus-theme";
     const root = document.documentElement;
@@ -25,7 +23,6 @@
         if (!stored()) apply(e.matches ? "dark" : "light");
     });
 
-    // общий контейнер кнопок в шапке (поиск и тема); search.js использует его же
     window.konvertusTools = () => {
         const header = document.querySelector(".header");
         if (!header) return null;
@@ -40,7 +37,6 @@
     };
 
     document.addEventListener("DOMContentLoaded", () => {
-        // если подтянулся старый кэшированный CSS, кнопку не рисуем, чтобы не ломать шапку
         if (getComputedStyle(root).getPropertyValue("--konvertus-css").trim() !== "8") return;
         const tools = window.konvertusTools();
         if (!tools) return;
@@ -80,13 +76,12 @@
         label();
 
         btn.addEventListener("click", () => {
-            // на время переключения плавно меняем цвета
             root.classList.add("theme-anim");
             const next = root.dataset.theme === "dark" ? "light" : "dark";
             apply(next);
             try {
                 localStorage.setItem(KEY, next);
-            } catch {}
+            } catch { }
             label();
             setTimeout(() => root.classList.remove("theme-anim"), 450);
         });

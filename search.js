@@ -1,5 +1,3 @@
-// Поиск по всему сайту: кнопка с лупой в шапке, окно поиска по Ctrl/⌘ + K или «/».
-// Данные берутся из search-index.js, туда же добавляются новые страницы.
 const SEARCH_ROOT = new URL("./", document.currentScript.src).href;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -7,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const EN = root.lang === "en";
     const t = (ru, en) => (EN ? en : ru);
 
-    // если подтянулся старый кэшированный CSS, поиск не рисуем, чтобы не ломать страницу
     if (getComputedStyle(root).getPropertyValue("--konvertus-css").trim() !== "8") return;
 
     const DATA = (window.KONVERTUS_SEARCH || []).filter((e) => e.l === (EN ? "en" : "ru"));
@@ -27,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const MAGNIFIER = "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4";
     const ARROW = "M5 12h14M13 6l6 6-6 6";
 
-    // нормализация и грубое «обрезание окончаний»: «рубли» и «рубль» находят друг друга
     const norm = (s) => s.toLowerCase().replaceAll("ё", "е");
     const stem = (w) => (w.length >= 5 ? w.slice(0, -2) : w);
     const startsWord = (text, q) => (" " + text).includes(" " + q);
@@ -43,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 for (const q of qs) {
                     if (startsWord(e.title, q)) score += e.title.startsWith(q) ? 12 : 10;
                     else if (startsWord(e.rest, q)) score += 3;
-                    else return null; // нужно совпадение по каждому слову запроса
+                    else return null;
                 }
                 return { e, score, i };
             })
@@ -155,7 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let opener = null;
     let searchButton = null;
 
-    // окно «вырастает» из кнопки с лупой: считаем, куда его нужно сдвинуть и насколько уменьшить в закрытом состоянии
     function placeFromButton() {
         const rect = searchButton?.getBoundingClientRect();
         if (!rect || !rect.width) {
@@ -164,7 +159,6 @@ document.addEventListener("DOMContentLoaded", () => {
             dialog.style.removeProperty("--s");
             return;
         }
-        // offsetLeft/offsetTop не зависят от текущего transform
         const cx = dialog.offsetLeft + dialog.offsetWidth / 2;
         const cy = dialog.offsetTop + dialog.offsetHeight / 2;
         dialog.style.setProperty("--tx", rect.left + rect.width / 2 - cx + "px");
@@ -177,14 +171,12 @@ document.addEventListener("DOMContentLoaded", () => {
         opener = document.activeElement && document.activeElement !== document.body ? document.activeElement : searchButton;
         input.value = "";
         render();
-        // ставим окно на место кнопки без анимации, фиксируем это и только потом запускаем рост
         dialog.style.transition = "none";
         placeFromButton();
         void dialog.offsetWidth;
         dialog.style.transition = "";
         wrap.classList.add("open");
         document.body.classList.add("search-lock");
-        // небольшая задержка, чтобы фокус не мешал началу анимации
         setTimeout(() => input.focus({ preventScroll: true }), 30);
     }
 
@@ -213,12 +205,11 @@ document.addEventListener("DOMContentLoaded", () => {
             e.stopPropagation();
             close();
         } else if (e.key === "Tab") {
-            e.preventDefault(); // фокус остаётся в окне, выбирать удобнее стрелками
+            e.preventDefault();
         }
     });
 
     wrap.querySelector(".site-search-backdrop").addEventListener("click", close);
-    // переход на ту же страницу (например, «Контакты») не перезагружает её, поэтому закрываем окно сами
     results.addEventListener("click", (e) => {
         if (e.target.closest("a")) setTimeout(close, 0);
     });
@@ -238,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
         searchButton = btn;
     }
 
-    // горячие клавиши: Ctrl/⌘ + K и «/» (когда фокус не в поле ввода)
+    // горячие клавиши: Ctrl/⌘ + K и «/»
     document.addEventListener("keydown", (e) => {
         const typing = e.target.closest?.("input, textarea, select, [contenteditable]");
         if ((e.key.toLowerCase() === "k" && (e.ctrlKey || e.metaKey)) || (e.key === "/" && !typing && !e.ctrlKey && !e.metaKey && !e.altKey)) {
