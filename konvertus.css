@@ -9,7 +9,7 @@
   --ink: #000;
   --input-bg: #fff;
   --line: rgba(0, 0, 0, 0.08);
-  --konvertus-css: 9;
+  --konvertus-css: 10;
 }
 
 /* тёмная тема */
@@ -2131,12 +2131,28 @@ body.search-lock .search-toggle {
     font-size: 14px;
   }
 
+  /* две равные колонки; minmax(0, 1fr) и min-width: 0 нужны, чтобы поля даты в Safari на iPhone
+     могли сжиматься и не выходили за рамки (у них своя минимальная ширина) */
+  .range-custom {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .range-custom label {
-    flex: 1 1 140px;
+    min-width: 0;
   }
 
   .range-custom input {
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 44px;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .range-custom .refresh-btn {
+    grid-column: 1 / -1;
   }
 
   .chart-stats {
@@ -2150,5 +2166,12 @@ body.search-lock .search-toggle {
 
   .chart-stat-value {
     font-size: 17px;
+  }
+}
+
+/* совсем узкие экраны: поля дат друг под другом, чтобы дата помещалась целиком */
+@media (max-width: 360px) {
+  .range-custom {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const EN = root.lang === "en";
     const t = (ru, en) => (EN ? en : ru);
 
-    if (getComputedStyle(root).getPropertyValue("--konvertus-css").trim() !== "9") return;
+    if (getComputedStyle(root).getPropertyValue("--konvertus-css").trim() !== "10") return;
 
     const DATA = (window.KONVERTUS_SEARCH || []).filter((e) => e.l === (EN ? "en" : "ru"));
     if (!DATA.length) return;

@@ -1,7 +1,7 @@
 const SELECT_ICON_BASE = new URL("icons/", document.currentScript.src).href;
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (getComputedStyle(document.documentElement).getPropertyValue("--konvertus-css").trim() !== "9") {
+    if (getComputedStyle(document.documentElement).getPropertyValue("--konvertus-css").trim() !== "10") {
         console.warn("konvertus.css устарел (кэш браузера): кастомные списки отключены, обновите страницу без кэша");
         return;
     }
