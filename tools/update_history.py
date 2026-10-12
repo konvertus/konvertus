@@ -32,7 +32,11 @@ CODES = ["USD", "EUR", "CNY", "GBP", "CHF", "JPY", "TRY", "KZT", "BYN", "AED"]
 YEARS = 5                      # столько лет хранится (график умеет «свой период» до 5 лет)
 KEEP_DAYS = YEARS * 366 + 7
 WORKERS = 6
-RETRIES = 4
+RETRIES = 3
+TIMEOUT = 20
+CHUNK = 100                    # после каждых стольких дней результат сохраняется в файл
+
+_warned = False
 
 
 def get_json(url: str):
@@ -40,7 +44,7 @@ def get_json(url: str):
     for attempt in range(RETRIES):
         try:
             request = urllib.request.Request(url, headers={"User-Agent": "konvertus-history-updater"})
-            with urllib.request.urlopen(request, timeout=30) as response:
+            with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
                 return json.loads(response.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             if e.code == 404:
@@ -48,6 +52,10 @@ def get_json(url: str):
             err = e
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as e:
             err = e
+        global _warned
+        if not _warned:
+            _warned = True
+            print(f"  нет ответа от cbr-xml-daily.ru ({err}), повторяем…", flush=True)
         time.sleep(1.5 * (attempt + 1))
     raise RuntimeError(f"не удалось загрузить {url}: {err}")
 
@@ -64,6 +72,19 @@ def pack(data: dict):
 def fetch_day(day: dt.date):
     data = get_json(f"{BASE}archive/{day:%Y}/{day:%m}/{day:%d}/daily_json.js")
     return pack(data) if data and data.get("Valute") else None
+
+
+def write(rates: dict, first: dt.date) -> str:
+    """Сохраняет файл. Возвращает 'same', если изменений нет, иначе 'written'."""
+    cutoff = first.isoformat()
+    kept = {d: r for d, r in rates.items() if d >= cutoff}
+    result = {"updated": max(kept), "codes": CODES, "rates": dict(sorted(kept.items()))}
+    text = json.dumps(result, ensure_ascii=False, separators=(",", ":"))
+    OUT.parent.mkdir(exist_ok=True)
+    if OUT.exists() and OUT.read_text(encoding="utf-8") == text:
+        return "same"
+    OUT.write_text(text, encoding="utf-8")
+    return "written"
 
 
 def main() -> int:
@@ -87,16 +108,22 @@ def main() -> int:
 
     days = [start + dt.timedelta(days=i) for i in range((end - start).days + 1)]
     days = [d for d in days if d.weekday() < 5]  # в выходные курсов нет
-    print(f"Нужно загрузить дней: {len(days)} ({start} … {end})")
+    print(f"Нужно загрузить дней: {len(days)} ({start} … {end}). Это может занять несколько минут…", flush=True)
 
     added = 0
+    total = len(days)
     with concurrent.futures.ThreadPoolExecutor(max_workers=WORKERS) as pool:
-        for result in pool.map(fetch_day, days):
-            if result:
-                date, row = result
-                if rates.get(date) != row:
-                    rates[date] = row
-                    added += 1
+        for i in range(0, total, CHUNK):
+            for result in pool.map(fetch_day, days[i:i + CHUNK]):
+                if result:
+                    date, row = result
+                    if rates.get(date) != row:
+                        rates[date] = row
+                        added += 1
+            done = min(i + CHUNK, total)
+            if rates:
+                write(rates, first)  # промежуточное сохранение: если прервать, продолжим с этого места
+            print(f"  загружено дней: {done} из {total}", flush=True)
 
     # свежий курс (может быть на более позднюю дату, чем есть в архиве)
     latest = get_json(BASE + "daily_json.js")
@@ -106,22 +133,16 @@ def main() -> int:
             rates[date] = row
             added += 1
 
-    # храним только нужный период
-    cutoff = first.isoformat()
-    rates = {d: r for d, r in rates.items() if d >= cutoff}
-
     if not rates:
         print("Не получили ни одного дня — файл не меняем.", file=sys.stderr)
         return 1
 
-    result = {"updated": max(rates), "codes": CODES, "rates": dict(sorted(rates.items()))}
-    text = json.dumps(result, ensure_ascii=False, separators=(",", ":"))
-    OUT.parent.mkdir(exist_ok=True)
-    if OUT.exists() and OUT.read_text(encoding="utf-8") == text:
+    status = write(rates, first)
+    size = OUT.stat().st_size // 1024
+    if status == "same" and not added:
         print("Изменений нет.")
-        return 0
-    OUT.write_text(text, encoding="utf-8")
-    print(f"Записано: {len(rates)} дней, новых или изменённых: {added}, размер {len(text) // 1024} КБ.")
+    else:
+        print(f"Готово: {len([d for d in rates if d >= first.isoformat()])} дней в файле, новых или изменённых: {added}, размер {size} КБ.")
     return 0
 
 
