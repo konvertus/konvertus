@@ -55,6 +55,9 @@ konvertus/
 ├── search-index.js       search index: add every new page here
 ├── favicon.ico, favicon.svg, favicon-96x96.png, apple-touch-icon.png, site.webmanifest, web-app-manifest-*.png   site icon (made with realfavicongenerator.net)
 ├── og-image.png          link preview image for social networks (1200×630)
+├── data/history.json     5 years of Bank of Russia rates (updated automatically)
+├── tools/                update_history.py (collects history), self_host_fonts.py (local font copies)
+├── .github/workflows/    update-rates.yml — daily history update
 ├── icons/                currency icons (PNG, 128×128, transparent background)
 │   └── categories/       category icons (also embedded into konvertus.css as masks, so they work without a server)
 ├── converters/           converter pages (Russian version)
@@ -91,7 +94,11 @@ The site will then be available at http://localhost:8000. An internet connection
 
 **Currencies.** The script requests `daily_json.js` from cbr-xml-daily.ru, works out the rate of one unit in rubles (taking into account that the yen and tenge are quoted per 100 units) and converts through the ruble. The last received rate is saved in `localStorage`: if there is no connection, the site shows it with a note.
 
-**Rate chart.** `rate-chart.js` takes history from the cbr-xml-daily.ru archive (`archive/YYYY/MM/DD/daily_json.js`, one file per day) and draws an SVG chart for the two currencies selected in the converter. To avoid hundreds of requests, long periods use selected dates (up to 48 points) and weekends are skipped. Loaded days are saved in `localStorage` (a past day's rate never changes), so switching periods again needs no requests.
+**Rate chart.** `rate-chart.js` draws an SVG chart for the two currencies selected in the converter. History comes from a single file, `data/history.json` (one request for any period). GitHub Actions (`.github/workflows/update-rates.yml`) refreshes it daily by running `tools/update_history.py`, which appends new days from the cbr-xml-daily.ru archive. If the file is missing, the chart works directly from the CBR archive (`archive/YYYY/MM/DD/daily_json.js`, one file per day): long periods use selected dates (up to 48 points) and loaded days are saved in `localStorage`.
+
+**First run.** After pushing the project to GitHub, open Actions → "Обновление истории курсов" → Run workflow to build the first `data/history.json`. After that it updates itself twice a day. Check that the site rebuilds after the bot's commit (Actions or Pages tab).
+
+**Local font copies.** To stop loading fonts from Google's servers, run `python3 tools/self_host_fonts.py` once (internet required): it downloads Montserrat and the icons into `fonts/` and switches every page to them. Afterwards only cbr-xml-daily.ru remains in the external services paragraph, so update that paragraph.
 
 **Number systems.** The number is parsed into a `BigInt`, so long values keep full precision. Only integers are supported; invalid characters produce a clear message.
 

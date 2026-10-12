@@ -1,5 +1,10 @@
 // График курса для пары валют из конвертера.
-// Данные: архив ЦБ РФ на cbr-xml-daily.ru (по одному файлу на день), без библиотек.
+// Данные: готовый файл data/history.json (его раз в день обновляет tools/update_history.py);
+// если файла нет, то архив ЦБ РФ на cbr-xml-daily.ru (по одному файлу на день). Без библиотек.
+const RATE_HISTORY_URL = document.currentScript
+    ? new URL("data/history.json", document.currentScript.src).href
+    : null;
+
 document.addEventListener("DOMContentLoaded", () => {
     const section = document.getElementById("rate-chart");
     const selectTop = document.getElementById("select-top");
@@ -16,7 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const RATES_CACHE_KEY = "konvertus-rates"; // кэш из currency.js
     const CODES = ["USD", "EUR", "CNY", "GBP", "CHF", "JPY", "TRY", "KZT", "BYN", "AED"];
     const MAX_POINTS = 48;       // не больше стольких дат на график
-    const PARALLEL = 6;          // одновременных запросов
+    const PARALLEL = 10;         // одновременных запросов
+    const DENSE_DAYS = 14;       // для периодов не длиннее: точка на каждый календарный день
     const MAX_CUSTOM_DAYS = 5 * 366;
     const MIN_DATE = "2000-01-01";
     const DAY = 86400000;
@@ -93,88 +99,214 @@ document.addEventListener("DOMContentLoaded", () => {
         history = {};
     }
 
+    // дни из data/history.json в localStorage не дублируем: файл и так кэшируется браузером
+    const snapKeys = new Set();
+
     function saveHistory() {
         try {
-            localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+            const own = {};
+            for (const [k, v] of Object.entries(history)) if (!snapKeys.has(k)) own[k] = v;
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(own));
         } catch {
             // хранилище переполнено или запрещено — график всё равно работает
         }
     }
 
-    // из ответа ЦБ берём только нужное: рублей за 1 единицу валюты
-    function pack(data) {
-        const r = { RUB: 1 };
-        for (const code of CODES) {
-            const v = data.Valute && data.Valute[code];
-            if (v && v.Nominal) r[code] = Number((v.Value / v.Nominal).toPrecision(8));
+    // готовая история одним файлом: { first, last } либо null, если файла нет или он не загрузился.
+    // Дни из файла подмешиваются в history; даты внутри его диапазона, которых в файле нет
+    // (выходные, праздники), помечаются как «курса не было», и по ним не делается ни одного запроса
+    let snap = null;
+    let snapJob = null;
+    function loadSnapshot() {
+        if (!snapJob) {
+            snapJob = (async () => {
+                if (!RATE_HISTORY_URL) return null;
+                try {
+                    const response = await fetch(RATE_HISTORY_URL, { cache: "no-cache" });
+                    if (!response.ok) throw new Error("HTTP " + response.status);
+                    const data = await response.json();
+                    const index = CODES.map((c) => data.codes.indexOf(c));
+                    const dates = Object.keys(data.rates).sort();
+                    if (dates.length < 2) return null;
+
+                    for (const date of dates) {
+                        const row = data.rates[date];
+                        const r = { RUB: 1 };
+                        CODES.forEach((c, i) => {
+                            const v = index[i] >= 0 ? row[index[i]] : null;
+                            if (v) r[c] = v;
+                        });
+                        if (history[date] === undefined || history[date] === 0) history[date] = { d: date, r };
+                        snapKeys.add(date);
+                    }
+                    const first = dates[0];
+                    const last = dates[dates.length - 1];
+                    for (let ms = toMs(first); ms <= toMs(last); ms += DAY) {
+                        const iso = toISO(ms);
+                        if (history[iso] === undefined) {
+                            history[iso] = 0;
+                            snapKeys.add(iso);
+                        }
+                    }
+                    return { first, last };
+                } catch {
+                    return null; // нет файла: работаем через архив ЦБ, как раньше
+                }
+            })();
         }
-        return { d: String(data.Date).slice(0, 10), r };
+        return snapJob;
     }
 
-    async function fetchDay(iso, signal) {
-        if (iso in history) return history[iso];
-        const [y, m, d] = iso.split("-");
-        const response = await fetch(`${BASE}archive/${y}/${m}/${d}/daily_json.js`, { signal });
-        if (response.status === 404) {
-            history[iso] = 0; // в этот день курса нет (праздник)
-            return 0;
+    // последняя дата из курса, который уже скачал currency.js (понадобится как подсказка до ответа сервера)
+    function cachedLatest() {
+        try {
+            const cached = JSON.parse(localStorage.getItem(RATES_CACHE_KEY));
+            return cached && cached.Date ? String(cached.Date).slice(0, 10) : null;
+        } catch {
+            return null;
         }
-        if (!response.ok) throw new Error("HTTP " + response.status);
-        const data = await response.json();
-        if (!data.Valute) throw new Error("Unexpected response");
-        history[iso] = pack(data);
-        return history[iso];
+    }
+
+    // рублей за 1 единицу валюты из одного набора значений ЦБ (Value или Previous)
+    function packRates(data, field) {
+        const r = { RUB: 1 };
+        let any = false;
+        for (const code of CODES) {
+            const v = data.Valute && data.Valute[code];
+            if (v && v.Nominal && v[field]) {
+                r[code] = Number((v[field] / v.Nominal).toPrecision(8));
+                any = true;
+            }
+        }
+        return any ? r : null;
+    }
+
+    // в каждом файле ЦБ есть курс на дату файла и предыдущий курс (с его датой PreviousDate):
+    // сохраняем оба, так один запрос даёт сразу две настоящие точки графика
+    function remember(data) {
+        const r = packRates(data, "Value");
+        if (!r) throw new Error("Unexpected response");
+        const entry = { d: String(data.Date).slice(0, 10), r };
+        const prevDate = data.PreviousDate && String(data.PreviousDate).slice(0, 10);
+        const prevRates = prevDate && packRates(data, "Previous");
+        if (prevRates && prevDate < entry.d) {
+            entry.p = prevDate;
+            if (history[prevDate] === undefined) history[prevDate] = { d: prevDate, r: prevRates };
+        }
+        return entry;
+    }
+
+    // даты, в которые курс точно не публиковался (между предыдущей и текущей датой файла ЦБ):
+    // такие дни не запрашиваем, чтобы не тратить запросы на заведомые 404
+    function nonPublished() {
+        const out = new Set();
+        for (const e of Object.values(history)) {
+            if (!e || !e.p) continue;
+            for (let ms = toMs(e.p) + DAY; ms < toMs(e.d); ms += DAY) out.add(toISO(ms));
+        }
+        return out;
+    }
+
+    // запросы не отменяем: даже если человек уже переключил период, скачанное попадёт в кэш и пригодится.
+    // Одинаковые запросы из разных запусков объединяются
+    const inflight = new Map();
+
+    function fetchDay(iso) {
+        if (iso in history) return Promise.resolve(history[iso]);
+        if (inflight.has(iso)) return inflight.get(iso);
+        const [y, m, d] = iso.split("-");
+        const job = (async () => {
+            const response = await fetch(`${BASE}archive/${y}/${m}/${d}/daily_json.js`);
+            if (response.status === 404) {
+                // курса на эту дату нет (выходной, праздник); сегодняшний день не запоминаем: файл ещё может появиться
+                if (iso < toISO(Date.now())) history[iso] = 0;
+                return 0;
+            }
+            if (!response.ok) throw new Error("HTTP " + response.status);
+            const data = await response.json();
+            if (!data.Valute) throw new Error("Unexpected response");
+            history[iso] = remember(data);
+            return history[iso];
+        })().finally(() => inflight.delete(iso));
+        inflight.set(iso, job);
+        return job;
     }
 
     // последняя доступная дата курса (ЦБ публикует курс на следующий рабочий день заранее)
     let latest = null;
-    async function getLatest(signal) {
-        if (latest) return latest;
-        try {
-            const response = await fetch(LATEST_URL, { signal });
-            if (!response.ok) throw new Error("HTTP " + response.status);
-            const data = await response.json();
-            if (!data.Valute) throw new Error("Unexpected response");
-            const entry = pack(data);
-            history[entry.d] = entry;
-            latest = entry.d;
-        } catch (e) {
-            if (e.name === "AbortError") throw e;
-            try {
-                const cached = JSON.parse(localStorage.getItem(RATES_CACHE_KEY));
-                if (cached && cached.Date) latest = String(cached.Date).slice(0, 10);
-            } catch {
-                // нет кэша
-            }
-            if (!latest) latest = toISO(weekdayBack(Date.now()));
+    let latestJob = null;
+    function getLatest() {
+        if (latest) return Promise.resolve(latest);
+        if (!latestJob) {
+            latestJob = (async () => {
+                try {
+                    // currency.js уже запросил тот же файл: ждём его ответ, а не качаем второй раз
+                    let data = null;
+                    try {
+                        data = await window.konvertusLatestPromise;
+                    } catch {
+                        data = null;
+                    }
+                    if (!data || !data.Valute) {
+                        const response = await fetch(LATEST_URL);
+                        if (!response.ok) throw new Error("HTTP " + response.status);
+                        data = await response.json();
+                    }
+                    if (!data.Valute) throw new Error("Unexpected response");
+                    const entry = remember(data);
+                    history[entry.d] = entry;
+                    saveHistory();
+                    latest = entry.d;
+                } catch {
+                    latest = cachedLatest() || toISO(weekdayBack(Date.now()));
+                }
+                toInput.max = fromInput.max = latest;
+                return latest;
+            })().finally(() => {
+                latestJob = null;
+            });
         }
-        toInput.max = fromInput.max = latest;
-        return latest;
+        return latestJob;
     }
 
     // ---------- какие даты нужно загрузить ----------
-    function planDates(startIso, endIso) {
+    function makePlan(startIso, endIso) {
         const start = toMs(startIso);
         const end = toMs(endIso);
         const days = Math.round((end - start) / DAY);
         const step = Math.max(1, Math.ceil(days / MAX_POINTS));
+        const skip = nonPublished();
         const set = new Set();
-        for (let ms = start; ms < end; ms += step * DAY) set.add(toISO(weekdayBack(ms)));
-        set.add(endIso);
-        return { dates: [...set].sort(), step };
+        const add = (ms) => {
+            const iso = toISO(weekdayBack(ms));
+            if (iso in history || !skip.has(iso)) set.add(iso);
+        };
+        // готовая история: каждый день из файла и небольшой «хвост» после него (несколько дней, на которые
+        // файл мог отстать от свежего курса). Остальное, например период длиннее файла, грузим выборочно
+        const snapFrom = snap ? toMs(snap.first) : Infinity;
+        const snapTo = snap ? toMs(snap.last) + 15 * DAY : -Infinity;
+        for (let ms = start; ms < end; ms += (ms >= snapFrom && ms < snapTo ? 1 : step) * DAY) add(ms);
+        add(end);
+        // dense: точка на каждый календарный день (только для коротких периодов)
+        return {
+            start: startIso,
+            end: endIso,
+            dates: [...set].sort(),
+            step: snap && start >= snapFrom ? 1 : step,
+            dense: days <= DENSE_DAYS,
+        };
     }
 
-    async function loadAll(dates, signal, onProgress) {
+    async function loadAll(dates, id, onProgress) {
         let next = 0;
         let done = 0;
         let failed = 0;
         const worker = async () => {
-            while (next < dates.length) {
+            while (next < dates.length && id === runId) {
                 const iso = dates[next++];
                 try {
-                    await fetchDay(iso, signal);
-                } catch (e) {
-                    if (e.name === "AbortError") throw e;
+                    await fetchDay(iso);
+                } catch {
                     failed++;
                 }
                 onProgress(++done, dates.length);
@@ -185,25 +317,48 @@ document.addEventListener("DOMContentLoaded", () => {
         return failed;
     }
 
-    function buildSeries(dates, from, to) {
-        const byDate = new Map();
-        for (const iso of dates) {
+    function buildSeries(plan, from, to) {
+        // всё, что известно за период: загруженные даты, их «предыдущие» значения и последняя дата
+        const found = new Map();
+        const add = (e) => {
+            if (e && !found.has(e.d)) found.set(e.d, e);
+        };
+        for (const iso of plan.dates) {
             const e = history[iso];
-            if (!e) continue;
+            add(e);
+            if (e && plan.step === 1 && e.p) add(history[e.p]);
+        }
+        add(history[plan.end]);
+
+        const low = toISO(weekdayBack(toMs(plan.start)));
+        const points = [];
+        for (const e of found.values()) {
             const a = e.r[from];
             const b = e.r[to];
-            if (!a || !b) continue;
-            byDate.set(e.d, a / b);
+            if (!a || !b || e.d > plan.end) continue;
+            if (!plan.dense && e.d < low) continue;
+            points.push({ d: e.d, ms: toMs(e.d), v: a / b });
         }
-        return [...byDate]
-            .sort(([x], [y]) => (x < y ? -1 : x > y ? 1 : 0))
-            .map(([d, v]) => ({ d, ms: toMs(d), v }));
+        points.sort((x, y) => x.ms - y.ms);
+        if (!plan.dense || !points.length) return points;
+
+        // короткий период: точка на каждый день. В выходные и праздники новый курс не публикуется,
+        // действует последний установленный, поэтому такие дни повторяют предыдущее значение
+        const filled = [];
+        const endMs = toMs(plan.end);
+        let i = 0;
+        for (let ms = Math.max(toMs(plan.start), points[0].ms); ms <= endMs; ms += DAY) {
+            while (i + 1 < points.length && points[i + 1].ms <= ms) i++;
+            const p = points[i];
+            filled.push(p.ms === ms ? p : { d: toISO(ms), ms, v: p.v, carried: true });
+        }
+        return filled;
     }
 
     // ---------- состояние ----------
     let range = "30";
     let runId = 0;
-    let controller = null;
+    let started = false;
     let current = null; // { series, from, to }
 
     function setStatus(text, isError = false) {
@@ -240,11 +395,41 @@ document.addEventListener("DOMContentLoaded", () => {
         return { start: from, end: to };
     }
 
+    // собирает график из того, что есть в кэше; false, если рисовать нечего
+    function present(plan, from, to, failed, quiet) {
+        const series = buildSeries(plan, from, to);
+        if (series.length < 2) {
+            if (quiet) return false;
+            box.classList.remove("loading");
+            clearChart();
+            setStatus(
+                failed
+                    ? t("Не удалось загрузить данные. Проверьте интернет и нажмите на период ещё раз.", "Couldn’t load the data. Check your connection and press the period again.")
+                    : t("Для этой пары нет данных за выбранный период.", "There is no data for this pair in the chosen period."),
+                true
+            );
+            return false;
+        }
+
+        box.classList.remove("loading");
+        current = { series, from, to };
+        render();
+
+        const notes = [t("Источник: ЦБ РФ.", "Source: Bank of Russia.")];
+        if (plan.step > 1) notes.push(t("Для быстрой загрузки показаны выборочные даты.", "Selected dates are shown to keep loading fast."));
+        if (series.some((p) => p.carried)) notes.push(t("В выходные и праздники действует прежний курс.", "On weekends and holidays the previous rate stays in effect."));
+        if (failed) notes.push(t("Часть дат загрузить не удалось.", "Some dates couldn’t be loaded."));
+        setStatus(notes.join(" "));
+        return true;
+    }
+
+    function presetPlan(endIso) {
+        return makePlan(toISO(toMs(endIso) - Number(range) * DAY), endIso);
+    }
+
     async function run() {
+        started = true;
         const id = ++runId;
-        if (controller) controller.abort();
-        controller = new AbortController();
-        const { signal } = controller;
 
         const from = selectTop.value;
         const to = selectBottom.value;
@@ -259,48 +444,52 @@ document.addEventListener("DOMContentLoaded", () => {
 
         box.classList.add("loading");
         setStatus(t("Загружаем данные…", "Loading data…"));
+        const progress = (done, total) => {
+            if (id === runId && total > 6 && box.classList.contains("loading")) setStatus(t(`Загружаем данные… ${done} из ${total}`, `Loading data… ${done} of ${total}`));
+        };
 
         try {
-            const latestIso = await getLatest(signal);
+            let plan;
+            let failed = 0;
+
+            snap = await loadSnapshot();
             if (id !== runId) return;
 
-            const r = resolveRange(latestIso);
-            if (r.error) {
-                box.classList.remove("loading");
-                clearChart();
-                setStatus(r.error, true);
-                return;
-            }
+            if (range === "custom") {
+                const latestIso = await getLatest();
+                if (id !== runId) return;
 
-            const { dates, step } = planDates(r.start, r.end);
-            const failed = await loadAll(dates, signal, (done, total) => {
-                if (id === runId && total > 6) setStatus(t(`Загружаем данные… ${done} из ${total}`, `Loading data… ${done} of ${total}`));
-            });
+                const r = resolveRange(latestIso);
+                if (r.error) {
+                    box.classList.remove("loading");
+                    clearChart();
+                    setStatus(r.error, true);
+                    return;
+                }
+                plan = makePlan(r.start, r.end);
+                failed = await loadAll(plan.dates, id, progress);
+            } else {
+                // не ждём ответа о последней дате: начинаем грузить сразу по подсказке (кэш или сегодняшняя дата).
+                // Когда придёт точная дата, догружаем недостающее, обычно ничего
+                const hint = latest || cachedLatest() || toISO(weekdayBack(Date.now()));
+                const first = presetPlan(hint);
+
+                // если всё нужное уже сохранено, график появляется мгновенно, пока идёт проверка новой даты
+                if (first.dates.every((d) => d in history)) present(first, from, to, 0, true);
+
+                let latestIso;
+                [failed, latestIso] = await Promise.all([loadAll(first.dates, id, progress), getLatest()]);
+                if (id !== runId) return;
+
+                plan = latestIso === hint ? first : presetPlan(latestIso);
+                const missing = plan.dates.filter((d) => !(d in history));
+                if (missing.length) failed += await loadAll(missing, id, progress);
+            }
             if (id !== runId) return;
 
-            const series = buildSeries(dates, from, to);
-            box.classList.remove("loading");
-
-            if (series.length < 2) {
-                clearChart();
-                setStatus(
-                    failed
-                        ? t("Не удалось загрузить данные. Проверьте интернет и нажмите на период ещё раз.", "Couldn’t load the data. Check your connection and press the period again.")
-                        : t("Для этой пары нет данных за выбранный период.", "There is no data for this pair in the chosen period."),
-                    true
-                );
-                return;
-            }
-
-            current = { series, from, to };
-            render();
-
-            const notes = [t("Источник: ЦБ РФ.", "Source: Bank of Russia.")];
-            if (step > 1) notes.push(t("Для быстрой загрузки показаны выборочные даты.", "Selected dates are shown to keep loading fast."));
-            if (failed) notes.push(t("Часть дат загрузить не удалось.", "Some dates couldn’t be loaded."));
-            setStatus(notes.join(" "));
-        } catch (e) {
-            if (e.name === "AbortError") return;
+            present(plan, from, to, failed, false);
+        } catch {
+            if (id !== runId) return;
             box.classList.remove("loading");
             clearChart();
             setStatus(t("Не удалось построить график. Попробуйте ещё раз.", "Couldn’t build the chart. Please try again."), true);
@@ -372,7 +561,7 @@ document.addEventListener("DOMContentLoaded", () => {
             el("path", { class: "chart-line", d: line })
         );
         if (series.length <= 40) {
-            for (const [x, y] of pts) svg.append(el("circle", { class: "chart-dot", cx: x, cy: y, r: 3 }));
+            pts.forEach(([x, y], i) => svg.append(el("circle", { class: "chart-dot" + (series[i].carried ? " carried" : ""), cx: x, cy: y, r: 3 })));
         }
 
         // наведение
@@ -406,7 +595,13 @@ document.addEventListener("DOMContentLoaded", () => {
             strong.textContent = `1 ${from} = ${fmt(p.v)} ${to}`;
             const date = document.createElement("span");
             date.textContent = fmtLong.format(p.ms);
-            tip.replaceChildren(strong, date);
+            const nodes = [strong, date];
+            if (p.carried) {
+                const note = document.createElement("span");
+                note.textContent = t(" · новый курс не публиковался", " · no new rate published");
+                date.append(note);
+            }
+            tip.replaceChildren(...nodes);
             tip.hidden = false;
             const half = tip.offsetWidth / 2;
             tip.style.left = Math.min(Math.max(px, half + 4), W - half - 4) + "px";
@@ -500,6 +695,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let timer = null;
     document.addEventListener("konvertus:pair", () => {
+        if (!started) return; // график ещё не запускался: возьмёт актуальную пару при старте
         clearTimeout(timer);
         timer = setTimeout(run, 150);
     });
@@ -522,5 +718,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     setRange("30");
-    run();
+    box.classList.add("loading");
+
+    // график ниже конвертера: пока его не видно, ничего не качаем, чтобы страница открывалась быстрее
+    if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (!entries.some((e) => e.isIntersecting)) return;
+                observer.disconnect();
+                run();
+            },
+            { rootMargin: "500px 0px" }
+        );
+        observer.observe(section);
+    } else {
+        run();
+    }
 });

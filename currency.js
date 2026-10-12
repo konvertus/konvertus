@@ -215,9 +215,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const timer = setTimeout(() => controller.abort(), 8000);
 
         try {
-            const response = await fetch(API_URL, { cache: "no-store", signal: controller.signal });
-            if (!response.ok) throw new Error("HTTP " + response.status);
-            const data = await response.json();
+            const request = fetch(API_URL, { cache: "no-store", signal: controller.signal }).then((response) => {
+                if (!response.ok) throw new Error("HTTP " + response.status);
+                return response.json();
+            });
+            window.konvertusLatestPromise = request; // график курса ждёт этот же запрос, а не качает файл второй раз
+            const data = await request;
             if (!data.Valute) throw new Error("Неожиданный ответ");
 
             writeCache(data);

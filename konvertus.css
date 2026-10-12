@@ -9,7 +9,7 @@
   --ink: #000;
   --input-bg: #fff;
   --line: rgba(0, 0, 0, 0.08);
-  --konvertus-css: 10;
+  --konvertus-css: 11;
 }
 
 /* тёмная тема */
@@ -2036,6 +2036,11 @@ body.search-lock .search-toggle {
 
 .chart-dot {
   fill: var(--accent);
+}
+
+/* день без новой публикации курса (выходной, праздник): точка бледнее */
+.chart-dot.carried {
+  opacity: 0.4;
 }
 
 .chart-cursor {
