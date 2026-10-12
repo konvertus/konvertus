@@ -284,8 +284,18 @@ document.addEventListener("DOMContentLoaded", () => {
         // готовая история: каждый день из файла и небольшой «хвост» после него (несколько дней, на которые
         // файл мог отстать от свежего курса). Остальное, например период длиннее файла, грузим выборочно
         const snapFrom = snap ? toMs(snap.first) : Infinity;
-        const snapTo = snap ? toMs(snap.last) + 15 * DAY : -Infinity;
-        for (let ms = start; ms < end; ms += (ms >= snapFrom && ms < snapTo ? 1 : step) * DAY) add(ms);
+        const snapLast = snap ? toMs(snap.last) : -Infinity;
+        const snapTo = snapLast + 15 * DAY;
+        for (let ms = start; ms < end; ms += (ms >= snapFrom && ms < snapTo ? 1 : step) * DAY) {
+            if (ms >= snapFrom && ms <= snapLast) {
+                // в файле даты стоят «как у ЦБ»: курс, установленный в пятницу, имеет дату субботы и действует
+                // до вторника (понедельников в файле нет). Поэтому выходные не сдвигаем на пятницу
+                const iso = toISO(ms);
+                if (history[iso]) set.add(iso);
+            } else {
+                add(ms);
+            }
+        }
         add(end);
         // dense: точка на каждый календарный день (только для коротких периодов)
         return {
