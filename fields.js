@@ -6,25 +6,18 @@ document.addEventListener("DOMContentLoaded", () => {
         swap.style.setProperty("--turn", turn + "deg");
     });
 
-    // Смена местами: поля с единицами (и значки валют сверху) перелетают друг к другу.
-    // Значения меняет скрипт конвертера, а анимация лишь «возвращает» каждый элемент с места соседа
-    const selectTop = document.getElementById("select-top");
-    const selectBottom = document.getElementById("select-bottom");
-    if (swap && selectTop && selectBottom) {
+    // Смена местами: значки валют сверху перелетают друг к другу, заголовок плавно обновляется.
+    // Значения меняет скрипт конвертера. Сами поля выбора анимирует select.js (небольшой «pop»)
+    const iconsBox = document.getElementById("currency-icons");
+    const title = document.getElementById("title");
+    if (swap && (iconsBox || title)) {
         const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-        const iconsBox = document.getElementById("currency-icons");
-        const title = document.getElementById("title");
         let animations = [];
         let before = null;
 
-        // кастомный список (select.js) стоит перед скрытым <select>
-        const fieldOf = (select) => {
-            const prev = select.previousElementSibling;
-            return prev && prev.classList.contains("cselect") ? prev : select;
-        };
         const badgesOf = () => (iconsBox ? [...iconsBox.querySelectorAll(".currency-badge")] : []);
 
-        function fly(el, from, bulgeX, bulgeY, zIndex) {
+        function fly(el, from, bulgeY, zIndex) {
             const to = el.getBoundingClientRect();
             const dx = from.left - to.left;
             const dy = from.top - to.top;
@@ -32,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const animation = el.animate(
                 [
                     { transform: `translate(${dx}px, ${dy}px)` },
-                    { transform: `translate(${dx / 2 + bulgeX}px, ${dy / 2 + bulgeY}px)`, offset: 0.5 },
+                    { transform: `translate(${dx / 2}px, ${dy / 2 + bulgeY}px)`, offset: 0.5 },
                     { transform: "translate(0, 0)" }
                 ],
                 { duration: 520, easing: "cubic-bezier(0.4, 0, 0.2, 1)" }
@@ -45,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
             animations.push(animation);
         }
 
-        // до обработчиков конвертера (они меняют значения) запоминаем, где стояли поля
+        // до обработчиков конвертера (они меняют значения) запоминаем, где стояли значки
         document.addEventListener(
             "click",
             (e) => {
@@ -53,33 +46,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 animations.forEach((a) => a.cancel());
                 animations = [];
                 const [left, right] = badgesOf().map((b) => b.getBoundingClientRect());
-                before = {
-                    top: fieldOf(selectTop).getBoundingClientRect(),
-                    bottom: fieldOf(selectBottom).getBoundingClientRect(),
-                    left,
-                    right
-                };
+                before = { left, right };
                 // к этому моменту конвертер уже поменял значения и обновил страницу, но кадр ещё не нарисован
                 requestAnimationFrame(() => {
                     const from = before;
                     before = null;
                     if (!from || reduceMotion.matches) return;
-                    const top = fieldOf(selectTop);
-                    const bottom = fieldOf(selectBottom);
-                    if (!top.animate) return;
-
-                    // select.js при смене значения запускает свой «pop», при смене местами он не нужен
-                    for (const field of [top, bottom]) field.querySelector?.(".cselect-trigger")?.classList.remove("pop");
-
-                    fly(top, from.bottom, -24, 0, 6);
-                    fly(bottom, from.top, 24, 0, 5);
 
                     const [newLeft, newRight] = badgesOf();
-                    if (newLeft && newRight && from.left && from.right) {
-                        fly(newLeft, from.right, 0, -12, 2);
-                        fly(newRight, from.left, 0, 12, 1);
+                    if (newLeft?.animate && newRight && from.left && from.right) {
+                        fly(newLeft, from.right, -12, 2);
+                        fly(newRight, from.left, 12, 1);
                     }
-                    title?.animate(
+                    title?.animate?.(
                         [{ opacity: 0, transform: "translateY(-6px)" }, { opacity: 1, transform: "none" }],
                         { duration: 320, easing: "ease-out" }
                     );
