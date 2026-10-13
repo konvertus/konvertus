@@ -244,68 +244,9 @@ document.addEventListener("DOMContentLoaded", () => {
     selectBottom?.addEventListener("change", update);
     refresh?.addEventListener("click", load);
 
-    // Смена валют местами: поля (и значки сверху) перелетают друг к другу.
-    // Значения меняются сразу, а анимация только «возвращает» каждый элемент с места соседа
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let swapAnimations = [];
-
-    function fieldOf(select) {
-        const prev = select.previousElementSibling;
-        return prev && prev.classList.contains("cselect") ? prev : select;
-    }
-
-    function fly(el, from, bulgeX, bulgeY, zIndex) {
-        const to = el.getBoundingClientRect();
-        const dx = from.left - to.left;
-        const dy = from.top - to.top;
-        el.style.zIndex = zIndex;
-        const animation = el.animate(
-            [
-                { transform: `translate(${dx}px, ${dy}px)` },
-                { transform: `translate(${dx / 2 + bulgeX}px, ${dy / 2 + bulgeY}px)`, offset: 0.5 },
-                { transform: "translate(0, 0)" }
-            ],
-            { duration: 520, easing: "cubic-bezier(0.4, 0, 0.2, 1)" }
-        );
-        const clear = () => {
-            el.style.zIndex = "";
-        };
-        animation.onfinish = clear;
-        animation.oncancel = clear;
-        swapAnimations.push(animation);
-    }
-
-    const badgesOf = () => (iconsBox ? [...iconsBox.querySelectorAll(".currency-badge")] : []);
-
     swap?.addEventListener("click", () => {
-        swapAnimations.forEach((a) => a.cancel());
-        swapAnimations = [];
-
-        const top = fieldOf(selectTop);
-        const bottom = fieldOf(selectBottom);
-        const [oldLeft, oldRight] = badgesOf().map((b) => b.getBoundingClientRect());
-        const topFrom = top.getBoundingClientRect();
-        const bottomFrom = bottom.getBoundingClientRect();
-
         [selectTop.value, selectBottom.value] = [selectBottom.value, selectTop.value];
-        // select.js при смене значения запускает свой «pop», при смене местами он не нужен
-        for (const field of [top, bottom]) field.querySelector?.(".cselect-trigger")?.classList.remove("pop");
         update();
-
-        if (reduceMotion.matches || !top.animate) return;
-
-        fly(top, bottomFrom, -24, 0, 6);
-        fly(bottom, topFrom, 24, 0, 5);
-
-        const [newLeft, newRight] = badgesOf();
-        if (newLeft && newRight && oldLeft && oldRight) {
-            fly(newLeft, oldRight, 0, -12, 2);
-            fly(newRight, oldLeft, 0, 12, 1);
-        }
-        title?.animate(
-            [{ opacity: 0, transform: "translateY(-6px)" }, { opacity: 1, transform: "none" }],
-            { duration: 320, easing: "ease-out" }
-        );
     });
 
 
