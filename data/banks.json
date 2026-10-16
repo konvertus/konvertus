@@ -1,0 +1,28 @@
+[
+  {
+    "bank": "Open Bank",
+    "country": "RU",
+    "rates": {
+      "USD": { "buy": 74.10, "sell": 75.00 },
+      "EUR": { "buy": 80.20, "sell": 81.10 }
+    },
+    "updated": "2026-10-16T09:30:00Z"
+  },
+  {
+    "bank": "City Exchange",
+    "country": "RU",
+    "rates": {
+      "USD": { "buy": 73.95, "sell": 74.95 },
+      "EUR": { "buy": 79.90, "sell": 80.85 }
+    },
+    "updated": "2026-10-16T09:45:00Z"
+  },
+  {
+    "bank": "National Bank",
+    "country": "KZ",
+    "rates": {
+      "USD": { "buy": 74.50, "sell": 75.40 }
+    },
+    "updated": "2026-10-16T08:50:00Z"
+  }
+]

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Bank rates — Konvertus</title>
+  <link rel="stylesheet" href="/konvertus.css">
+  <style>
+    /* Small page-specific styles */
+    .rates-container { max-width: 960px; margin: 2rem auto; padding: 1rem; }
+    .controls { display:flex; gap:1rem; align-items:center; margin-bottom:1rem; }
+    table.rates { width:100%; border-collapse:collapse; }
+    table.rates th, table.rates td { padding:0.5rem 0.75rem; text-align:left; border-bottom:1px solid #e6e6e6; }
+    table.rates th { cursor:pointer; user-select:none; white-space:nowrap }
+    .best-buy { background: #e6ffed; } /* highlight best bank to sell to (bank buys) */
+    .best-sell { background: #eef6ff; } /* highlight best bank to buy from (bank sells) */
+    .muted { color:#666; font-size:0.9rem }
+    .empty { padding:2rem; text-align:center; color:#666 }
+  </style>
+</head>
+<body>
+  <main class="rates-container">
+    <h1>Compare bank buy/sell rates</h1>
+    <p class="muted">Compare buy (bank buys currency from you) and sell (bank sells currency to you) rates across banks.</p>
+
+    <div class="controls">
+      <label for="currency">Currency</label>
+      <select id="currency"></select>
+
+      <label for="mode">I want to</label>
+      <select id="mode">
+        <option value="buy">Buy currency (you pay bank)</option>
+        <option value="sell">Sell currency (bank pays you)</option>
+      </select>
+
+      <button id="refresh">Refresh</button>
+      <span id="updated" class="muted"></span>
+    </div>
+
+    <div id="table-wrap">
+      <table class="rates" id="rates-table" aria-describedby="updated">
+        <thead>
+          <tr>
+            <th data-sort="name">Bank</th>
+            <th data-sort="buy">Buy</th>
+            <th data-sort="sell">Sell</th>
+            <th data-sort="updated">Updated</th>
+          </tr>
+        </thead>
+        <tbody id="rates-body"></tbody>
+      </table>
+      <div id="empty" class="empty" hidden>No data</div>
+    </div>
+  </main>
+
+  <script src="/bank-rates.js"></script>
+</body>
+</html>
