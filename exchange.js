@@ -194,12 +194,12 @@ document.addEventListener("DOMContentLoaded", () => {
         for (const ch of amountInput.value) {
             if (ch >= "0" && ch <= "9") cleaned += ch;
             else if ((ch === "." || ch === ",") && !hasSeparator) {
-                cleaned += ".";
+                cleaned += EN ? "." : ",";
                 hasSeparator = true;
             }
         }
         if (cleaned !== amountInput.value) amountInput.value = cleaned;
-        state.amount = parseFloat(cleaned);
+        state.amount = parseFloat(cleaned.replace(",", "."));
         render();
     });
 

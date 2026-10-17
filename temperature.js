@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const copy = document.getElementById("copy");
 
     copy?.addEventListener("click", async () => {
-        if (!output.value || isNaN(Number(output.value))) return;
+        if (!output.value || isNaN(Number(output.value.replace(",", ".")))) return;
 
         try {
             await navigator.clipboard.writeText(output.value);

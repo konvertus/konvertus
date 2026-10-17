@@ -9,6 +9,13 @@
     const valueProp = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
     const setRaw = (field, text) => valueProp.set.call(field, text);
 
+    // десятичный разделитель в числовых полях: запятая на русских страницах, точка на английских
+    const DECIMAL = document.documentElement.lang === "en" ? "." : ",";
+    const NUMERIC_TEXT = /^-?\d*[.,]?\d*(e[-+]?\d*)?$/i;
+    // скрипты конвертера считают с точкой, а человек видит разделитель своего языка
+    const toDisplay = (text) => (typeof text === "string" && NUMERIC_TEXT.test(text) ? text.replace(/[.,]/, DECIMAL) : text);
+    const toCanonical = (text) => text.replace(",", ".");
+
     const rules = new Map(); // поле → функция, оставляющая в тексте только допустимые символы
     const layers = new Map(); // поле → слой с анимацией
 
@@ -19,7 +26,8 @@
     // ---------- какие символы можно вводить в поля конвертера ----------
     const DIGITS = "0123456789abcdefghijklmnopqrstuvwxyz";
 
-    // число: цифры, одна десятичная точка (запятая заменяется точкой), «-» в начале,
+    // число: цифры, один десятичный разделитель (можно набрать и точку, и запятую; остаётся
+    // разделитель языка страницы), «-» в начале,
     // в поле ввода ещё экспонента (1e5), как раньше у <input type="number">
     function cleanNumber(text, allowExponent) {
         let out = "";
@@ -29,7 +37,7 @@
             if (ch >= "0" && ch <= "9") {
                 out += ch;
             } else if ((ch === "." || ch === ",") && !hasSeparator && !hasExponent) {
-                out += ".";
+                out += DECIMAL;
                 hasSeparator = true;
             } else if (ch === "-" && (out === "" || (hasExponent && /e$/i.test(out)))) {
                 out += ch;
@@ -56,7 +64,10 @@
     }
 
     // ---------- слой с анимированными символами ----------
-    function createLayer(field) {
+    // options.numeric: значение показывается с разделителем языка страницы;
+    // options.canonical: скриптам при чтении отдаётся число с точкой (для поля ввода)
+    function createLayer(field, options = {}) {
+        const rawGet = () => valueProp.get.call(field);
         const wrap = document.createElement("div");
         wrap.className = "typing-field";
         field.replaceWith(wrap);
@@ -102,7 +113,7 @@
         }
 
         function render(animate) {
-            const next = field.value;
+            const next = rawGet();
             if (next !== text) {
                 // общее начало и конец остаются как есть, анимируются только вставленные символы
                 const before = Array.from(text);
@@ -155,14 +166,16 @@
             configurable: true,
             enumerable: true,
             get() {
-                return valueProp.get.call(this);
+                const raw = valueProp.get.call(this);
+                return options.canonical ? toCanonical(raw) : raw;
             },
             set(v) {
-                valueProp.set.call(this, v);
+                valueProp.set.call(this, options.numeric ? toDisplay(String(v)) : v);
                 render(typingIn !== null && typingIn !== field);
             }
         });
 
+        if (options.numeric) valueProp.set.call(field, toDisplay(rawGet()));
         syncMetrics();
         render(false);
         layers.set(field, { render });
@@ -180,7 +193,7 @@
 
             const rule = rules.get(field);
             if (rule) {
-                const value = field.value;
+                const value = valueProp.get.call(field);
                 const cleaned = rule(value);
                 if (cleaned !== value) {
                     const caret = field.selectionStart;
@@ -218,8 +231,9 @@
             rules.set(input, (text) => cleanNumber(text, true));
             rules.set(output, (text) => cleanNumber(text, false));
         }
-        createLayer(input);
-        createLayer(output);
+        const numeric = !document.querySelector('script[src*="numbers.js"]');
+        createLayer(input, { numeric, canonical: numeric });
+        createLayer(output, { numeric });
     }
 
     // ---------- строка поиска по сайту ----------
