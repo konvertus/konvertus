@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактор курсов банков</title>
+    <style>
+        body {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+            font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+            color: #2b2b2b;
+            background: #f1e3c0;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 26px;
+        }
+
+        .note {
+            margin: 0 0 20px;
+            max-width: 760px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            padding: 16px 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+            overflow-x: auto;
+        }
+
+        label.cur {
+            margin-right: 14px;
+            white-space: nowrap;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 6px 8px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th.cur-head {
+            text-align: center;
+            border-bottom: none;
+        }
+
+        .sub th {
+            font-size: 12px;
+            font-weight: 600;
+            color: #777;
+        }
+
+        input.rate {
+            width: 84px;
+            padding: 6px;
+            font: inherit;
+            border: 2px solid #7a8c77;
+            border-radius: 6px;
+        }
+
+        input.bad {
+            border-color: #c0392b;
+            background: #fdecea;
+        }
+
+        .warn {
+            margin: 12px 0 0;
+            font-weight: 600;
+            color: #c0392b;
+        }
+
+        textarea {
+            box-sizing: border-box;
+            width: 100%;
+            height: 220px;
+            padding: 10px;
+            font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace;
+            border: 2px solid #7a8c77;
+            border-radius: 6px;
+        }
+
+        button {
+            margin: 10px 8px 0 0;
+            padding: 10px 18px;
+            font: inherit;
+            font-weight: 600;
+            color: #fffaf0;
+            background: #7a8c77;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #ab5e4b;
+        }
+
+        .ok {
+            color: #2e6b3a;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Редактор курсов банков</h1>
+    <p class="note">Откройте курсы нужных банков (в приложении или на сайте), впишите их ниже и нажмите «Скопировать».
+        Полученный текст вставьте в файл <b>data/banks.json</b> целиком и загрузите на GitHub. Страница ничего никуда
+        не отправляет и работает без интернета.</p>
+
+    <div class="card">
+        <b>Валюты:</b>
+        <span id="currencies"></span>
+        <p class="note" style="margin:10px 0 0">
+            <b>Покупка</b> — по этому курсу банк <u>покупает</u> валюту у вас (число меньше).
+            <b>Продажа</b> — по этому курсу банк <u>продаёт</u> валюту вам (число больше).
+        </p>
+    </div>
+
+    <div class="card">
+        <table id="grid"></table>
+        <p class="warn" id="warn" hidden></p>
+    </div>
+
+    <div class="card">
+        <b>Готовый файл data/banks.json</b>
+        <textarea id="out" readonly></textarea>
+        <button type="button" id="copy">Скопировать</button>
+        <button type="button" id="download">Скачать banks.json</button>
+        <span class="ok" id="done"></span>
+    </div>
+
+    <div class="card">
+        <b>Загрузить уже заполненный файл</b> (чтобы поправить пару курсов, а не вводить всё заново)
+        <textarea id="load" placeholder="Вставьте сюда содержимое текущего data/banks.json"></textarea>
+        <button type="button" id="loadBtn">Загрузить</button>
+    </div>
+
+    <script>
+        const ALL = ["USD", "EUR", "CNY", "GBP", "CHF", "JPY", "TRY", "KZT", "BYN", "AED"];
+        let selected = ["USD", "EUR", "CNY"];
+        let banks = [
+            { id: "sber", name: "Сбербанк", name_en: "Sberbank", url: "https://www.sberbank.ru", rates: {} },
+            { id: "alfa", name: "Альфа-Банк", name_en: "Alfa-Bank", url: "https://alfabank.ru", rates: {} },
+            { id: "tbank", name: "Т-Банк (Тинькофф)", name_en: "T-Bank (Tinkoff)", url: "https://www.tbank.ru", rates: {} },
+            { id: "vtb", name: "ВТБ", name_en: "VTB", url: "https://www.vtb.ru", rates: {} },
+            { id: "gpb", name: "Газпромбанк", name_en: "Gazprombank", url: "https://www.gazprombank.ru", rates: {} }
+        ];
+
+        const $ = (id) => document.getElementById(id);
+        const toNumber = (text) => parseFloat(String(text).replace(",", "."));
+
+        function drawCurrencies() {
+            $("currencies").replaceChildren(...ALL.map((code) => {
+                const label = document.createElement("label");
+                label.className = "cur";
+                const box = document.createElement("input");
+                box.type = "checkbox";
+                box.checked = selected.includes(code);
+                box.addEventListener("change", () => {
+                    selected = ALL.filter((c) => (c === code ? box.checked : selected.includes(c)));
+                    drawGrid();
+                    build();
+                });
+                label.append(box, " " + code);
+                return label;
+            }));
+        }
+
+        function drawGrid() {
+            const grid = $("grid");
+            grid.replaceChildren();
+            const head = grid.insertRow();
+            head.append(document.createElement("th"));
+            for (const code of selected) {
+                const th = document.createElement("th");
+                th.className = "cur-head";
+                th.colSpan = 2;
+                th.textContent = code;
+                head.append(th);
+            }
+            const sub = grid.insertRow();
+            sub.className = "sub";
+            sub.append(document.createElement("th"));
+            for (const code of selected) {
+                for (const label of ["Покупка", "Продажа"]) {
+                    const th = document.createElement("th");
+                    th.textContent = label;
+                    sub.append(th);
+                }
+            }
+            for (const bank of banks) {
+                const row = grid.insertRow();
+                row.insertCell().innerHTML = "";
+                row.cells[0].append(Object.assign(document.createElement("b"), { textContent: bank.name }));
+                for (const code of selected) {
+                    for (const side of ["buy", "sell"]) {
+                        const input = document.createElement("input");
+                        input.className = "rate";
+                        input.inputMode = "decimal";
+                        input.placeholder = "—";
+                        const value = bank.rates?.[code]?.[side];
+                        if (value) input.value = value;
+                        input.addEventListener("input", () => {
+                            input.value = input.value.replace(/[^\d.,]/g, "");
+                            bank.rates = bank.rates || {};
+                            bank.rates[code] = bank.rates[code] || {};
+                            const n = toNumber(input.value);
+                            if (n > 0) bank.rates[code][side] = n;
+                            else delete bank.rates[code][side];
+                            build();
+                        });
+                        input.dataset.bank = bank.id;
+                        input.dataset.code = code;
+                        input.dataset.side = side;
+                        row.insertCell().append(input);
+                    }
+                }
+            }
+        }
+
+        function build() {
+            const result = { updated: null, demo: false, currencies: [], banks: [] };
+            const problems = [];
+
+            for (const bank of banks) {
+                const rates = {};
+                for (const code of selected) {
+                    const r = bank.rates?.[code] || {};
+                    if (!(r.buy > 0) && !(r.sell > 0)) continue;
+                    rates[code] = {};
+                    if (r.buy > 0) rates[code].buy = r.buy;
+                    if (r.sell > 0) rates[code].sell = r.sell;
+                    if (r.buy > 0 && r.sell > 0 && r.buy >= r.sell) problems.push(`${bank.name}, ${code}: покупка не меньше продажи`);
+                }
+                result.banks.push({ id: bank.id, name: bank.name, name_en: bank.name_en, url: bank.url, rates });
+            }
+            result.currencies = selected.filter((code) => result.banks.some((b) => b.rates[code]));
+
+            // подсветка перепутанных курсов
+            for (const input of document.querySelectorAll("input.rate")) {
+                const bank = banks.find((b) => b.id === input.dataset.bank);
+                const r = bank.rates?.[input.dataset.code] || {};
+                input.classList.toggle("bad", r.buy > 0 && r.sell > 0 && r.buy >= r.sell);
+            }
+            const warn = $("warn");
+            warn.hidden = !problems.length;
+            warn.textContent = problems.length ? "Проверьте: " + problems.join("; ") + ". Покупка должна быть меньше продажи." : "";
+
+            const now = new Date();
+            const pad = (n) => String(n).padStart(2, "0");
+            const offset = -now.getTimezoneOffset();
+            const sign = offset >= 0 ? "+" : "-";
+            result.updated = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}:00${sign}${pad(Math.floor(Math.abs(offset) / 60))}:${pad(Math.abs(offset) % 60)}`;
+            $("out").value = JSON.stringify(result, null, 2) + "\n";
+            $("done").textContent = "";
+        }
+
+        $("copy").addEventListener("click", async () => {
+            try {
+                await navigator.clipboard.writeText($("out").value);
+            } catch {
+                $("out").select();
+                document.execCommand("copy");
+            }
+            $("done").textContent = "Скопировано";
+        });
+
+        $("download").addEventListener("click", () => {
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(new Blob([$("out").value], { type: "application/json" }));
+            link.download = "banks.json";
+            link.click();
+            URL.revokeObjectURL(link.href);
+        });
+
+        $("loadBtn").addEventListener("click", () => {
+            try {
+                const data = JSON.parse($("load").value);
+                if (!Array.isArray(data.banks)) throw new Error();
+                banks = data.banks.map((b) => ({ id: b.id, name: b.name, name_en: b.name_en, url: b.url || "", rates: b.rates || {} }));
+                const used = ALL.filter((code) => banks.some((b) => b.rates[code]));
+                if (used.length) selected = used;
+                drawCurrencies();
+                drawGrid();
+                build();
+            } catch {
+                alert("Не получилось прочитать файл: вставьте содержимое data/banks.json целиком.");
+            }
+        });
+
+        drawCurrencies();
+        drawGrid();
+        build();
+    </script>
+</body>
+
+</html>
