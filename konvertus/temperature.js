@@ -1,0 +1,108 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const EN = document.documentElement.lang === "en";
+    const t = (ru, en) => (EN ? en : ru);
+    const title = document.getElementById("title");
+    const input = document.getElementById("input");
+    const output = document.getElementById("output");
+    const selectTop = document.getElementById("select-top");
+    const selectBottom = document.getElementById("select-bottom");
+    const swap = document.getElementById("swap");
+
+    const toC = {
+        c: v => v,
+        f: v => (v - 32) * 5 / 9,
+        k: v => v - 273.15,
+        r: v => (v - 491.67) * 5 / 9,
+        re: v => v * 5 / 4
+    };
+    const fromC = {
+        c: v => v,
+        f: v => v * 9 / 5 + 32,
+        k: v => v + 273.15,
+        r: v => (v + 273.15) * 9 / 5,
+        re: v => v * 4 / 5
+    };
+
+    function calculate() {
+        output.classList.remove("is-invalid");
+        const val = parseFloat(input.value);
+        if (isNaN(val)) {
+            output.value = "";
+            return;
+        }
+
+        const celsius = toC[selectTop.value](val);
+
+        if (celsius < -273.15 - 1e-9) {
+            output.value = t("Ниже абсолютного нуля", "Below absolute zero");
+            return;
+        }
+
+        const result = fromC[selectBottom.value](celsius);
+        output.value = Number(result.toFixed(6));
+    }
+
+    function update() {
+        if (title) {
+            const first = selectTop.options[selectTop.selectedIndex].textContent;
+            const second = selectBottom.options[selectBottom.selectedIndex].textContent;
+            title.textContent = `${first} ${t("в", "to")} ${second}`;
+        }
+        calculate();
+    }
+
+    input?.addEventListener("input", calculate);
+    selectTop?.addEventListener("change", update);
+    selectBottom?.addEventListener("change", update);
+
+    swap?.addEventListener("click", () => {
+        [selectTop.value, selectBottom.value] = [selectBottom.value, selectTop.value];
+        update();
+    });
+
+    function parseTyped(text) {
+        const raw = text.trim().replace(/\s/g, "").replace(",", ".");
+        if (raw === "") return { empty: true };
+        if (/^[-+]?\.?$|^[-+]?\d*\.?\d*e[-+]?$/i.test(raw)) return { partial: true };
+        const value = Number(raw);
+        return Number.isFinite(value) ? { value } : { invalid: true };
+    }
+
+    output?.addEventListener("focus", () => {
+        if (output.value && isNaN(Number(output.value.replace(",", ".")))) output.select();
+    });
+
+    output?.addEventListener("input", () => {
+        const p = parseTyped(output.value);
+        output.classList.toggle("is-invalid", !!p.invalid);
+        if (p.empty) input.value = "";
+        if (p.value === undefined) return;
+
+        const celsius = toC[selectBottom.value](p.value);
+        if (celsius < -273.15 - 1e-9) {
+            output.classList.add("is-invalid");
+            input.value = "";
+            return;
+        }
+        input.value = Number(fromC[selectTop.value](celsius).toFixed(6));
+    });
+
+    const copy = document.getElementById("copy");
+
+    copy?.addEventListener("click", async () => {
+        if (!output.value || isNaN(Number(output.value.replace(",", ".")))) return;
+
+        try {
+            await navigator.clipboard.writeText(output.value);
+        } catch {
+            output.select();
+            document.execCommand("copy");
+        }
+
+        const icon = copy.querySelector("span");
+        icon.textContent = "check";
+        setTimeout(() => (icon.textContent = "content_copy"), 1500);
+    });
+
+    update();
+});

@@ -1,0 +1,131 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const EN = document.documentElement.lang === "en";
+    const t = (ru, en) => (EN ? en : ru);
+    const title = document.getElementById("title");
+    const input = document.getElementById("input");
+    const output = document.getElementById("output");
+    const selectTop = document.getElementById("select-top");
+    const selectBottom = document.getElementById("select-bottom");
+    const swap = document.getElementById("swap");
+
+    const DIGITS = "0123456789abcdefghijklmnopqrstuvwxyz";
+    const MAX_LENGTH = 200;
+    let valid = false;
+
+    function parse(text, base) {
+        let s = text.trim().replace(/[\s_]/g, "").toLowerCase();
+        let negative = false;
+        if (s.startsWith("-")) {
+            negative = true;
+            s = s.slice(1);
+        }
+        if (!s) return null;
+
+        if (/[.,]/.test(s)) throw new Error(t("Только целые числа", "Integers only"));
+
+        const b = BigInt(base);
+        let value = 0n;
+        for (const ch of s) {
+            const d = DIGITS.indexOf(ch);
+            if (d === -1 || d >= base) {
+                throw new Error(t(`Недопустимая цифра: ${ch.toUpperCase()}`, `Invalid digit: ${ch.toUpperCase()}`));
+            }
+            value = value * b + BigInt(d);
+        }
+        return negative ? -value : value;
+    }
+
+    function show(text, ok) {
+        output.classList.remove("is-invalid");
+        output.value = text;
+        valid = ok;
+    }
+
+    function calculate() {
+        const text = input.value;
+        if (!text.trim()) return show("", false);
+        if (text.length > MAX_LENGTH) return show(t("Слишком длинное число", "Number is too long"), false);
+
+        try {
+            const value = parse(text, Number(selectTop.value));
+            if (value === null) return show("", false);
+            show(value.toString(Number(selectBottom.value)).toUpperCase(), true);
+        } catch (e) {
+            show(e.message, false);
+        }
+    }
+
+    function updateKeyboards() {
+        const mode = (select) => (Number(select.value) <= 10 ? "numeric" : "text");
+        if (input) input.inputMode = mode(selectTop);
+        if (output) output.inputMode = mode(selectBottom);
+    }
+
+    function update() {
+        updateKeyboards();
+        if (title) {
+            const first = selectTop.options[selectTop.selectedIndex].textContent;
+            const second = selectBottom.options[selectBottom.selectedIndex].dataset.short;
+            title.textContent = `${first} ${t("в", "to")} ${second}`;
+        }
+        calculate();
+    }
+
+    input?.addEventListener("input", calculate);
+    selectTop?.addEventListener("change", update);
+    selectBottom?.addEventListener("change", update);
+
+    swap?.addEventListener("click", () => {
+        [selectTop.value, selectBottom.value] = [selectBottom.value, selectTop.value];
+        update();
+    });
+
+    output?.addEventListener("input", () => {
+        const text = output.value;
+        output.classList.remove("is-invalid");
+
+        if (!text.trim()) {
+            input.value = "";
+            valid = false;
+            return;
+        }
+        if (text.length > MAX_LENGTH) {
+            output.classList.add("is-invalid");
+            valid = false;
+            return;
+        }
+
+        try {
+            const value = parse(text, Number(selectBottom.value));
+            if (value === null) return;
+            input.value = value.toString(Number(selectTop.value)).toUpperCase();
+            valid = true;
+        } catch {
+            output.classList.add("is-invalid");
+            valid = false;
+        }
+    });
+
+    output?.addEventListener("focus", () => {
+        if (!valid && output.value) output.select();
+    });
+
+    const copy = document.getElementById("copy");
+
+    copy?.addEventListener("click", async () => {
+        if (!valid || !output.value) return;
+
+        try {
+            await navigator.clipboard.writeText(output.value);
+        } catch {
+            output.select();
+            document.execCommand("copy");
+        }
+
+        const icon = copy.querySelector("span");
+        icon.textContent = "check";
+        setTimeout(() => (icon.textContent = "content_copy"), 1500);
+    });
+
+    update();
+});

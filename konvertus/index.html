@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#7a8c77">
+    <link rel="icon" type="image/png" href="favicon-96x96.png?v=2" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
+    <link rel="shortcut icon" href="favicon.ico?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2">
+    <meta name="apple-mobile-web-app-title" content="konvertus">
+    <link rel="manifest" href="site.webmanifest?v=2">
+    <script src="theme.js?v=11"></script>
+    <link rel="stylesheet" href="konvertus.css?v=11">
+    <link rel="stylesheet" href="typing.css?v=2">
+
+    <!-- Шрифты и значки (свои копии, без запросов к Google) -->
+    <link rel="stylesheet" href="fonts/fonts.css?v=1">
+    <link rel="preload" href="fonts/montserrat-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin>
+
+    <title>Конвертус — конвертер единиц измерения и валют онлайн</title>
+    <meta name="description" content="Быстрый онлайн-конвертер единиц и валют: длина, вес, температура, курсы ЦБ РФ с графиком, данные, системы счисления. Без рекламы и регистрации.">
+    <link rel="canonical" href="https://konvertus.github.io/konvertus/">
+    <link rel="alternate" hreflang="ru" href="https://konvertus.github.io/konvertus/">
+    <link rel="alternate" hreflang="en" href="https://konvertus.github.io/konvertus/en/index.html">
+    <link rel="alternate" hreflang="x-default" href="https://konvertus.github.io/konvertus/">
+
+    <!-- Open Graph (соцсети и мессенджеры) -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Konvertus">
+    <meta property="og:title" content="Конвертус — конвертер единиц измерения и валют онлайн">
+    <meta property="og:description" content="Быстрый онлайн-конвертер единиц и валют: длина, вес, температура, курсы ЦБ РФ с графиком, данные, системы счисления. Без рекламы и регистрации.">
+    <meta property="og:url" content="https://konvertus.github.io/konvertus/">
+    <meta property="og:image" content="https://konvertus.github.io/konvertus/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Конвертус — конвертер единиц измерения и валют">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:locale:alternate" content="en_US">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Конвертус — конвертер единиц измерения и валют онлайн">
+    <meta name="twitter:description" content="Быстрый онлайн-конвертер единиц и валют: длина, вес, температура, курсы ЦБ РФ с графиком, данные, системы счисления. Без рекламы и регистрации.">
+    <meta name="twitter:image" content="https://konvertus.github.io/konvertus/og-image.png">
+    <meta name="twitter:image:alt" content="Конвертус — конвертер единиц измерения и валют">
+</head>
+<body>
+
+    <!-- шапка -->
+    <header class="header">
+
+        <a href="index.html" class="logo">
+            <span class="material-symbols-outlined arrows_symbol">sync_alt</span>
+            <span>КОНВЕ₽ТУС</span>
+        </a>
+
+        <!-- кнопки слева -->
+        <button type="button" class="nav-toggle" aria-label="Меню" aria-expanded="false" aria-controls="nav-panel"><span></span></button>
+
+            <div class="nav-panel" id="nav-panel">
+            <nav class="menu">
+            <div class="dropdown">
+                <button class="dropbtn">Инструменты <span class="caret" aria-hidden="true">▾</span></button>
+
+                <div class="dropdown-content">
+                    <div class="column">
+                        <h3><span class="cat-icon cat-length" aria-hidden="true"></span>Длина</h3>
+                        <a href="converters/meters-feet.html">Метры в футы</a>
+                        <a href="converters/miles-km.html">Мили в километры</a>
+                        <a href="converters/inches-cm.html">Дюймы в сантиметры</a>
+                    </div>
+                    <div class="column">
+                        <h3><span class="cat-icon cat-mass" aria-hidden="true"></span>Вес</h3>
+                        <a href="converters/kg-pounds.html">Килограммы в фунты</a>
+                        <a href="converters/grams-ounces.html">Граммы в унции</a>
+                    </div>
+                    <div class="column">
+                        <h3><span class="cat-icon cat-temperature" aria-hidden="true"></span>Температура</h3>
+                        <a href="converters/celsius-fahrenheit.html">Цельсий в Фаренгейт</a>
+                        <a href="converters/celsius-kelvin.html">Цельсий в Кельвин</a>
+                    </div>
+                    <div class="column">
+                        <h3><span class="cat-icon cat-currency" aria-hidden="true"></span>Валюты</h3>
+                        <a href="converters/rub-usd.html">Рубли в доллары</a>
+                        <a href="converters/eur-rub.html">Евро в рубли</a>
+                        <a href="exchange.html">Обмен</a>
+                    </div>
+                    <div class="column">
+                        <h3><span class="cat-icon cat-data" aria-hidden="true"></span>Данные</h3>
+                        <a href="converters/mb-gb.html">Мегабайты в гигабайты</a>
+                        <a href="converters/mbit-mb.html">Мегабиты в мегабайты</a>
+                    </div>
+                    <div class="column">
+                        <h3><span class="cat-icon cat-binary" aria-hidden="true"></span>Системы счисления</h3>
+                        <a href="converters/bin-dec.html">Двоичная в десятичную</a>
+                        <a href="converters/dec-hex.html">Десятичная в шестнадцатеричную</a>
+                    </div>
+                </div>
+            </div>
+
+            <a href="about.html">О нас</a>
+        </nav>
+            </div>
+
+    </header>
+
+    <main>
+        <!-- Описание -->
+        <section class="hero">
+            <h1>КОНВЕ₽ТУС</h1>
+            <p>Быстрый перевод единиц измерения и валют. Выберите нужный конвертер и получите результат.</p>
+        </section>
+
+        <!-- Популярные конвертеры -->
+        <section class="block">
+            <h2>Популярные конвертусы</h2>
+            <div class="cards">
+                <a href="converters/miles-km.html" class="card"><span class="cat-icon card-icon cat-length" aria-hidden="true"></span>Мили в километры</a>
+                <a href="converters/rub-usd.html" class="card"><span class="cat-icon card-icon cat-currency" aria-hidden="true"></span>Рубли в доллары</a>
+                <a href="converters/meters-feet.html" class="card"><span class="cat-icon card-icon cat-length" aria-hidden="true"></span>Метры в футы</a>
+                <a href="converters/kg-pounds.html" class="card"><span class="cat-icon card-icon cat-mass" aria-hidden="true"></span>Фунты в килограммы</a>
+            </div>
+        </section>
+
+        <!-- Категории -->
+        <section class="block">
+            <h2>Категории</h2>
+            <div class="cards">
+                <a href="converters/rub-usd.html" class="card"><span class="cat-icon card-icon cat-currency" aria-hidden="true"></span>Валюты</a>
+                <a href="converters/miles-km.html" class="card"><span class="cat-icon card-icon cat-length" aria-hidden="true"></span>Длина</a>
+                <a href="converters/kg-pounds.html" class="card"><span class="cat-icon card-icon cat-mass" aria-hidden="true"></span>Вес</a>
+                <a href="converters/celsius-fahrenheit.html" class="card"><span class="cat-icon card-icon cat-temperature" aria-hidden="true"></span>Температура</a>
+                <a href="converters/mb-gb.html" class="card"><span class="cat-icon card-icon cat-data" aria-hidden="true"></span>Данные</a>
+                <a href="converters/bin-dec.html" class="card"><span class="cat-icon card-icon cat-binary" aria-hidden="true"></span>Системы счисления</a>
+            </div>
+        </section>
+
+    </main>
+    <footer class="footer">
+        <a href="index.html" class="footer-logo">КОНВЕ₽ТУС</a>
+        <nav class="footer-links">
+            <a href="about.html">О нас</a>
+            <a href="about.html#contacts">Контакты</a>
+        </nav>
+        <div class="lang-switch">
+                <span class="lang-current">Русский</span>
+                <span class="lang-sep">·</span>
+                <a href="en/index.html" hreflang="en" lang="en">English</a>
+            </div>
+            <p>© 2026 Конвертус</p>
+    </footer>
+    <script src="typing.js?v=3"></script>
+    <script src="search-index.js?v=12"></script>
+    <script src="search.js?v=11"></script>
+    <script src="menu.js?v=11"></script>
+</body>
+</html>
