@@ -54,7 +54,11 @@ konvertus/
 ├── search.js             site-wide search (Ctrl/⌘+K or "/")
 ├── search-index.js       search index: add every new page here
 ├── favicon.ico, favicon.svg, favicon-96x96.png, apple-touch-icon.png, site.webmanifest, web-app-manifest-*.png   site icon (made with realfavicongenerator.net)
+├── exchange.html         "Exchange" page: bank rate comparison (exchange.js, exchange.css)
+├── typing.js, typing.css typing animation and character filtering for the input and result fields
 ├── og-image.png          link preview image for social networks (1200×630)
+├── data/banks.json       buy and sell currency rates at banks (filled in with tools/banks-editor.html)
+├── data/banks.demo.json  demo data for preview (exchange.html?demo)
 ├── data/history.json     5 years of Bank of Russia rates (updated automatically)
 ├── tools/                update_history.py (collects history), self_host_fonts.py (local font copies)
 ├── .github/workflows/    update-rates.yml — daily history update
@@ -127,3 +131,34 @@ To work, the site contacts two external services: fonts and icons are loaded fro
 ## Author
 
 A student project. Send suggestions and bug reports through the repository's Issues section.
+
+## Exchange page
+
+The `exchange.html` page (and `en/exchange.html`) compares buy and sell currency rates at banks. Bank rates come from `data/banks.json`, and the Bank of Russia rate used for comparison comes from `data/history.json`.
+
+The banks in the file are Sberbank, Alfa-Bank, T-Bank (Tinkoff), VTB and Gazprombank. Until rates are filled in, the page says "Bank rates have not been added yet". To see how it looks with data, open `exchange.html?demo` (it uses `data/banks.demo.json` and shows a "demo data" notice).
+
+**How to fill in the rates.** Open `tools/banks-editor.html` by double-clicking it (works offline), type the buy and sell rate for each bank, press "Скопировать" (Copy), paste the text over the whole of `data/banks.json` and push to GitHub. The editor highlights swapped rates: buy is always lower than sell. File format:
+
+```json
+{
+  "updated": "2026-10-16T12:00:00+03:00",
+  "demo": false,
+  "currencies": ["USD", "EUR", "CNY"],
+  "banks": [
+    {
+      "id": "bank-1",
+      "name": "Название банка",
+      "name_en": "Bank name",
+      "url": "https://example.com",
+      "rates": { "USD": { "buy": 80.10, "sell": 82.40 } }
+    }
+  ]
+}
+```
+
+`buy` is the rate at which the **bank buys** currency from a customer, and `sell` is the rate at which the **bank sells** it to a customer. If a bank does not exchange some currency, just leave it out of `rates`. `name_en` and `url` are optional.
+
+## Input fields
+
+`typing.js` makes the text of the real fields transparent and draws the same characters on top of it one by one: each new character slides in from above. Letters cannot be typed into the result field (only digits of the chosen base on the number-system pages). To turn this off, remove the `typing.js` and `typing.css` includes from the pages.
