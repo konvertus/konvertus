@@ -25,6 +25,7 @@ import sys
 import time
 import urllib.error
 import urllib.request
+import ssl
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 BANKS_FILE = ROOT / "data" / "banks.json"
@@ -35,6 +36,14 @@ MAX_DEVIATION = 0.15   # середина между покупкой и про�
 TIMEOUT = 20
 RETRIES = 3
 MSK = dt.timezone(dt.timedelta(hours=3))
+CA_FILE = ROOT / "tools" / "certs" / "russian_trusted_root_ca.pem"
+
+
+def ssl_context() -> ssl.SSLContext:
+    ctx = ssl.create_default_context()
+    if CA_FILE.exists():
+        ctx.load_verify_locations(cafile=str(CA_FILE))
+    return ctx
 
 
 def get_json(url: str, headers: dict | None = None):
@@ -43,7 +52,7 @@ def get_json(url: str, headers: dict | None = None):
         try:
             h = {"User-Agent": "Mozilla/5.0 (compatible; konvertus-bank-rates)", "Accept": "application/json"}
             h.update(headers or {})
-            with urllib.request.urlopen(urllib.request.Request(url, headers=h), timeout=TIMEOUT) as r:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=h), timeout=TIMEOUT, context=ssl_context()) as r:
                 return json.loads(r.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             err = e

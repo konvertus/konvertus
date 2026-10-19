@@ -1,7 +1,12 @@
 {
-  "updated": null,
+  "updated": "2026-10-19T18:22:30+03:00",
   "demo": false,
-  "currencies": [],
+  "currencies": [
+    "USD",
+    "EUR",
+    "CNY",
+    "GBP"
+  ],
   "banks": [
     {
       "id": "sber",
@@ -22,7 +27,24 @@
       "name": "Т-Банк (Тинькофф)",
       "name_en": "T-Bank (Tinkoff)",
       "url": "https://www.tbank.ru",
-      "rates": {}
+      "rates": {
+        "USD": {
+          "buy": 82.5,
+          "sell": 87.05
+        },
+        "EUR": {
+          "buy": 91.55,
+          "sell": 97.65
+        },
+        "CNY": {
+          "buy": 12.295,
+          "sell": 12.507
+        },
+        "GBP": {
+          "buy": 88.3,
+          "sell": 132.45
+        }
+      }
     },
     {
       "id": "vtb",
