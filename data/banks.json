@@ -27,6 +27,12 @@
       "name": "Т-Банк (Тинькофф)",
       "name_en": "T-Bank (Tinkoff)",
       "url": "https://www.tbank.ru",
+      "urls": {
+        "USD": "https://www.tbank.ru/invest/currencies/USD000UTSTOM/",
+        "EUR": "https://www.tbank.ru/invest/currencies/EURRUB/",
+        "CNY": "https://www.tbank.ru/invest/currencies/CNYRUB/",
+        "GBP": "https://www.tbank.ru/invest/currencies/GBPRUB"
+      },
       "rates": {
         "USD": {
           "buy": 82.5,

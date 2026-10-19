@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const nameCell = el("td");
             nameCell.dataset.label = t("Банк", "Bank");
-            const url = row.bank.url;
+            const url = row.bank.urls?.[state.code] || row.bank.url;
             if (typeof url === "string" && /^https?:\/\//i.test(url)) {
                 const a = el("a", "exchange-bank", bankName(row.bank));
                 a.href = url;
