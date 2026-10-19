@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-19T18:24:40+03:00",
+  "updated": "2026-10-19T19:00:20+03:00",
   "demo": false,
   "currencies": [
     "USD",
@@ -29,20 +29,20 @@
       "url": "https://www.tbank.ru",
       "rates": {
         "USD": {
-          "buy": 82.45,
-          "sell": 87.0
+          "buy": 81.35,
+          "sell": 88.85
         },
         "EUR": {
-          "buy": 91.55,
-          "sell": 97.6
+          "buy": 91.65,
+          "sell": 99.55
         },
         "CNY": {
-          "buy": 12.29,
-          "sell": 12.501
+          "buy": 11.546,
+          "sell": 13.288
         },
         "GBP": {
-          "buy": 88.25,
-          "sell": 132.4
+          "buy": 88.35,
+          "sell": 132.6
         }
       }
     },
