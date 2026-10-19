@@ -45,6 +45,11 @@ def get_json(url: str, headers: dict | None = None):
             h.update(headers or {})
             with urllib.request.urlopen(urllib.request.Request(url, headers=h), timeout=TIMEOUT) as r:
                 return json.loads(r.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            err = e
+            if 400 <= e.code < 500 and e.code != 429:
+                break  # сервер отказал: повторять бессмысленно
+            time.sleep(1.5 * (attempt + 1))
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as e:
             err = e
             time.sleep(1.5 * (attempt + 1))
@@ -63,22 +68,38 @@ def fetch_tbank() -> dict:
     """
     category = os.environ.get("TBANK_CATEGORY", "DebitCardsTransfers")
     result = {}
+    reported = set()
+
+    def report(key: str, message: str) -> None:
+        # причину каждого типа показываем один раз, а не по разу на каждую валюту
+        if key not in reported:
+            reported.add(key)
+            print("  " + message)
+
     for code in CURRENCIES:
         data = None
         for host in ("api.tbank.ru", "api.tinkoff.ru"):
             try:
                 data = get_json(f"https://{host}/v1/currency_rates?from={code}&to=RUB")
                 break
-            except RuntimeError:
-                continue
-        if not data:
+            except RuntimeError as e:
+                report(host, f"{host}: {e}")
+        if not isinstance(data, dict):
             continue
-        for item in data.get("payload", {}).get("rates", []):
+        rates = data.get("payload", {}).get("rates", [])
+        for item in rates:
             if (item.get("category") == category
                     and item.get("fromCurrency", {}).get("name") == code
                     and item.get("toCurrency", {}).get("name") == "RUB"):
                 result[code] = {"buy": item.get("buy"), "sell": item.get("sell")}
                 break
+        else:
+            categories = sorted({str(i.get("category")) for i in rates if isinstance(i, dict)})
+            report(
+                "category",
+                f"ответ получен, но курса {code} в категории {category} в нём нет. "
+                f"resultCode: {data.get('resultCode')}; категории в ответе: {', '.join(categories) or 'нет'}"
+            )
     return result
 
 
