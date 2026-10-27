@@ -15,6 +15,7 @@ Final project for a web development course.
 | Length | meters to feet, miles to kilometers, inches to centimeters | 12 units: from nanometers to kilometers, miles, nautical miles, yards, feet, inches |
 | Weight | kilograms to pounds, grams to ounces | 11 units: metric tons, quintals, carats, ounces, pounds, stones, poods and more |
 | Temperature | Celsius to Fahrenheit, Celsius to Kelvin | Celsius, Fahrenheit, Kelvin, Rankine, Réaumur |
+| Speed | km/h to m/s | 8 units: km/h, m/s, km/s, m/min, cm/s, miles per hour, knots, feet per second |
 | Currencies | rubles to dollars, euros to rubles | 11 currencies at the Bank of Russia rate, a rates board, an "Update rate" button, a rate chart for the selected pair for a week, month, 3 months, a year or a custom period |
 | Data | megabytes to gigabytes, megabits to megabytes | bits, bytes, decimal (KB, MB...) and binary (KiB, MiB...) units, megabits as used in internet plans |
 | Number systems | binary to decimal, decimal to hexadecimal | binary, octal, decimal, hexadecimal; large numbers without losing precision |
@@ -68,6 +69,7 @@ konvertus/
 │   ├── meters-feet.html, miles-km.html, inches-cm.html
 │   ├── kg-pounds.html, grams-ounces.html
 │   ├── celsius-fahrenheit.html, celsius-kelvin.html
+│   ├── kmh-ms.html
 │   ├── rub-usd.html, eur-rub.html
 │   ├── mb-gb.html, mbit-mb.html
 │   └── bin-dec.html, dec-hex.html
