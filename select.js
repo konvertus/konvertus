@@ -21,7 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
         TRY: "lira.png",
         KZT: "tenge.png",
         BYN: "belarusian-ruble.png",
-        AED: "dirham.png"
+        AED: "dirham.png",
+        UAH: "hryvnia.png"
     };
 
     const isCurrencyPage = !!document.getElementById("rates-board") || document.body.hasAttribute("data-currency");

@@ -24,7 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
         TRY: ["Турецкая лира", "Turkish lira"],
         KZT: ["Тенге", "Tenge"],
         BYN: ["Белорусский рубль", "Belarusian ruble"],
-        AED: ["Дирхам ОАЭ", "UAE dirham"]
+        AED: ["Дирхам ОАЭ", "UAE dirham"],
+        UAH: ["Украинская гривна", "Ukrainian hryvnia"]
     };
 
     const demoEl = document.getElementById("ex-demo");

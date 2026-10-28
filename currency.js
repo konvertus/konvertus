@@ -31,7 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
         TRY: "lira.png",
         KZT: "tenge.png",
         BYN: "belarusian-ruble.png",
-        AED: "dirham.png"
+        AED: "dirham.png",
+        UAH: "hryvnia.png"
     };
     const iconsBox = document.getElementById("currency-icons");
 

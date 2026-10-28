@@ -28,7 +28,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "data" / "history.json"
 
 BASE = os.environ.get("CBR_BASE", "https://www.cbr-xml-daily.ru/").rstrip("/") + "/"
-CODES = ["USD", "EUR", "CNY", "GBP", "CHF", "JPY", "TRY", "KZT", "BYN", "AED"]
+CODES = ["USD", "EUR", "CNY", "GBP", "CHF", "JPY", "TRY", "KZT", "BYN", "AED", "UAH"]
 YEARS = 5                      # столько лет хранится (график умеет «свой период» до 5 лет)
 KEEP_DAYS = YEARS * 366 + 7
 WORKERS = 6

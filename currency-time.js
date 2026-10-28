@@ -38,7 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
         TRY: "lira.png",
         KZT: "tenge.png",
         BYN: "belarusian-ruble.png",
-        AED: "dirham.png"
+        AED: "dirham.png",
+        UAH: "hryvnia.png"
     };
 
     const iconsBox = document.getElementById("currency-icons");
@@ -304,6 +305,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const amount = readAmount();
         if (!Number.isFinite(amount) || amount === 0) {
             clearResult("");
+            return;
+        }
+
+        // валюту только что добавили в список, а история курсов ещё не пересобрана
+        const unknown = [from, to].find((code) => code !== "RUB" && !codes.includes(code));
+        if (unknown) {
+            clearResult(t(`Истории курсов ${unknown} пока нет: она появится после обновления данных.`, `There is no rate history for ${unknown} yet: it will appear after the data update.`), true);
             return;
         }
 
