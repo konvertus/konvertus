@@ -104,6 +104,20 @@ def parse_bls(payload: dict) -> dict:
     return result
 
 
+def parse_ecb_csv(text: str) -> dict:
+    """ЕЦБ (SDMX, format=csvdata): колонки TIME_PERIOD («2026-09») и OBS_VALUE."""
+    result = {}
+    for row in csv.DictReader(io.StringIO(text.lstrip("\ufeff"))):
+        period, value = (row.get("TIME_PERIOD") or "").strip(), (row.get("OBS_VALUE") or "").strip()
+        if len(period) < 7 or period[4] != "-" or not value:
+            continue
+        try:
+            result[period[:7]] = float(value)
+        except ValueError:
+            continue
+    return result
+
+
 def parse_eurostat(payload: dict) -> dict:
     """Eurostat JSON-stat: время — единственное измерение с size > 1."""
     ids = payload["id"]
@@ -169,6 +183,14 @@ def src_bls(series_id: str):
     return f"BLS {series_id}", run
 
 
+def src_ecb(flow: str, key: str, label: str):
+    def run(first_year: int):
+        url = (f"https://data-api.ecb.europa.eu/service/data/{flow}/{key}"
+               f"?format=csvdata&startPeriod={first_year}-01")
+        return parse_ecb_csv(get(url, headers={"Accept": "text/csv"}).decode("utf-8", "replace"))
+    return f"ЕЦБ {label}", run
+
+
 def src_eurostat(geo: str, unit: str):
     def run(first_year: int):
         query = urllib.parse.urlencode({
@@ -198,8 +220,8 @@ def src_cbr():
 
 SOURCES = {
     "US": [src_bls("CUUR0000SA0"), src_fred("CPIAUCNS")],
-    # с января 2026 Eurostat перешёл на базу 2025=100 (I25); старая серия I15 обрывается в декабре 2025
-    "EA": [src_eurostat("EA", "I25"), src_fred("CP0000EZ19M086NEST")],
+    # ЕЦБ: HICP, еврозона (фиксированный состав на 2026 год), индекс 2025=100. Запасной — Eurostat (с января 2026 база I25).
+    "EA": [src_ecb("HICP", "M.I10.N.000000.4D0.INX", "HICP euro area"), src_eurostat("EA", "I25")],
     "RU": [src_cbr()],
 }
 
