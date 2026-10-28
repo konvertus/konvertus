@@ -15,7 +15,8 @@ Final project for a web development course.
 | Length | meters to feet, miles to kilometers, inches to centimeters | 12 units: from nanometers to kilometers, miles, nautical miles, yards, feet, inches |
 | Weight | kilograms to pounds, grams to ounces | 11 units: metric tons, quintals, carats, ounces, pounds, stones, poods and more |
 | Temperature | Celsius to Fahrenheit, Celsius to Kelvin | Celsius, Fahrenheit, Kelvin, Rankine, Réaumur |
-| Speed | km/h to m/s | 8 units: km/h, m/s, km/s, m/min, cm/s, miles per hour, knots, feet per second |
+| Speed | km/h to m/s | 8 units: km/h, m/s, mph, knots, ft/s, km/s, cm/s, Mach |
+| Speed | km/h to m/s | 8 units: km/h, m/s, miles per hour, knots, feet per second, km/s, cm/s, Mach |
 | Currencies | rubles to dollars, euros to rubles | 11 currencies at the Bank of Russia rate, a rates board, an "Update rate" button, a rate chart for the selected pair for a week, month, 3 months, a year or a custom period |
 | Data | megabytes to gigabytes, megabits to megabytes | bits, bytes, decimal (KB, MB...) and binary (KiB, MiB...) units, megabits as used in internet plans |
 | Number systems | binary to decimal, decimal to hexadecimal | binary, octal, decimal, hexadecimal; large numbers without losing precision |
@@ -23,6 +24,7 @@ Final project for a web development course.
 Also included:
 
 - Russian and English versions with a language switcher in the footer;
+- “Currencies over time” page: an amount, two currencies and a past date show what it would have been then and how the rate changed (5 years of CBR history from `data/history.json`).
 - mobile-friendly layout: hamburger menu, compact sizes, two-column grids;
 - a sticky header that stays on screen while you scroll;
 - a button to copy the result and a button to swap the units;
@@ -46,6 +48,8 @@ konvertus/
 ├── converter.js          length, weight and data converters (ratio-based)
 ├── temperature.js        temperature (scales with different zero points)
 ├── currency.js           currencies: fetching the CBR rate, rates board, icons
+├── currency-time.js, currency-time.css   “Currencies over time” page: an amount today vs. in the past, from CBR history (data/history.json)
+├── tools/update_inflation.py   monthly price indexes (BLS, Eurostat, FRED) into data/inflation.json; runs monthly via .github/workflows/update-inflation.yml
 ├── rate-chart.js         rate chart for a currency pair (SVG, history from the CBR archive, cached in localStorage)
 ├── numbers.js            number systems (BigInt)
 ├── menu.js               mobile menu and the "Tools" dropdown
@@ -56,6 +60,7 @@ konvertus/
 ├── search-index.js       search index: add every new page here
 ├── favicon.ico, favicon.svg, favicon-96x96.png, apple-touch-icon.png, site.webmanifest, web-app-manifest-*.png   site icon (made with realfavicongenerator.net)
 ├── exchange.html         "Exchange" page: bank rate comparison (exchange.js, exchange.css)
+├── currency-time.html    “Currencies over time” page (currency-time.js, currency-time.css)
 ├── typing.js, typing.css typing animation and character filtering for the input and result fields
 ├── og-image.png          link preview image for social networks (1200×630)
 ├── data/banks.json       buy and sell currency rates at banks (filled in with tools/banks-editor.html)
@@ -69,7 +74,6 @@ konvertus/
 │   ├── meters-feet.html, miles-km.html, inches-cm.html
 │   ├── kg-pounds.html, grams-ounces.html
 │   ├── celsius-fahrenheit.html, celsius-kelvin.html
-│   ├── kmh-ms.html
 │   ├── rub-usd.html, eur-rub.html
 │   ├── mb-gb.html, mbit-mb.html
 │   └── bin-dec.html, dec-hex.html

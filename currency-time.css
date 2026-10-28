@@ -1,0 +1,96 @@
+/* Страница «Валюты во времени» (currency-time.html).
+   Кнопки (.range-btn), карточки (.chart-stat), график (.chart-*) и строка статуса переиспользуют стили из konvertus.css */
+
+.time-lead {
+  max-width: 500px;
+  margin: -12px auto 28px;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--menu-text);
+  opacity: 0.8;
+}
+
+/* блок выбора даты внутри конвертера */
+.past-label,
+.past-note {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--menu-text);
+  opacity: 0.75;
+}
+
+.past-note {
+  margin-top: 4px;
+  min-height: 1.3em;
+}
+
+.converter-box .range-btns {
+  margin: 0 0 12px;
+}
+
+.converter-box .range-btn {
+  padding: 7px 12px;
+  font-size: 14px;
+}
+
+.converter-box input[type="date"] {
+  min-height: 48px;
+  box-sizing: border-box;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+:root[data-theme="dark"] .converter-box input[type="date"] {
+  color-scheme: dark;
+}
+
+/* строка статуса под конвертером: ширина как у конвертера */
+.time-status {
+  max-width: 500px;
+  margin: 16px auto 0;
+}
+
+.time-status[hidden],
+.time-result[hidden],
+.time-result .chart-box[hidden] {
+  display: none;
+}
+
+/* результат */
+.time-result {
+  margin-top: 48px;
+}
+
+.time-verdict {
+  max-width: 760px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.time-result .chart-stats {
+  margin: 8px 0 24px;
+}
+
+.time-result .chart-stat-label {
+  line-height: 1.3;
+}
+
+.time-result .chart-stat-value {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .time-lead {
+    margin-top: -8px;
+  }
+
+  .time-result {
+    margin-top: 36px;
+  }
+
+  .converter-box .range-btn {
+    padding: 7px 10px;
+    font-size: 13px;
+  }
+}

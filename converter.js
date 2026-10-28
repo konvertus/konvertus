@@ -23,10 +23,16 @@ document.addEventListener("DOMContentLoaded", () => {
         output.value = Number(result.toFixed(8));
     }
 
+    // для длинных названий (например, «Километры в час») в заголовке берём короткое: data-short="Км/ч"
+    function optionName(select) {
+        const option = select.options[select.selectedIndex];
+        return option.dataset.short || option.textContent;
+    }
+
     function update() {
         if (title) {
-            const first = selectTop.options[selectTop.selectedIndex].textContent;
-            const second = selectBottom.options[selectBottom.selectedIndex].textContent;
+            const first = optionName(selectTop);
+            const second = optionName(selectBottom);
             title.textContent = `${first} ${t("в", "to")} ${second.toLowerCase()}`;
         }
         calculate();

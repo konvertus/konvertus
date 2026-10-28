@@ -37,7 +37,7 @@
     };
 
     document.addEventListener("DOMContentLoaded", () => {
-        if (getComputedStyle(root).getPropertyValue("--konvertus-css").trim() !== "11") return;
+        if (getComputedStyle(root).getPropertyValue("--konvertus-css").trim() !== "12") return;
         const tools = window.konvertusTools();
         if (!tools) return;
 

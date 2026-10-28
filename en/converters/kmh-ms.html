@@ -11,8 +11,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png?v=2">
     <meta name="apple-mobile-web-app-title" content="konvertus">
     <link rel="manifest" href="../../site.webmanifest?v=2">
-    <script src="../../theme.js?v=11"></script>
-    <link rel="stylesheet" href="../../konvertus.css?v=11">
+    <script src="../../theme.js?v=12"></script>
+    <link rel="stylesheet" href="../../konvertus.css?v=12">
     <link rel="stylesheet" href="../../typing.css?v=2">
 
     <!-- Шрифты и значки (свои копии, без запросов к Google) -->
@@ -21,8 +21,8 @@
     <link rel="preload" href="../../fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="../../fonts/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin>
 
-    <title>Km/h to m/s — speed converter online | Konvertus</title>
-    <meta name="description" content="Online speed converter: kilometers per hour, meters per second, miles per hour, knots and other units. Fast conversion both ways.">
+    <title>Km/h to m/s — online speed converter | Konvertus</title>
+    <meta name="description" content="Online speed converter: kilometers per hour to meters per second and back. Miles per hour, knots, feet per second, Mach and other units are supported too.">
     <link rel="canonical" href="https://konvertus.github.io/konvertus/en/converters/kmh-ms.html">
     <link rel="alternate" hreflang="ru" href="https://konvertus.github.io/konvertus/converters/kmh-ms.html">
     <link rel="alternate" hreflang="en" href="https://konvertus.github.io/konvertus/en/converters/kmh-ms.html">
@@ -31,8 +31,8 @@
     <!-- Open Graph (social networks and messengers) -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Konvertus">
-    <meta property="og:title" content="Km/h to m/s — speed converter online | Konvertus">
-    <meta property="og:description" content="Online speed converter: kilometers per hour, meters per second, miles per hour, knots and other units. Fast conversion both ways.">
+    <meta property="og:title" content="Km/h to m/s — online speed converter | Konvertus">
+    <meta property="og:description" content="Online speed converter: kilometers per hour to meters per second and back. Miles per hour, knots, feet per second, Mach and other units are supported too.">
     <meta property="og:url" content="https://konvertus.github.io/konvertus/en/converters/kmh-ms.html">
     <meta property="og:image" content="https://konvertus.github.io/konvertus/og-image.png">
     <meta property="og:image:width" content="1200">
@@ -43,8 +43,8 @@
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Km/h to m/s — speed converter online | Konvertus">
-    <meta name="twitter:description" content="Online speed converter: kilometers per hour, meters per second, miles per hour, knots and other units. Fast conversion both ways.">
+    <meta name="twitter:title" content="Km/h to m/s — online speed converter | Konvertus">
+    <meta name="twitter:description" content="Online speed converter: kilometers per hour to meters per second and back. Miles per hour, knots, feet per second, Mach and other units are supported too.">
     <meta name="twitter:image" content="https://konvertus.github.io/konvertus/og-image.png">
     <meta name="twitter:image:alt" content="Konvertus — unit and currency converter">
 </head>
@@ -93,6 +93,7 @@
                             <a href="rub-usd.html">Rubles to dollars</a>
                             <a href="eur-rub.html">Euro to rubles</a>
                             <a href="../exchange.html">Exchange</a>
+                            <a href="../currency-time.html">Currencies over time</a>
                         </div>
                         <div class="column">
                             <h3><span class="cat-icon cat-data" aria-hidden="true"></span>Data</h3>
@@ -121,14 +122,14 @@
 
             <div class="converter-box">
                 <select id="select-top">
-                    <option value="0.2777777777777778" selected>Km/h</option>
-                    <option value="1">M/s</option>
-                    <option value="1000">Km/s</option>
-                    <option value="0.016666666666666666">M/min</option>
-                    <option value="0.01">Cm/s</option>
-                    <option value="0.44704">Miles/h</option>
-                    <option value="0.5144444444444445">Knots</option>
-                    <option value="0.3048">Ft/s</option>
+                    <option value="0.2777777777777778" data-short="Km/h" selected>Kilometers per hour</option>
+                    <option value="1" data-short="M/s">Meters per second</option>
+                    <option value="0.44704" data-short="Mph">Miles per hour</option>
+                    <option value="0.5144444444444445" data-short="Knots">Knots</option>
+                    <option value="0.3048" data-short="Ft/s">Feet per second</option>
+                    <option value="1000" data-short="Km/s">Kilometers per second</option>
+                    <option value="0.01" data-short="Cm/s">Centimeters per second</option>
+                    <option value="340.29" data-short="Mach">Mach (speed of sound)</option>
                 </select>
                 <input type="number" id="input" placeholder="Enter a number" inputmode="decimal" autocomplete="off">
 
@@ -137,14 +138,14 @@
                 </button>
 
                 <select id="select-bottom">
-                    <option value="0.2777777777777778">Km/h</option>
-                    <option value="1" selected>M/s</option>
-                    <option value="1000">Km/s</option>
-                    <option value="0.016666666666666666">M/min</option>
-                    <option value="0.01">Cm/s</option>
-                    <option value="0.44704">Miles/h</option>
-                    <option value="0.5144444444444445">Knots</option>
-                    <option value="0.3048">Ft/s</option>
+                    <option value="0.2777777777777778" data-short="Km/h">Kilometers per hour</option>
+                    <option value="1" data-short="M/s" selected>Meters per second</option>
+                    <option value="0.44704" data-short="Mph">Miles per hour</option>
+                    <option value="0.5144444444444445" data-short="Knots">Knots</option>
+                    <option value="0.3048" data-short="Ft/s">Feet per second</option>
+                    <option value="1000" data-short="Km/s">Kilometers per second</option>
+                    <option value="0.01" data-short="Cm/s">Centimeters per second</option>
+                    <option value="340.29" data-short="Mach">Mach (speed of sound)</option>
                 </select>
                 <div class="output-row">
                     <input type="text" id="output" placeholder="Result" inputmode="decimal" autocomplete="off">
@@ -155,7 +156,6 @@
             </div>
         </section>
 
-        <!-- Как удобно считать -->
         <section class="tips">
             <h2>Easy mental math</h2>
             <p>The converter above gives the exact result. For a quick estimate, these rules are enough:</p>
@@ -177,12 +177,12 @@
                     <td>3.6</td>
                 </tr>
                 <tr>
-                    <td>Miles/h to km/h</td>
+                    <td>Miles per hour to km/h</td>
                     <td>multiply by 1.6</td>
                     <td>1.609344</td>
                 </tr>
                 <tr>
-                    <td>Km/h to miles/h</td>
+                    <td>Km/h to miles per hour</td>
                     <td>multiply by 0.6</td>
                     <td>0.621371</td>
                 </tr>
@@ -199,43 +199,38 @@
             </p>
         </section>
 
-        <!-- Интересные факты -->
         <section class="facts">
             <h2>Interesting facts</h2>
             <div class="facts-grid">
 
                 <div class="fact">
                     <h3>Meter per second</h3>
-                    <p>It is the SI unit of speed. A handy anchor: 10 m/s is exactly 36 km/h, and 1 m/s is 3.6 km/h.</p>
+                    <p>It is the SI unit of speed. To get km/h, multiply by 3.6: exactly 10 m/s is 36 km/h.</p>
                 </div>
 
                 <div class="fact">
                     <h3>Knot</h3>
-                    <p>One knot is one nautical mile per hour, or 1.852 km/h. The name comes from a rope with knots that
-                        sailors let out behind the ship to measure its speed.</p>
+                    <p>One knot is one nautical mile per hour, or 1.852 km/h. The name comes from the age of sail, when speed was measured with a knotted rope thrown overboard.</p>
                 </div>
 
                 <div class="fact">
-                    <h3>Speed limit signs</h3>
-                    <p>In the USA and the UK roads use miles per hour: a 60 mph limit is about 97 km/h.</p>
+                    <h3>Miles per hour</h3>
+                    <p>Road signs in the US and the UK show speed in miles per hour. A 60 mph limit is about 97 km/h.</p>
                 </div>
 
                 <div class="fact">
-                    <h3>A sprinter</h3>
-                    <p>At his peak in the 100 m world record in 2009, Usain Bolt ran at about 44 km/h, which is
-                        12.4 m/s.</p>
-                </div>
-
-                <div class="fact">
-                    <h3>Space station</h3>
-                    <p>The International Space Station flies at about 7.66 km/s, which is roughly 27,600 km/h. It
-                        circles the Earth about every 90 minutes.</p>
+                    <h3>Mach number</h3>
+                    <p>Mach 1 is the speed of sound. Near the ground it is about 340 m/s, or roughly 1,225 km/h, and it depends on the air temperature.</p>
                 </div>
 
                 <div class="fact">
                     <h3>Speed of light</h3>
-                    <p>Light travels at exactly 299,792,458 m/s, which is almost 1.08 billion km/h. It is the same
-                        number that defines the meter.</p>
+                    <p>299,792,458 m/s is an exact value: since 1983 the meter has been defined through it. In km/h that is about 1.08 billion.</p>
+                </div>
+
+                <div class="fact">
+                    <h3>Land speed record</h3>
+                    <p>In 1997 the car ThrustSSC reached 1,228 km/h and became the first land vehicle to break the sound barrier.</p>
                 </div>
 
             </div>
@@ -255,12 +250,12 @@
         </div>
         <p>© 2026 Konvertus</p>
     </footer>
-    <script src="../../fields.js?v=13"></script>
+    <script src="../../fields.js?v=14"></script>
     <script src="../../typing.js?v=3"></script>
-    <script src="../../select.js?v=11"></script>
-    <script src="../../converter.js?v=11"></script>
-    <script src="../../search-index.js?v=12"></script>
-    <script src="../../search.js?v=11"></script>
+    <script src="../../select.js?v=12"></script>
+    <script src="../../converter.js?v=12"></script>
+    <script src="../../search-index.js?v=13"></script>
+    <script src="../../search.js?v=12"></script>
     <script src="../../menu.js?v=11"></script>
 </body>
 

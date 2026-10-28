@@ -1,0 +1,48 @@
+name: Обновление инфляции
+
+on:
+  schedule:
+    # данные по инфляции выходят раз в месяц с разной задержкой, поэтому проверяем три раза в месяц
+    - cron: "0 6 5,15,25 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-rates
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Обновить индексы цен
+        id: update
+        continue-on-error: true
+        run: python3 tools/update_inflation.py
+
+      - name: Сохранить изменения
+        run: |
+          if [ -z "$(git status --porcelain data/inflation.json)" ]; then
+            echo "Изменений нет"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/inflation.json
+          git commit -m "Обновление инфляции"
+          git push
+
+      # если источник не ответил или данные устарели, запуск помечается красным и GitHub пришлёт письмо
+      - name: Сообщить о проблеме
+        if: steps.update.outcome == 'failure'
+        run: |
+          echo "Не все источники инфляции ответили или данные устарели, см. лог шага выше"
+          exit 1

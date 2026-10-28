@@ -1,7 +1,7 @@
 const SELECT_ICON_BASE = new URL("icons/", document.currentScript.src).href;
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (getComputedStyle(document.documentElement).getPropertyValue("--konvertus-css").trim() !== "11") {
+    if (getComputedStyle(document.documentElement).getPropertyValue("--konvertus-css").trim() !== "12") {
         console.warn("konvertus.css устарел (кэш браузера): кастомные списки отключены, обновите страницу без кэша");
         return;
     }
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         AED: "dirham.png"
     };
 
-    const isCurrencyPage = !!document.getElementById("rates-board");
+    const isCurrencyPage = !!document.getElementById("rates-board") || document.body.hasAttribute("data-currency");
 
     const canHover = window.matchMedia("(hover: hover)").matches;
     const instances = [];

@@ -11,8 +11,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png?v=2">
     <meta name="apple-mobile-web-app-title" content="konvertus">
     <link rel="manifest" href="../site.webmanifest?v=2">
-    <script src="../theme.js?v=11"></script>
-    <link rel="stylesheet" href="../konvertus.css?v=11">
+    <script src="../theme.js?v=12"></script>
+    <link rel="stylesheet" href="../konvertus.css?v=12">
     <link rel="stylesheet" href="../typing.css?v=2">
 
     <!-- Шрифты и значки (свои копии, без запросов к Google) -->
@@ -22,7 +22,7 @@
     <link rel="preload" href="../fonts/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin>
 
     <title>Км/ч в м/с — конвертер скорости онлайн | Конвертус</title>
-    <meta name="description" content="Конвертер скорости онлайн: километры в час, метры в секунду, мили в час, узлы и другие единицы. Быстрый перевод в обе стороны.">
+    <meta name="description" content="Конвертер скорости онлайн: километры в час в метры в секунду и обратно. Поддерживаются мили в час, узлы, футы в секунду, число Маха и другие единицы.">
     <link rel="canonical" href="https://konvertus.github.io/konvertus/converters/kmh-ms.html">
     <link rel="alternate" hreflang="ru" href="https://konvertus.github.io/konvertus/converters/kmh-ms.html">
     <link rel="alternate" hreflang="en" href="https://konvertus.github.io/konvertus/en/converters/kmh-ms.html">
@@ -32,7 +32,7 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Konvertus">
     <meta property="og:title" content="Км/ч в м/с — конвертер скорости онлайн | Конвертус">
-    <meta property="og:description" content="Конвертер скорости онлайн: километры в час, метры в секунду, мили в час, узлы и другие единицы. Быстрый перевод в обе стороны.">
+    <meta property="og:description" content="Конвертер скорости онлайн: километры в час в метры в секунду и обратно. Поддерживаются мили в час, узлы, футы в секунду, число Маха и другие единицы.">
     <meta property="og:url" content="https://konvertus.github.io/konvertus/converters/kmh-ms.html">
     <meta property="og:image" content="https://konvertus.github.io/konvertus/og-image.png">
     <meta property="og:image:width" content="1200">
@@ -44,7 +44,7 @@
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Км/ч в м/с — конвертер скорости онлайн | Конвертус">
-    <meta name="twitter:description" content="Конвертер скорости онлайн: километры в час, метры в секунду, мили в час, узлы и другие единицы. Быстрый перевод в обе стороны.">
+    <meta name="twitter:description" content="Конвертер скорости онлайн: километры в час в метры в секунду и обратно. Поддерживаются мили в час, узлы, футы в секунду, число Маха и другие единицы.">
     <meta name="twitter:image" content="https://konvertus.github.io/konvertus/og-image.png">
     <meta name="twitter:image:alt" content="Конвертус — конвертер единиц измерения и валют">
 </head>
@@ -93,6 +93,7 @@
                             <a href="rub-usd.html">Рубли в доллары</a>
                             <a href="eur-rub.html">Евро в рубли</a>
                             <a href="../exchange.html">Обмен</a>
+                            <a href="../currency-time.html">Валюты во времени</a>
                         </div>
                         <div class="column">
                             <h3><span class="cat-icon cat-data" aria-hidden="true"></span>Данные</h3>
@@ -121,14 +122,14 @@
 
             <div class="converter-box">
                 <select id="select-top">
-                    <option value="0.2777777777777778" selected>Км/ч</option>
-                    <option value="1">М/с</option>
-                    <option value="1000">Км/с</option>
-                    <option value="0.016666666666666666">М/мин</option>
-                    <option value="0.01">См/с</option>
-                    <option value="0.44704">Мили/ч</option>
-                    <option value="0.5144444444444445">Узлы</option>
-                    <option value="0.3048">Фут/с</option>
+                    <option value="0.2777777777777778" data-short="Км/ч" selected>Километры в час</option>
+                    <option value="1" data-short="М/с">Метры в секунду</option>
+                    <option value="0.44704" data-short="Мили/ч">Мили в час</option>
+                    <option value="0.5144444444444445" data-short="Узлы">Узлы</option>
+                    <option value="0.3048" data-short="Фут/с">Футы в секунду</option>
+                    <option value="1000" data-short="Км/с">Километры в секунду</option>
+                    <option value="0.01" data-short="См/с">Сантиметры в секунду</option>
+                    <option value="340.29" data-short="Мах">Мах (скорость звука)</option>
                 </select>
                 <input type="number" id="input" placeholder="Введите число" inputmode="decimal" autocomplete="off">
 
@@ -137,14 +138,14 @@
                 </button>
 
                 <select id="select-bottom">
-                    <option value="0.2777777777777778">Км/ч</option>
-                    <option value="1" selected>М/с</option>
-                    <option value="1000">Км/с</option>
-                    <option value="0.016666666666666666">М/мин</option>
-                    <option value="0.01">См/с</option>
-                    <option value="0.44704">Мили/ч</option>
-                    <option value="0.5144444444444445">Узлы</option>
-                    <option value="0.3048">Фут/с</option>
+                    <option value="0.2777777777777778" data-short="Км/ч">Километры в час</option>
+                    <option value="1" data-short="М/с" selected>Метры в секунду</option>
+                    <option value="0.44704" data-short="Мили/ч">Мили в час</option>
+                    <option value="0.5144444444444445" data-short="Узлы">Узлы</option>
+                    <option value="0.3048" data-short="Фут/с">Футы в секунду</option>
+                    <option value="1000" data-short="Км/с">Километры в секунду</option>
+                    <option value="0.01" data-short="См/с">Сантиметры в секунду</option>
+                    <option value="340.29" data-short="Мах">Мах (скорость звука)</option>
                 </select>
                 <div class="output-row">
                     <input type="text" id="output" placeholder="Результат" inputmode="decimal" autocomplete="off">
@@ -155,7 +156,6 @@
             </div>
         </section>
 
-        <!-- Как удобно считать -->
         <section class="tips">
             <h2>Как удобно считать в уме</h2>
             <p>Точный результат покажет конвертер выше. А для быстрой прикидки хватит этих правил:</p>
@@ -177,12 +177,12 @@
                     <td>3,6</td>
                 </tr>
                 <tr>
-                    <td>Мили/ч в км/ч</td>
+                    <td>Мили в час в км/ч</td>
                     <td>умножить на 1,6</td>
                     <td>1,609344</td>
                 </tr>
                 <tr>
-                    <td>Км/ч в мили/ч</td>
+                    <td>Км/ч в мили в час</td>
                     <td>умножить на 0,6</td>
                     <td>0,621371</td>
                 </tr>
@@ -194,49 +194,43 @@
             </table>
 
             <p class="tips-note">
-                <strong>Общая формула:</strong> значение × (м/с в исходной величине) ÷ (м/с в нужной).
+                <strong>Общая формула:</strong> значение × (м/с в исходной единице) ÷ (м/с в нужной).
                 Так работает и наш конвертер: сначала всё переводится в метры в секунду, потом в нужную единицу.
             </p>
         </section>
 
-        <!-- Интересные факты -->
         <section class="facts">
             <h2>Интересные факты</h2>
             <div class="facts-grid">
 
                 <div class="fact">
                     <h3>Метр в секунду</h3>
-                    <p>Это единица скорости в системе СИ. Удобный ориентир: 10 м/с — это ровно 36 км/ч, а 1 м/с — 3,6 км/ч.</p>
+                    <p>Это единица скорости в СИ. Чтобы перейти к км/ч, умножьте на 3,6: ровно 10 м/с — это 36 км/ч.</p>
                 </div>
 
                 <div class="fact">
                     <h3>Узел</h3>
-                    <p>Один узел — это одна морская миля в час, то есть 1,852 км/ч. Название пришло от верёвки с узлами,
-                        которую моряки вытравливали за борт, чтобы измерить скорость корабля.</p>
+                    <p>Один узел — это морская миля в час, то есть 1,852 км/ч. Название пришло из эпохи парусников: скорость измеряли верёвкой с узлами, брошенной за борт.</p>
                 </div>
 
                 <div class="fact">
-                    <h3>Дорожные знаки</h3>
-                    <p>В США и Великобритании скорость на дорогах указывают в милях в час: ограничение 60 миль/ч — это
-                        около 97 км/ч.</p>
+                    <h3>Мили в час</h3>
+                    <p>На дорожных знаках США и Великобритании скорость указана в милях в час. Предел в 60 mph — это около 97 км/ч.</p>
                 </div>
 
                 <div class="fact">
-                    <h3>Спринтер</h3>
-                    <p>Во время мирового рекорда на 100 метров в 2009 году Усэйн Болт на пике бежал со скоростью около
-                        44 км/ч, то есть 12,4 м/с.</p>
-                </div>
-
-                <div class="fact">
-                    <h3>Космическая станция</h3>
-                    <p>МКС летит со скоростью около 7,66 км/с, или примерно 27 600 км/ч, и облетает Землю примерно за
-                        90 минут.</p>
+                    <h3>Число Маха</h3>
+                    <p>Мах 1 — это скорость звука. У земли она около 340 м/с, то есть примерно 1225 км/ч, и зависит от температуры воздуха.</p>
                 </div>
 
                 <div class="fact">
                     <h3>Скорость света</h3>
-                    <p>Свет проходит ровно 299 792 458 м/с, это почти 1,08 миллиарда км/ч. Именно через это число
-                        сегодня определяют метр.</p>
+                    <p>299 792 458 м/с — точное значение: с 1983 года через него определяется метр. В км/ч это около 1,08 млрд.</p>
+                </div>
+
+                <div class="fact">
+                    <h3>Наземный рекорд</h3>
+                    <p>В 1997 году автомобиль ThrustSSC разогнался до 1228 км/ч и первым среди наземных машин преодолел звуковой барьер.</p>
                 </div>
 
             </div>
@@ -256,12 +250,12 @@
         </div>
         <p>© 2026 Конвертус</p>
     </footer>
-    <script src="../fields.js?v=13"></script>
+    <script src="../fields.js?v=14"></script>
     <script src="../typing.js?v=3"></script>
-    <script src="../select.js?v=11"></script>
-    <script src="../converter.js?v=11"></script>
-    <script src="../search-index.js?v=12"></script>
-    <script src="../search.js?v=11"></script>
+    <script src="../select.js?v=12"></script>
+    <script src="../converter.js?v=12"></script>
+    <script src="../search-index.js?v=13"></script>
+    <script src="../search.js?v=12"></script>
     <script src="../menu.js?v=11"></script>
 </body>
 
