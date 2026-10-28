@@ -20,6 +20,11 @@
     }
 Важно только отношение индексов, поэтому разные базы у стран не мешают.
 
+Россия: Росстат не даёт стабильного машинного файла с помесячным ИПЦ, поэтому индекс строится по годовой
+инфляции Банка России (cbr.ru/hd_base/infl): индекс месяца = индекс того же месяца год назад × (1 + г/г).
+Первый год ряда заполняется ровным ростом, так что для рубля результат приближённый (порядка ±0,5 п.п.);
+такие регионы перечислены в поле "approx", и страница это показывает.
+
 Код возврата: 0 — всё в порядке, 1 — у какого-то региона нет данных или они устарели
 (тогда workflow покажет красный статус и придёт письмо от GitHub).
 """
@@ -115,6 +120,38 @@ def parse_eurostat(payload: dict) -> dict:
     return result
 
 
+def parse_cbr_infl(html: str) -> dict:
+    """Банк России: таблица «Дата (ММ.ГГГГ), ключевая ставка, инфляция г/г, цель» -> {месяц: % г/г}."""
+    import re
+    result = {}
+    for row in re.findall(r"<tr[^>]*>(.*?)</tr>", html, re.S | re.I):
+        cells = [re.sub(r"<[^>]+>", "", c).replace("&nbsp;", " ").strip()
+                 for c in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", row, re.S | re.I)]
+        if len(cells) < 3 or not re.fullmatch(r"\d{2}\.\d{4}", cells[0]):
+            continue
+        try:
+            result[f"{cells[0][3:]}-{cells[0][:2]}"] = float(cells[2].replace(",", ".").replace(" ", ""))
+        except ValueError:
+            continue
+    return result
+
+
+def yoy_to_index(yoy: dict) -> dict:
+    """Строит индекс цен из годовой инфляции: I(m) = I(m − 12) × (1 + г/г).
+    Первые 12 месяцев — ровный рост с темпом первого г/г (точнее данных нет)."""
+    months = sorted(yoy)
+    if len(months) < 24:
+        raise ValueError(f"для расчёта нужно хотя бы 24 месяца, есть {len(months)}")
+    for a, b in zip(months, months[1:]):
+        if months_between(a, b) != 1:
+            raise ValueError(f"в ряду пропущен месяц между {a} и {b}")
+    g = (1 + yoy[months[0]] / 100) ** (1 / 12)
+    index = {}
+    for k, m in enumerate(months):
+        index[m] = 100 * g ** k if k < 12 else index[months[k - 12]] * (1 + yoy[m] / 100)
+    return {m: round(v, 4) for m, v in index.items()}
+
+
 # ---------- источники ----------
 
 def src_fred(series_id: str):
@@ -132,21 +169,38 @@ def src_bls(series_id: str):
     return f"BLS {series_id}", run
 
 
-def src_eurostat(geo: str):
+def src_eurostat(geo: str, unit: str):
     def run(first_year: int):
         query = urllib.parse.urlencode({
-            "format": "JSON", "lang": "EN", "geo": geo, "coicop": "CP00", "unit": "I15",
+            "format": "JSON", "lang": "EN", "geo": geo, "coicop": "CP00", "unit": unit,
             "sinceTimePeriod": f"{first_year}-01",
         })
         url = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?" + query
         return parse_eurostat(json.loads(get(url).decode("utf-8")))
-    return f"Eurostat HICP {geo}", run
+    return f"Eurostat HICP {geo} {unit}", run
+
+
+def src_cbr():
+    def run(first_year: int):
+        # берём с запасом назад: первый год ряда уходит на «разгон» индекса
+        today = dt.date.today()
+        query = urllib.parse.urlencode({
+            "UniDbQuery.Posted": "True",
+            "UniDbQuery.From": f"01.01.{first_year}",
+            "UniDbQuery.To": today.strftime("%d.%m.%Y"),
+        })
+        html = get("https://www.cbr.ru/hd_base/infl/?" + query).decode("utf-8", "replace")
+        return yoy_to_index(parse_cbr_infl(html))
+    run.replace = True   # ряд пересчитывается целиком: частичное слияние дало бы разрыв
+    run.approx = True    # индекс приближённый
+    return "Банк России, инфляция г/г (пересчёт в индекс)", run
 
 
 SOURCES = {
     "US": [src_bls("CUUR0000SA0"), src_fred("CPIAUCNS")],
-    "EA": [src_eurostat("EA"), src_fred("CP0000EZ19M086NEST")],
-    "RU": [src_fred("RUSCPIALLMINMEI")],
+    # с января 2026 Eurostat перешёл на базу 2025=100 (I25); старая серия I15 обрывается в декабре 2025
+    "EA": [src_eurostat("EA", "I25"), src_fred("CP0000EZ19M086NEST")],
+    "RU": [src_cbr()],
 }
 
 
@@ -175,6 +229,7 @@ def main() -> int:
             print("Старый файл повреждён — собираем заново.")
     series = data.get("series", {})
     sources = data.get("sources", {})
+    approx = set(data.get("approx", []))
 
     problems = []
     for region in REGIONS:
@@ -184,14 +239,22 @@ def main() -> int:
                 fresh = run(first_year)
                 if len(fresh) < 12:
                     raise ValueError(f"слишком мало данных ({len(fresh)} точек)")
-                got = (name, fresh)
+                got = (name, fresh, run)
                 break
             except Exception as e:  # любой сбой источника — пробуем следующий
                 print(f"  {region}: {name} не подошёл: {e}", flush=True)
         if got:
-            name, fresh = got
-            series[region] = merge(series.get(region, {}), fresh, first_month)
+            name, fresh, run = got
+            # индексы с разной базой (смена источника) и пересчитываемые ряды нельзя смешивать со старыми
+            if getattr(run, "replace", False) or sources.get(region) != name:
+                series[region] = dict(sorted((m, v) for m, v in fresh.items() if m >= first_month))
+            else:
+                series[region] = merge(series.get(region, {}), fresh, first_month)
             sources[region] = name
+            if getattr(run, "approx", False):
+                approx.add(region)
+            else:
+                approx.discard(region)
             print(f"{region}: {name}, {len(fresh)} точек, последний месяц {max(fresh)}", flush=True)
         else:
             print(f"{region}: ни один источник не ответил, остаются старые данные", file=sys.stderr)
@@ -207,6 +270,7 @@ def main() -> int:
         "regions": REGIONS,
         "series": {r: series[r] for r in REGIONS if r in series},
         "sources": {r: sources[r] for r in REGIONS if r in sources},
+        "approx": sorted(approx & set(series)),
     }
     text = json.dumps(result, ensure_ascii=False, separators=(",", ":"))
     OUT.parent.mkdir(exist_ok=True)

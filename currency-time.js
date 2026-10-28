@@ -409,11 +409,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const realDir = Math.abs(real) < 0.005 ? "" : real > 0 ? "up" : "down";
             const pct = (f) => fmtPercent((f - 1) * 100);
             const lag = [aNow.month, bNow.month].sort()[0];
+            // индекс рубля строится по годовой инфляции ЦБ, поэтому он приблизительный
+            const isApprox = (cpi.approx || []).some((r) => [from, to].includes(cpi.regions[r]));
             cards.push(stat(
                 t("С учётом инфляции", "Inflation-adjusted"),
                 fmtPercent(real),
                 t(`цены: ${from} ${pct(fA)}, ${to} ${pct(fB)}`, `prices: ${from} ${pct(fA)}, ${to} ${pct(fB)}`)
-                    + (lag < latestIso.slice(0, 7) ? t(` · данные до ${lag}`, ` · data up to ${lag}`) : ""),
+                    + (lag < latestIso.slice(0, 7) ? t(` · данные до ${lag}`, ` · data up to ${lag}`) : "")
+                    + (isApprox ? t(" · для рубля приближённо", " · approximate for the ruble") : ""),
                 realDir
             ));
         }
