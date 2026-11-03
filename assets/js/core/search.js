@@ -1,4 +1,4 @@
-const SEARCH_ROOT = new URL("./", document.currentScript.src).href;
+const SEARCH_ROOT = new URL("../../../", document.currentScript.src).href;
 
 document.addEventListener("DOMContentLoaded", () => {
     const root = document.documentElement;

@@ -1,10 +1,9 @@
 // Страница «Обмен»: сравнение курсов покупки и продажи валюты в разных банках.
 // Курсы банков берутся из data/banks.json, курс ЦБ для сравнения из data/history.json.
-// адрес страницы с ?demo показывает демонстрационные данные (data/banks.demo.json), чтобы посмотреть, как всё выглядит
 const EXCHANGE_BANKS_URL = document.currentScript
-    ? new URL(new URLSearchParams(location.search).has("demo") ? "data/banks.demo.json" : "data/banks.json", document.currentScript.src).href
+    ? new URL("../../../data/banks.json", document.currentScript.src).href
     : null;
-const EXCHANGE_CBR_URL = document.currentScript ? new URL("data/history.json", document.currentScript.src).href : null;
+const EXCHANGE_CBR_URL = document.currentScript ? new URL("../../../data/history.json", document.currentScript.src).href : null;
 
 document.addEventListener("DOMContentLoaded", () => {
     const root = document.getElementById("exchange");

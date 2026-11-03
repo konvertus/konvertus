@@ -16,7 +16,6 @@ Final project for a web development course.
 | Weight | kilograms to pounds, grams to ounces | 11 units: metric tons, quintals, carats, ounces, pounds, stones, poods and more |
 | Temperature | Celsius to Fahrenheit, Celsius to Kelvin | Celsius, Fahrenheit, Kelvin, Rankine, Réaumur |
 | Speed | km/h to m/s, km/h to knots | 8 units: km/h, m/s, mph, knots, ft/s, km/s, cm/s, Mach |
-| Speed | km/h to m/s, km/h to knots | 8 units: km/h, m/s, miles per hour, knots, feet per second, km/s, cm/s, Mach |
 | Currencies | rubles to dollars, euros to rubles | 11 currencies at the Bank of Russia rate, a rates board, an "Update rate" button, a rate chart for the selected pair for a week, month, 3 months, a year or a custom period |
 | Data | megabytes to gigabytes, megabits to megabytes | bits, bytes, decimal (KB, MB...) and binary (KiB, MiB...) units, megabits as used in internet plans |
 | Number systems | binary to decimal, decimal to hexadecimal | binary, octal, decimal, hexadecimal; large numbers without losing precision |
@@ -24,7 +23,6 @@ Final project for a web development course.
 Also included:
 
 - Russian and English versions with a language switcher in the footer;
-- “Currencies over time” page: an amount, two currencies and a past date show what it would have been then and how the rate changed (5 years of CBR history from `data/history.json`).
 - mobile-friendly layout: hamburger menu, compact sizes, two-column grids;
 - a sticky header that stays on screen while you scroll;
 - a button to copy the result and a button to swap the units;
@@ -42,34 +40,7 @@ Also included:
 
 ```
 konvertus/
-├── index.html            home page (Russian version)
-├── about.html            "About" page
-├── konvertus.css         all site styles
-├── converter.js          length, weight and data converters (ratio-based)
-├── temperature.js        temperature (scales with different zero points)
-├── currency.js           currencies: fetching the CBR rate, rates board, icons
-├── currency-time.js, currency-time.css   “Currencies over time” page: an amount today vs. in the past, from CBR history (data/history.json)
-├── tools/update_inflation.py   monthly price indexes (BLS, Eurostat, FRED) into data/inflation.json; runs monthly via .github/workflows/update-inflation.yml
-├── rate-chart.js         rate chart for a currency pair (SVG, history from the CBR archive, cached in localStorage)
-├── numbers.js            number systems (BigInt)
-├── menu.js               mobile menu and the "Tools" dropdown
-├── select.js             custom dropdown lists (animation, currency icons and search)
-├── fields.js             swap-button flip animation and the ± button on phones (temperature, number systems)
-├── theme.js              dark theme (applied in <head>, saved in localStorage) and the toggle button
-├── search.js             site-wide search (Ctrl/⌘+K or "/")
-├── search-index.js       search index: add every new page here
-├── favicon.ico, favicon.svg, favicon-96x96.png, apple-touch-icon.png, site.webmanifest, web-app-manifest-*.png   site icon (made with realfavicongenerator.net)
-├── exchange.html         "Exchange" page: bank rate comparison (exchange.js, exchange.css)
-├── currency-time.html    “Currencies over time” page (currency-time.js, currency-time.css)
-├── typing.js, typing.css typing animation and character filtering for the input and result fields
-├── og-image.png          link preview image for social networks (1200×630)
-├── data/banks.json       buy and sell currency rates at banks (filled in with tools/banks-editor.html)
-├── data/banks.demo.json  demo data for preview (exchange.html?demo)
-├── data/history.json     5 years of Bank of Russia rates (updated automatically)
-├── tools/                update_history.py (collects history), self_host_fonts.py (local font copies)
-├── .github/workflows/    update-rates.yml — daily history update
-├── icons/                currency icons (PNG, 128×128, transparent background)
-│   └── categories/       category icons (also embedded into konvertus.css as masks, so they work without a server)
+├── index.html, about.html, exchange.html   pages of the Russian version (page URLs have not changed)
 ├── converters/           converter pages (Russian version)
 │   ├── meters-feet.html, miles-km.html, inches-cm.html
 │   ├── kg-pounds.html, grams-ounces.html
@@ -77,12 +48,44 @@ konvertus/
 │   ├── rub-usd.html, eur-rub.html
 │   ├── mb-gb.html, mbit-mb.html
 │   └── bin-dec.html, dec-hex.html
-└── en/                   English version, same structure
-    ├── index.html, about.html
-    └── converters/
+├── en/                   English version, same structure
+│   ├── index.html, about.html, exchange.html
+│   └── converters/
+├── assets/               everything the pages load
+│   ├── css/
+│   │   ├── konvertus.css     all site styles
+│   │   ├── typing.css        typing animation and look of the input and result fields
+│   │   └── exchange.css      styles of the "Exchange" page
+│   ├── js/
+│   │   ├── core/             on every page
+│   │   │   ├── theme.js          dark theme (applied in <head>, saved in localStorage) and the toggle button
+│   │   │   ├── menu.js           mobile menu and the "Tools" dropdown
+│   │   │   ├── search.js         site-wide search (Ctrl/⌘+K or "/")
+│   │   │   └── search-index.js   search index: add every new page here
+│   │   ├── ui/               interface of the converter pages
+│   │   │   ├── select.js         custom dropdown lists (animation, currency icons and search)
+│   │   │   ├── fields.js         swap-button flip animation and the ± button on phones
+│   │   │   └── typing.js         typing animation and character filtering for the fields
+│   │   └── converters/       calculations and data
+│   │       ├── converter.js      length, weight and data converters (ratio-based)
+│   │       ├── temperature.js    temperature (scales with different zero points)
+│   │       ├── numbers.js        number systems (BigInt)
+│   │       ├── currency.js       currencies: fetching the CBR rate, rates board, icons
+│   │       ├── rate-chart.js     rate chart for a currency pair (SVG, history from data/history.json)
+│   │       └── exchange.js       "Exchange" page: bank rate comparison
+│   ├── fonts/            Montserrat and Material Symbols (local copies, fonts.css)
+│   ├── icons/            currency icons (PNG, 128×128, transparent background)
+│   │   └── categories/   category icons (also embedded into konvertus.css as masks, so they work without a server)
+│   ├── favicon/          favicon.svg, favicon-96x96.png, apple-touch-icon.png, site.webmanifest, web-app-manifest-*.png (made with realfavicongenerator.net)
+│   └── img/              og-image.png: link preview image for social networks (1200×630)
+├── data/                 banks.json (bank buy and sell rates), history.json (5 years of Bank of Russia rates, updated automatically)
+├── tools/                update_history.py (collects history), update_banks.py (bank rates), certs/
+├── .github/workflows/    update-rates.yml (daily history update), update-banks.yml
+├── favicon.ico           stays in the root: browsers and bots look for it there
+└── README.md, README.ru.md
 ```
 
-Styles, scripts and icons are shared by both language versions. Pages load them through relative paths: from `converters/` that is `../konvertus.css`, from `en/converters/` it is `../../konvertus.css`. If you move folders around, the paths need to be updated.
+Styles, scripts and icons are shared by both language versions. Pages load them through relative paths: from `converters/` that is `../assets/css/konvertus.css`, from `en/converters/` it is `../../assets/css/konvertus.css`. Scripts find icons and data relative to their own location (the `new URL(...)` lines at the top of `currency.js`, `select.js`, `exchange.js`, `rate-chart.js` and `search.js`). If you move folders around, the paths need to be updated in both places.
 
 ## Running locally
 
@@ -107,8 +110,6 @@ The site will then be available at http://localhost:8000. An internet connection
 **Rate chart.** `rate-chart.js` draws an SVG chart for the two currencies selected in the converter. History comes from a single file, `data/history.json` (one request for any period). GitHub Actions (`.github/workflows/update-rates.yml`) refreshes it daily by running `tools/update_history.py`, which appends new days from the cbr-xml-daily.ru archive. If the file is missing, the chart works directly from the CBR archive (`archive/YYYY/MM/DD/daily_json.js`, one file per day): long periods use selected dates (up to 48 points) and loaded days are saved in `localStorage`.
 
 **First run.** After pushing the project to GitHub, open Actions → "Обновление истории курсов" → Run workflow to build the first `data/history.json`. After that it updates itself twice a day. Check that the site rebuilds after the bot's commit (Actions or Pages tab).
-
-**Local font copies.** To stop loading fonts from Google's servers, run `python3 tools/self_host_fonts.py` once (internet required): it downloads Montserrat and the icons into `fonts/` and switches every page to them. Afterwards only cbr-xml-daily.ru remains in the external services paragraph, so update that paragraph.
 
 **Number systems.** The number is parsed into a `BigInt`, so long values keep full precision. Only integers are supported; invalid characters produce a clear message.
 
@@ -142,9 +143,8 @@ A student project. Send suggestions and bug reports through the repository's Iss
 
 The `exchange.html` page (and `en/exchange.html`) compares buy and sell currency rates at banks. Bank rates come from `data/banks.json`, and the Bank of Russia rate used for comparison comes from `data/history.json`.
 
-The banks in the file are Sberbank, Alfa-Bank, T-Bank (Tinkoff), VTB and Gazprombank. Until rates are filled in, the page says "Bank rates have not been added yet". To see how it looks with data, open `exchange.html?demo` (it uses `data/banks.demo.json` and shows a "demo data" notice).
 
-**How to fill in the rates.** Open `tools/banks-editor.html` by double-clicking it (works offline), type the buy and sell rate for each bank, press "Скопировать" (Copy), paste the text over the whole of `data/banks.json` and push to GitHub. The editor highlights swapped rates: buy is always lower than sell. File format:
+**How to fill in the rates.** Edit `data/banks.json` by hand: type the buy and sell rate for each bank (buy is always lower than sell) and push to GitHub. File format:
 
 ```json
 {

@@ -1,4 +1,4 @@
-const SELECT_ICON_BASE = new URL("icons/", document.currentScript.src).href;
+const SELECT_ICON_BASE = new URL("../../icons/", document.currentScript.src).href;
 
 document.addEventListener("DOMContentLoaded", () => {
     if (getComputedStyle(document.documentElement).getPropertyValue("--konvertus-css").trim() !== "14") {

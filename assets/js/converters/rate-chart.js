@@ -2,7 +2,7 @@
 // Данные: готовый файл data/history.json (его раз в день обновляет tools/update_history.py);
 // если файла нет, то архив ЦБ РФ на cbr-xml-daily.ru (по одному файлу на день). Без библиотек.
 const RATE_HISTORY_URL = document.currentScript
-    ? new URL("data/history.json", document.currentScript.src).href
+    ? new URL("../../../data/history.json", document.currentScript.src).href
     : null;
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -1,4 +1,4 @@
-const ICON_BASE = new URL("icons/", document.currentScript.src).href;
+const ICON_BASE = new URL("../../icons/", document.currentScript.src).href;
 
 document.addEventListener("DOMContentLoaded", () => {
     const EN = document.documentElement.lang === "en";
