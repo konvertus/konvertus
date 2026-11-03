@@ -2148,8 +2148,6 @@ body.search-lock .search-toggle {
     font-size: 14px;
   }
 
-  /* две равные колонки; minmax(0, 1fr) и min-width: 0 нужны, чтобы поля даты в Safari на iPhone
-     могли сжиматься и не выходили за рамки (у них своя минимальная ширина) */
   .range-custom {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2186,7 +2184,6 @@ body.search-lock .search-toggle {
   }
 }
 
-/* совсем узкие экраны: поля дат друг под другом, чтобы дата помещалась целиком */
 @media (max-width: 360px) {
   .range-custom {
     grid-template-columns: minmax(0, 1fr);
