@@ -20,8 +20,8 @@
   --text: #fffaf0;
   --accent: #c4705a;
   --menu-bg: #252823;
-  --menu-text: #ebe4d3;
-  --ink: #e9e2d2;
+  --menu-text: #f6f1e4;
+  --ink: #f4eee0;
   --input-bg: #1a1c19;
   --line: rgba(255, 255, 255, 0.1);
 }
@@ -2148,6 +2148,8 @@ body.search-lock .search-toggle {
     font-size: 14px;
   }
 
+  /* две равные колонки; minmax(0, 1fr) и min-width: 0 нужны, чтобы поля даты в Safari на iPhone
+     могли сжиматься и не выходили за рамки (у них своя минимальная ширина) */
   .range-custom {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2184,6 +2186,7 @@ body.search-lock .search-toggle {
   }
 }
 
+/* совсем узкие экраны: поля дат друг под другом, чтобы дата помещалась целиком */
 @media (max-width: 360px) {
   .range-custom {
     grid-template-columns: minmax(0, 1fr);

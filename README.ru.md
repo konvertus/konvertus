@@ -40,17 +40,16 @@
 
 ```
 konvertus/
-├── index.html, about.html, exchange.html   страницы русской версии (адреса страниц не изменились)
-├── converters/           страницы конвертеров (русская версия)
-│   ├── meters-feet.html, miles-km.html, inches-cm.html
-│   ├── kg-pounds.html, grams-ounces.html
-│   ├── celsius-fahrenheit.html, celsius-kelvin.html
-│   ├── rub-usd.html, eur-rub.html
-│   ├── mb-gb.html, mbit-mb.html
-│   └── bin-dec.html, dec-hex.html
-├── en/                   английская версия, структура та же
-│   ├── index.html, about.html, exchange.html
-│   └── converters/
+├── index.html, about.html                  страницы русской версии
+├── converters/           страницы конвертеров (русская версия), по папке на категорию, по странице на каждую пару единиц
+│   ├── length/           66 страниц (meters-feet, miles-km и inches-cm написаны вручную, остальные созданы генератором)
+│   ├── mass/             55 страниц
+│   ├── temperature/      10 страниц
+│   ├── speed/            28 страниц
+│   ├── currency/         66 страниц с парами валют и exchange.html (курсы банков)
+│   ├── data/             91 страница
+│   └── numbers/          6 страниц (двоичная, восьмеричная, десятичная, шестнадцатеричная)
+├── en/                   английская версия, структура та же (en/index.html, en/about.html, en/converters/...)
 ├── assets/               всё, что подгружают страницы
 │   ├── css/
 │   │   ├── konvertus.css     все стили сайта
@@ -76,16 +75,14 @@ konvertus/
 │   ├── fonts/            Montserrat и Material Symbols (свои копии, fonts.css)
 │   ├── icons/            иконки валют (PNG, 128×128, прозрачный фон)
 │   │   └── categories/   значки категорий (дополнительно вшиты в konvertus.css как маски, чтобы работали без сервера)
-│   ├── favicon/          favicon.svg, favicon-96x96.png, apple-touch-icon.png, site.webmanifest, web-app-manifest-*.png (сделаны в realfavicongenerator.net)
-│   └── img/              og-image.png: картинка для превью ссылки в соцсетях (1200×630)
+│   ├── favicon/          favicon.ico, favicon.svg, favicon-96x96.png, apple-touch-icon.png, site.webmanifest, web-app-manifest-*.png (сделаны в realfavicongenerator.net)
 ├── data/                 banks.json (курсы покупки и продажи в банках), history.json (история курсов ЦБ за 5 лет, обновляется автоматически)
-├── tools/                update_history.py (сбор истории), update_banks.py (курсы банков), certs/
+├── tools/                update_history.py (сбор истории), update_banks.py (курсы банков), generate_pairs.py (страницы пар и блок поиска), certs/
 ├── .github/workflows/    update-rates.yml (ежедневное обновление истории), update-banks.yml
-├── favicon.ico           лежит в корне: браузеры и боты ищут его именно там
 └── README.md, README.ru.md
 ```
 
-Стили, скрипты и иконки общие для обеих языковых версий. Страницы подключают их по относительным путям: из `converters/` это `../assets/css/konvertus.css`, из `en/converters/` — `../../assets/css/konvertus.css`. Скрипты находят иконки и данные относительно своего расположения (строки `new URL(...)` в начале `currency.js`, `select.js`, `exchange.js`, `rate-chart.js` и `search.js`). Если перенести папки, пути придётся поправить в обоих местах.
+Стили, скрипты и иконки общие для обеих языковых версий. Страницы подключают их по относительным путям: из `converters/length/` это `../../assets/css/konvertus.css`, из `en/converters/length/` — `../../../assets/css/konvertus.css`. Скрипты находят иконки и данные относительно своего расположения (строки `new URL(...)` в начале `currency.js`, `select.js`, `exchange.js`, `rate-chart.js` и `search.js`). Если перенести папки, пути придётся поправить в обоих местах.
 
 ## Запуск на своём компьютере
 
@@ -113,11 +110,15 @@ python3 -m http.server 8000
 
 **Системы счисления.** Число разбирается в `BigInt`, поэтому длинные значения не теряют точность. Поддерживаются только целые числа; на неверные символы страница отвечает понятным сообщением.
 
+## Страницы для всех пар единиц
+
+У каждой пары единиц в категории есть своя страница, поэтому поиск по сайту находит, например, «километры в метры» напрямую. Эти страницы (и соответствующий блок в конце `assets/js/core/search-index.js`) создаёт `python3 tools/generate_pairs.py`, шаблонами служат страницы, написанные вручную. Чтобы добавить единицу, впишите её в списки единиц на странице-шаблоне (ru и en) и в `units` в скрипте, затем запустите скрипт снова. Страницы из списка `existing` в скрипте написаны вручную и не перезаписываются.
+
 ## Как добавить новый конвертер
 
 Для величин, которые переводятся умножением (площадь, объём, скорость):
 
-1. Скопируйте любую страницу из `converters/`, например `kg-pounds.html`, под новым именем.
+1. Скопируйте любую страницу из `converters/`, например `converters/mass/kg-pounds.html`, под новым именем.
 2. Замените заголовок, `<title>`, оба списка единиц (`value` — это число базовых единиц) и блоки с подсказками и фактами. Атрибут `selected` задаёт единицы по умолчанию.
 3. Добавьте ссылку в меню «Инструменты» на всех страницах и карточку на главной.
 4. Сделайте то же в `en/converters/` с английскими текстами.
@@ -141,7 +142,7 @@ python3 -m http.server 8000
 
 ## Страница «Обмен»
 
-Страница `exchange.html` (и `en/exchange.html`) сравнивает курсы покупки и продажи валюты в банках. Курсы берутся из файла `data/banks.json`, а курс ЦБ для сравнения из `data/history.json`.
+Страница `converters/currency/exchange.html` (и `en/converters/currency/exchange.html`) сравнивает курсы покупки и продажи валюты в банках. Курсы берутся из файла `data/banks.json`, а курс ЦБ для сравнения из `data/history.json`.
 
 
 **Как заполнить курсы.** Отредактируйте `data/banks.json` вручную: впишите покупку и продажу по каждому банку (покупка всегда меньше продажи) и отправьте на GitHub. Формат файла:

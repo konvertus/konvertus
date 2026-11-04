@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#7a8c77">
+    <link rel="icon" type="image/png" href="../../../assets/favicon/favicon-96x96.png?v=18" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="../../../assets/favicon/favicon.svg?v=18">
+    <link rel="shortcut icon" href="../../../assets/favicon/favicon.ico?v=18">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../assets/favicon/apple-touch-icon.png?v=18">
+    <meta name="apple-mobile-web-app-title" content="konvertus">
+    <link rel="manifest" href="../../../assets/favicon/site.webmanifest?v=18">
+    <script src="../../../assets/js/core/theme.js?v=18"></script>
+    <link rel="stylesheet" href="../../../assets/css/konvertus.css?v=18">
+    <link rel="stylesheet" href="../../../assets/css/typing.css?v=18">
+    <link rel="stylesheet" href="../../../assets/css/exchange.css?v=18">
+
+    <!-- Шрифты и значки (свои копии, без запросов к Google) -->
+    <link rel="stylesheet" href="../../../assets/fonts/fonts.css?v=18">
+    <link rel="preload" href="../../../assets/fonts/montserrat-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../../../assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../../../assets/fonts/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin>
+
+    <title>Currency exchange — compare bank rates | Konvertus</title>
+    <meta name="description"
+        content="Compare buy and sell rates at different banks: where it is cheaper to buy or sell dollars, euros and yuan. See the total and how far each rate is from the Bank of Russia rate.">
+    <link rel="canonical" href="https://konvertus.github.io/konvertus/en/converters/currency/exchange.html">
+    <link rel="alternate" hreflang="ru" href="https://konvertus.github.io/konvertus/converters/currency/exchange.html">
+    <link rel="alternate" hreflang="en" href="https://konvertus.github.io/konvertus/en/converters/currency/exchange.html">
+    <link rel="alternate" hreflang="x-default" href="https://konvertus.github.io/konvertus/converters/currency/exchange.html">
+</head>
+
+<body>
+
+    <!-- шапка -->
+    <header class="header">
+
+        <a href="../../index.html" class="logo">
+            <span class="material-symbols-outlined arrows_symbol">sync_alt</span>
+            <span>KONVERTUS</span>
+        </a>
+
+        <!-- left buttons -->
+        <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false"
+            aria-controls="nav-panel"><span></span></button>
+
+        <div class="nav-panel" id="nav-panel">
+            <nav class="menu">
+                <div class="dropdown">
+                    <button class="dropbtn">Tools <span class="caret" aria-hidden="true">▾</span></button>
+
+                    <div class="dropdown-content">
+                        <div class="column">
+                            <h3><span class="cat-icon cat-length" aria-hidden="true"></span>Length</h3>
+                            <a href="../length/meters-feet.html">Meters to feet</a>
+                            <a href="../length/miles-km.html">Miles to kilometers</a>
+                            <a href="../length/inches-cm.html">Inches to centimeters</a>
+                        </div>
+                        <div class="column">
+                            <h3><span class="cat-icon cat-mass" aria-hidden="true"></span>Weight</h3>
+                            <a href="../mass/kg-pounds.html">Kilograms to pounds</a>
+                            <a href="../mass/grams-ounces.html">Grams to ounces</a>
+                        </div>
+                        <div class="column">
+                            <h3><span class="cat-icon cat-temperature" aria-hidden="true"></span>Temperature</h3>
+                            <a href="../temperature/celsius-fahrenheit.html">Celsius to Fahrenheit</a>
+                            <a href="../temperature/celsius-kelvin.html">Celsius to Kelvin</a>
+                        </div>
+                        <div class="column">
+                            <h3><span class="cat-icon cat-speed" aria-hidden="true"></span>Speed</h3>
+                            <a href="../speed/kmh-ms.html">Km/h to m/s</a>
+                            <a href="../speed/kmh-knots.html">Km/h to knots</a>
+                        </div>
+                        <div class="column">
+                            <h3><span class="cat-icon cat-currency" aria-hidden="true"></span>Currencies</h3>
+                            <a href="rub-usd.html">Rubles to dollars</a>
+                            <a href="exchange.html">Exchange</a>
+                        </div>
+                        <div class="column">
+                            <h3><span class="cat-icon cat-data" aria-hidden="true"></span>Data</h3>
+                            <a href="../data/mb-gb.html">Megabytes to gigabytes</a>
+                            <a href="../data/mbit-mb.html">Megabits to megabytes</a>
+                        </div>
+                        <div class="column">
+                            <h3><span class="cat-icon cat-binary" aria-hidden="true"></span>Number systems</h3>
+                            <a href="../numbers/bin-dec.html">Binary to decimal</a>
+                            <a href="../numbers/dec-hex.html">Decimal to hexadecimal</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="../../about.html">About</a>
+            </nav>
+        </div>
+
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Currency exchange</h1>
+            <p>Compare buy and sell rates at different banks and choose where exchanging is cheaper.</p>
+        </section>
+
+        <section class="exchange" id="exchange">
+            <p class="exchange-demo" id="ex-demo" hidden>These are <strong>demo data</strong>: not real bank rates.
+                Real rates will appear here once the rates file is filled in.</p>
+
+            <div class="range-btns exchange-mode" role="group" aria-label="What do you want to do" id="ex-mode">
+                <button type="button" class="range-btn" data-mode="buy" aria-pressed="true">Buy</button>
+                <button type="button" class="range-btn" data-mode="sell" aria-pressed="false">Sell</button>
+            </div>
+
+            <div class="range-btns" role="group" aria-label="Currency" id="ex-currencies"></div>
+
+            <label class="exchange-amount">
+                <span>Amount</span>
+                <input type="text" id="ex-amount" inputmode="decimal" autocomplete="off" value="1000">
+                <span id="ex-amount-code"></span>
+            </label>
+
+            <div class="chart-stats" id="ex-stats" aria-live="polite"></div>
+
+            <div class="exchange-table-wrap">
+                <table class="exchange-table" id="ex-table">
+                    <caption class="exchange-caption">Currency buy and sell rates at banks</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Bank</th>
+                            <th scope="col">Bank buys</th>
+                            <th scope="col">Bank sells</th>
+                            <th scope="col">Spread</th>
+                            <th scope="col" id="ex-total-head">You pay</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <p class="rates-status" id="ex-status"></p>
+        </section>
+
+        <section class="tips">
+            <h2>How to read the table</h2>
+            <p><strong>Bank buys</strong> is the rate at which the bank takes currency from you when you sell it.
+                <strong>Bank sells</strong> is the rate at which you buy currency from the bank. The difference is the
+                spread, which is the price of the exchange: the smaller it is, the better.
+            </p>
+            <p>Choose what you want to do and the banks line up from the best to the worst offer. The last column shows
+                how many rubles you pay or get for the amount you entered.</p>
+        </section>
+    </main>
+    <footer class="footer">
+        <a href="../../index.html" class="footer-logo">KONVERTUS</a>
+        <nav class="footer-links">
+            <a href="../../about.html">About</a>
+            <a href="../../about.html#contacts">Contacts</a>
+        </nav>
+        <div class="lang-switch">
+            <a href="../../../converters/currency/exchange.html" hreflang="ru" lang="ru">Русский</a>
+            <span class="lang-sep">·</span>
+            <span class="lang-current">English</span>
+        </div>
+        <p>© 2026 Konvertus</p>
+    </footer>
+    <script src="../../../assets/js/converters/exchange.js?v=18"></script>
+    <script src="../../../assets/js/ui/typing.js?v=18"></script>
+    <script src="../../../assets/js/core/search-index.js?v=18"></script>
+    <script src="../../../assets/js/core/search.js?v=18"></script>
+    <script src="../../../assets/js/core/menu.js?v=18"></script>
+</body>
+
+</html>
