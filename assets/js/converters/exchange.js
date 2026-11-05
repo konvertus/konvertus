@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const demoEl = document.getElementById("ex-demo");
     const modeBox = document.getElementById("ex-mode");
+    const kindBox = document.getElementById("ex-kind");
     const chipsBox = document.getElementById("ex-currencies");
     const amountInput = document.getElementById("ex-amount");
     const amountCode = document.getElementById("ex-amount-code");
@@ -38,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const statusEl = document.getElementById("ex-status");
     const tbody = table.querySelector("tbody");
 
-    const state = { mode: "buy", code: null, amount: 1000 };
+    const state = { mode: "buy", kind: "cashless", code: null, amount: 1000 };
     let banks = [];
     let cbr = null; // { date, rates: { USD: 80.5, ... } }
 
@@ -58,10 +59,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ---------- данные ----------
+    // курс банка по валюте и типу (cashless / cash); старый плоский формат {buy, sell} считается безналичным
+    function rateOf(bank, code, kind) {
+        const r = bank.rates?.[code];
+        if (!r) return null;
+        if ("buy" in r || "sell" in r) return kind === "cashless" ? r : null;
+        return r[kind] || null;
+    }
+
+    // ссылка на страницу обмена: для валюты и типа → для валюты → для типа → на сайт банка
+    function linkOf(bank, code, kind) {
+        const u = bank.urls?.[code];
+        const candidates = [typeof u === "string" ? u : u?.[kind], bank.exchange_urls?.[kind], bank.url];
+        return candidates.find((x) => typeof x === "string" && /^https?:\/\//i.test(x)) || null;
+    }
+
     function rowsFor(code) {
         const side = state.mode === "buy" ? "sell" : "buy"; // покупаем мы, значит банк продаёт
         const rows = banks
-            .map((bank) => ({ bank, buy: bank.rates?.[code]?.buy, sell: bank.rates?.[code]?.sell }))
+            .map((bank) => {
+                const r = rateOf(bank, code, state.kind);
+                return { bank, buy: r?.buy, sell: r?.sell };
+            })
             .filter((r) => valid(r[side]));
         // купить выгоднее по меньшему курсу продажи, продать по большему курсу покупки
         rows.sort((a, b) => (state.mode === "buy" ? a.sell - b.sell : b.buy - a.buy));
@@ -98,8 +117,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const nameCell = el("td");
             nameCell.dataset.label = t("Банк", "Bank");
-            const url = row.bank.urls?.[state.code] || row.bank.url;
-            if (typeof url === "string" && /^https?:\/\//i.test(url)) {
+            const url = linkOf(row.bank, state.code, state.kind);
+            if (url) {
                 const a = el("a", "exchange-bank", bankName(row.bank));
                 a.href = url;
                 a.target = "_blank";
@@ -172,6 +191,12 @@ document.addEventListener("DOMContentLoaded", () => {
         render();
     }
 
+    function setKind(kind) {
+        state.kind = kind;
+        for (const btn of kindBox.querySelectorAll(".range-btn")) btn.setAttribute("aria-pressed", String(btn.dataset.kind === kind));
+        render();
+    }
+
     function setCurrency(code) {
         state.code = code;
         for (const btn of chipsBox.querySelectorAll(".range-btn")) btn.setAttribute("aria-pressed", String(btn.dataset.code === code));
@@ -181,6 +206,10 @@ document.addEventListener("DOMContentLoaded", () => {
     modeBox.addEventListener("click", (e) => {
         const btn = e.target.closest(".range-btn");
         if (btn) setMode(btn.dataset.mode);
+    });
+    kindBox.addEventListener("click", (e) => {
+        const btn = e.target.closest(".range-btn");
+        if (btn) setKind(btn.dataset.kind);
     });
     chipsBox.addEventListener("click", (e) => {
         const btn = e.target.closest(".range-btn");

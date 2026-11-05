@@ -13,43 +13,57 @@
       "name": "Сбербанк",
       "name_en": "Sberbank",
       "url": "https://www.sberbank.ru",
-      "rates": {}
+      "rates": {},
+      "exchange_urls": {
+        "cashless": "https://www.sberbank.ru/ru/quotes/currencies",
+        "cash": "https://www.sberbank.ru/ru/quotes/currencies"
+      }
     },
     {
       "id": "alfa",
       "name": "Альфа-Банк",
       "name_en": "Alfa-Bank",
       "url": "https://alfabank.ru",
-      "rates": {}
+      "rates": {},
+      "exchange_urls": {
+        "cashless": "https://alfabank.ru/currency/",
+        "cash": "https://alfabank.ru/currency/"
+      }
     },
     {
       "id": "tbank",
       "name": "Т-Банк (Тинькофф)",
       "name_en": "T-Bank (Tinkoff)",
       "url": "https://www.tbank.ru",
-      "urls": {
-        "USD": "https://www.tbank.ru/invest/currencies/USD000UTSTOM/",
-        "EUR": "https://www.tbank.ru/invest/currencies/EURRUB/",
-        "CNY": "https://www.tbank.ru/invest/currencies/CNYRUB/",
-        "GBP": "https://www.tbank.ru/invest/currencies/GBPRUB"
-      },
       "rates": {
         "USD": {
-          "buy": 81.25,
-          "sell": 85.75
+          "cashless": {
+            "buy": 81.25,
+            "sell": 85.75
+          }
         },
         "EUR": {
-          "buy": 90.35,
-          "sell": 96.35
+          "cashless": {
+            "buy": 90.35,
+            "sell": 96.35
+          }
         },
         "CNY": {
-          "buy": 12.14,
-          "sell": 12.349
+          "cashless": {
+            "buy": 12.14,
+            "sell": 12.349
+          }
         },
         "GBP": {
-          "buy": 87.95,
-          "sell": 131.95
+          "cashless": {
+            "buy": 87.95,
+            "sell": 131.95
+          }
         }
+      },
+      "exchange_urls": {
+        "cashless": "https://www.tbank.ru/about/exchange-rates/",
+        "cash": "https://www.tbank.ru/about/exchange-rates/"
       }
     },
     {
@@ -57,14 +71,22 @@
       "name": "ВТБ",
       "name_en": "VTB",
       "url": "https://www.vtb.ru",
-      "rates": {}
+      "rates": {},
+      "exchange_urls": {
+        "cashless": "https://www.vtb.ru/personal/platezhi-i-perevody/obmen-valjuty/",
+        "cash": "https://www.vtb.ru/personal/platezhi-i-perevody/obmen-valjuty/"
+      }
     },
     {
       "id": "gpb",
       "name": "Газпромбанк",
       "name_en": "Gazprombank",
       "url": "https://www.gazprombank.ru",
-      "rates": {}
+      "rates": {},
+      "exchange_urls": {
+        "cashless": "https://www.gazprombank.ru/personal/currency-rates/",
+        "cash": "https://www.gazprombank.ru/personal/currency-rates/"
+      }
     }
   ]
 }

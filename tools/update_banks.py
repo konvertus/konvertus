@@ -66,25 +66,25 @@ def get_json(url: str, headers: dict | None = None):
 
 
 # ---------------------------------------------------------------- банки
+# fetcher возвращает {"USD": {"cashless": {"buy": 81.7, "sell": 89.2}, "cash": {...}}, ...}
+# buy — банк покупает валюту у клиента, sell — банк продаёт её клиенту.
+# Любой из двух типов можно не возвращать.
+
+KINDS = ("cashless", "cash")
+
 
 def fetch_tbank() -> dict:
-    """Т-Банк. Публичный JSON, который использует его страница курсов.
+    """Т-Банк: безналичный курс (категория DebitCardsTransfers) и, если задана, категория наличных.
 
-    В ответе несколько «категорий» курса. На странице со скриншота
-    («при переводе между своими счетами и оплате услуг») это DebitCardsTransfers.
-    Если на сайте покажутся другие числа — посмотри в DevTools → Network
-    нужную категорию и поменяй её через переменную TBANK_CATEGORY.
+    Название категории наличных неизвестно заранее: запусти tools/probe_banks.py
+    (workflow «Проверка банков»), он выведет все категории из ответа, и впиши нужную
+    в переменную TBANK_CASH_CATEGORY (или в CATEGORIES ниже).
     """
-    category = os.environ.get("TBANK_CATEGORY", "DebitCardsTransfers")
+    categories = {
+        "cashless": os.environ.get("TBANK_CATEGORY", "DebitCardsTransfers"),
+        "cash": os.environ.get("TBANK_CASH_CATEGORY", ""),
+    }
     result = {}
-    reported = set()
-
-    def report(key: str, message: str) -> None:
-        # причину каждого типа показываем один раз, а не по разу на каждую валюту
-        if key not in reported:
-            reported.add(key)
-            print("  " + message)
-
     for code in CURRENCIES:
         data = None
         for host in ("api.tbank.ru", "api.tinkoff.ru"):
@@ -92,28 +92,21 @@ def fetch_tbank() -> dict:
                 data = get_json(f"https://{host}/v1/currency_rates?from={code}&to=RUB")
                 break
             except RuntimeError as e:
-                report(host, f"{host}: {e}")
+                print(f"  {host}: {e}")
         if not isinstance(data, dict):
             continue
-        rates = data.get("payload", {}).get("rates", [])
-        for item in rates:
-            if (item.get("category") == category
-                    and item.get("fromCurrency", {}).get("name") == code
-                    and item.get("toCurrency", {}).get("name") == "RUB"):
-                result[code] = {"buy": item.get("buy"), "sell": item.get("sell")}
-                break
-        else:
-            categories = sorted({str(i.get("category")) for i in rates if isinstance(i, dict)})
-            report(
-                "category",
-                f"ответ получен, но курса {code} в категории {category} в нём нет. "
-                f"resultCode: {data.get('resultCode')}; категории в ответе: {', '.join(categories) or 'нет'}"
-            )
+        for item in data.get("payload", {}).get("rates", []):
+            if item.get("fromCurrency", {}).get("name") != code or item.get("toCurrency", {}).get("name") != "RUB":
+                continue
+            for kind, cat in categories.items():
+                if cat and item.get("category") == cat:
+                    result.setdefault(code, {})[kind] = {"buy": item.get("buy"), "sell": item.get("sell")}
     return result
 
 
-# Чтобы добавить банк: напиши fetch_<банк>() по образцу выше
-# и впиши его сюда. Ключ — id банка из data/banks.json.
+# Чтобы добавить банк: напиши fetch_<банк>() по образцу выше и впиши его сюда.
+# Ключ — id банка из data/banks.json (sber, alfa, tbank, vtb, gpb).
+# Адреса для остальных банков подбираются через tools/probe_banks.py.
 FETCHERS = {
     "tbank": fetch_tbank,
 }
@@ -133,18 +126,34 @@ def cbr_rates() -> dict:
 
 def clean(rates: dict, cbr: dict, bank_id: str) -> dict:
     out = {}
-    for code, r in rates.items():
-        buy, sell = r.get("buy"), r.get("sell")
-        ok = all(isinstance(v, (int, float)) and v > 0 for v in (buy, sell)) and buy <= sell
-        ref = cbr.get(code)
-        if ok and ref:
-            # сравниваем середину, а не края: у редких валют (фунт) банки ставят очень широкий разброс
-            ok = abs((buy + sell) / 2 / ref - 1) <= MAX_DEVIATION
-        if ok:
-            out[code] = {"buy": round(float(buy), 4), "sell": round(float(sell), 4)}
-        else:
-            print(f"  {bank_id} {code}: подозрительные данные {r}, пропускаем")
+    for code, kinds in rates.items():
+        for kind in KINDS:
+            r = (kinds or {}).get(kind)
+            if not isinstance(r, dict):
+                continue
+            buy, sell = r.get("buy"), r.get("sell")
+            ok = all(isinstance(v, (int, float)) and v > 0 for v in (buy, sell)) and buy <= sell
+            ref = cbr.get(code)
+            if ok and ref:
+                # сравниваем середину, а не края: у редких валют (фунт) банки ставят очень широкий разброс
+                ok = abs((buy + sell) / 2 / ref - 1) <= MAX_DEVIATION
+            if ok and sell / buy > 1.15:
+                ok = False  # спред больше 15 % — почти наверняка ошибка данных
+            if ok:
+                out.setdefault(code, {})[kind] = {"buy": round(float(buy), 4), "sell": round(float(sell), 4)}
+            else:
+                print(f"  {bank_id} {code} {kind}: подозрительные данные {r}, пропускаем")
     return out
+
+
+def merge(old: dict, fresh: dict) -> dict:
+    """Свежие курсы поверх старых; старый плоский формат {buy, sell} считается безналичным."""
+    merged = {}
+    for code, r in (old or {}).items():
+        merged[code] = {"cashless": r} if "buy" in r else dict(r)
+    for code, kinds in fresh.items():
+        merged.setdefault(code, {}).update(kinds)
+    return merged
 
 
 # ---------------------------------------------------------------- main
@@ -170,11 +179,11 @@ def main() -> int:
             print(f"{bank['id']}: данных нет, оставляем прошлые курсы")
             continue
         succeeded += 1
-        merged = {**bank.get("rates", {}), **fresh}
+        merged = merge(bank.get("rates", {}), fresh)
         if merged != bank.get("rates"):
             bank["rates"] = merged
             changed = True
-        details = ", ".join("{} {}/{}".format(c, r["buy"], r["sell"]) for c, r in fresh.items())
+        details = ", ".join(f"{c} {k} {r['buy']}/{r['sell']}" for c, ks in fresh.items() for k, r in ks.items())
         print(f"{bank['id']}: {details}")
 
     if attempted and not succeeded:
