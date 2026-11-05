@@ -14,11 +14,12 @@ from update_banks import ssl_context  # noqa: E402
 CANDIDATES = {
     "tbank-api": "https://api.tbank.ru/v1/currency_rates?from=USD&to=RUB",
     "tbank-api-old": "https://api.tinkoff.ru/v1/currency_rates?from=USD&to=RUB",
-    "tbank-page": "https://www.tbank.ru/about/exchange-rates/",
+    "tbank-home": "https://www.tbank.ru/",
     "sber": "https://www.sberbank.ru/ru/quotes/currencies",
     "alfa": "https://alfabank.ru/currency/",
     "vtb": "https://www.vtb.ru/personal/platezhi-i-perevody/obmen-valjuty/",
-    "gpb": "https://www.gazprombank.ru/personal/currency-rates/",
+    "gpb-home": "https://www.gazprombank.ru/",
+    "gpb-personal": "https://www.gazprombank.ru/personal/",
 }
 
 
@@ -41,7 +42,15 @@ def main() -> None:
             except ValueError:
                 print(body[:300])
         else:
-            print("есть USD:", "USD" in body, "| есть JSON-данные:", "application/json" in body or '"rate' in body.lower())
+            import re
+            links = []
+            for m in re.finditer(r'(?:href|src|url)=["\']?([^"\'\s>]+)', body):
+                u = m.group(1)
+                if re.search(r"kurs|rate|currenc|valut|obmen|exchange|/api/", u, re.I) and u not in links:
+                    links.append(u)
+            print("похожие ссылки:", links[:15])
+            for m in list(re.finditer("USD", body))[:3]:
+                print("  ...", body[max(0, m.start() - 150):m.start() + 150].replace("\n", " "))
             print(body[:200].replace("\n", " "))
 
 

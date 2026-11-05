@@ -82,7 +82,7 @@ def fetch_tbank() -> dict:
     """
     categories = {
         "cashless": os.environ.get("TBANK_CATEGORY", "DebitCardsTransfers"),
-        "cash": os.environ.get("TBANK_CASH_CATEGORY", ""),
+        "cash": os.environ.get("TBANK_CASH_CATEGORY", "ATMRateGroup"),
     }
     result = {}
     for code in CURRENCIES:
