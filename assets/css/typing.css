@@ -1,17 +1,14 @@
-/* Анимация набора текста в полях «ввод» и «результат» (typing.js).
-   Настоящее поле остаётся на месте, но его текст прозрачный: символы рисует слой поверх. */
+/* Анимация набора текста в полях «ввод» и «результат» (typing.js). */
 
 .typing-field {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
 }
 
-/* у полей конвертера отступ снизу был у самого поля */
 .converter-box .typing-field {
   margin-bottom: 20px;
 }
 
-/* в строках с кнопками и в строке поиска поле занимает всё свободное место */
 .input-row .typing-field,
 .output-row .typing-field,
 .site-search-field .typing-field {
@@ -65,7 +62,6 @@
   white-space: pre;
 }
 
-/* новый символ выезжает сверху */
 .typing-in {
   animation: typing-slide-down 0.25s cubic-bezier(0.25, 1, 0.3, 1) both;
 }
@@ -88,8 +84,6 @@
   }
 }
 
-/* поле ответа: тот же вид, что у поля ввода, но другой фон.
-   В светлой теме он уже задан в konvertus.css (бежевый), в тёмной у обоих полей он совпадал */
 :root[data-theme="dark"] #output {
   background-color: #2e352b;
 }
