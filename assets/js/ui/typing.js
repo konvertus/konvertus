@@ -26,6 +26,9 @@
     // ---------- какие символы можно вводить в поля конвертера ----------
     const DIGITS = "0123456789abcdefghijklmnopqrstuvwxyz";
 
+    // отрицательные числа нужны только температуре и валютам; в остальных конвертерах «-» в начале не вводится
+    const allowsNegative = () => !!document.querySelector('script[src*="temperature.js"], script[src*="currency.js"]');
+
     // число: цифры, один десятичный разделитель (можно набрать и точку, и запятую; остаётся
     // разделитель языка страницы), «-» в начале,
     // в поле ввода ещё экспонента (1e5), как раньше у <input type="number">
@@ -39,7 +42,7 @@
             } else if ((ch === "." || ch === ",") && !hasSeparator && !hasExponent) {
                 out += DECIMAL;
                 hasSeparator = true;
-            } else if (ch === "-" && (out === "" || (hasExponent && /e$/i.test(out)))) {
+            } else if (ch === "-" && ((out === "" && allowsNegative()) || (hasExponent && /e$/i.test(out)))) {
                 out += ch;
             } else if (ch === "+" && hasExponent && /e$/i.test(out)) {
                 out += ch;
@@ -57,8 +60,9 @@
         let out = "";
         for (const ch of text) {
             const low = ch.toLowerCase();
-            if (ch === "-" && out === "") out = "-";
-            else if (allowed.includes(low)) out += base > 10 ? low.toUpperCase() : low;
+            if (ch === "-") {
+                if (out === "" && allowsNegative()) out = "-";
+            } else if (allowed.includes(low)) out += base > 10 ? low.toUpperCase() : low;
         }
         return out;
     }

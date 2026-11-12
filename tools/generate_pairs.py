@@ -15,6 +15,10 @@ wr = lambda p, s: p.write_text(s, encoding="utf8", newline="")
 CATS = {
  "length": dict(tmpl="meters-feet", units="kilometers meters decimeters centimeters millimeters micrometers nanometers miles nautical-miles yards feet inches".split(),
                 existing={"meters-feet": ("meters", "feet"), "miles-km": ("miles", "kilometers"), "inches-cm": ("inches", "centimeters")}, noun=("длины", "length")),
+ "area": dict(tmpl="sqm-sqft", units="square-kilometers hectares ares square-meters square-decimeters square-centimeters square-millimeters square-miles acres square-yards square-feet square-inches".split(),
+              existing={"sqm-sqft": ("square-meters", "square-feet"), "hectares-acres": ("hectares", "acres"), "sotki-sqm": ("ares", "square-meters")}, noun=("площади", "area")),
+ "volume": dict(tmpl="liters-gallons", units="cubic-meters liters milliliters cubic-centimeters gallons quarts pints cups fluid-ounces tablespoons teaspoons imperial-gallons imperial-pints".split(),
+                existing={"liters-gallons": ("liters", "gallons"), "ml-cups": ("milliliters", "cups"), "liters-ml": ("liters", "milliliters")}, noun=("объёма", "volume")),
  "mass": dict(tmpl="kg-pounds", units="tonnes quintals kilograms grams milligrams micrograms carats ounces pounds stones poods".split(),
               existing={"kg-pounds": ("kilograms", "pounds"), "grams-ounces": ("grams", "ounces")}, noun=("веса", "weight")),
  "temperature": dict(tmpl="celsius-fahrenheit", units="celsius fahrenheit kelvin rankine reaumur".split(),

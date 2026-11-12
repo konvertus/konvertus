@@ -13,6 +13,8 @@ Final project for a web development course.
 | Category | Pages | What's inside |
 |---|---|---|
 | Length | meters to feet, miles to kilometers, inches to centimeters | 12 units: from nanometers to kilometers, miles, nautical miles, yards, feet, inches |
+| Area | square meters to square feet, hectares to acres, ares (sotka) to square meters | 12 units: from square millimeters to square kilometers, hectares, ares (sotka), acres, square miles, yards, feet, inches |
+| Volume | liters to gallons, milliliters to cups, liters to milliliters | 13 units: cubic meters, liters, milliliters, cubic centimeters, US gallons, quarts, pints, cups, fluid ounces, spoons, imperial gallons and pints |
 | Weight | kilograms to pounds, grams to ounces | 11 units: metric tons, quintals, carats, ounces, pounds, stones, poods and more |
 | Temperature | Celsius to Fahrenheit, Celsius to Kelvin | Celsius, Fahrenheit, Kelvin, Rankine, Réaumur |
 | Speed | km/h to m/s, km/h to knots | 8 units: km/h, m/s, mph, knots, ft/s, km/s, cm/s, Mach |
@@ -43,6 +45,8 @@ konvertus/
 ├── index.html, about.html                  pages of the Russian version
 ├── converters/           converter pages (Russian version), one folder per category, one page for every pair of units
 │   ├── length/           66 pages (meters-feet, miles-km and inches-cm are hand-made, the rest are generated)
+│   ├── area/             66 pages (sqm-sqft, hectares-acres and sotki-sqm are hand-made, the rest are generated)
+│   ├── volume/           78 pages (liters-gallons, ml-cups and liters-ml are hand-made, the rest are generated)
 │   ├── mass/             55 pages
 │   ├── temperature/      10 pages
 │   ├── speed/            28 pages
