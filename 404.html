@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 · Konvertus</title>
+    <meta name="robots" content="noindex">
+    <script>
+        // Старые адреса без языковой папки (/converters/..., /about.html) переносим в /ru/
+        (function () {
+            var m = location.pathname.match(/^(.*?\/)(converters\/.+|about\.html)$/);
+            if (m && !/\/(en|ru)\//.test(location.pathname)) {
+                location.replace(m[1] + "ru/" + m[2] + location.search + location.hash);
+            }
+        })();
+    </script>
+    <style>
+        body { font-family: system-ui, sans-serif; text-align: center; margin: 20vh 1rem 0; color: #333; }
+        a { color: #5c7059; margin: 0 .5rem; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+    <h1>404</h1>
+    <p>Страница не найдена · Page not found</p>
+    <p><a href="/konvertus/ru/index.html">Русский</a> · <a href="/konvertus/en/index.html">English</a></p>
+</body>
+</html>

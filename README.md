@@ -6,7 +6,7 @@ A website for quickly converting units of measurement and currencies. No ads, no
 
 Final project for a web development course.
 
-**Live demo:** https://konvertus.github.io/konvertus/en/index.html (Russian version: https://konvertus.github.io/konvertus/)
+**Live demo:** https://konvertus.github.io/konvertus/en/index.html (Russian version: https://konvertus.github.io/konvertus/ru/index.html)
 
 ## Features
 
@@ -42,18 +42,21 @@ Also included:
 
 ```
 konvertus/
-├── index.html, about.html                  pages of the Russian version
-├── converters/           converter pages (Russian version), one folder per category, one page for every pair of units
-│   ├── length/           66 pages (meters-feet, miles-km and inches-cm are hand-made, the rest are generated)
-│   ├── area/             66 pages (sqm-sqft, hectares-acres and sotki-sqm are hand-made, the rest are generated)
-│   ├── volume/           78 pages (liters-gallons, ml-cups and liters-ml are hand-made, the rest are generated)
-│   ├── mass/             55 pages
-│   ├── temperature/      10 pages
-│   ├── speed/            28 pages
-│   ├── currency/         66 pages with currency pairs, plus exchange.html (bank rates)
-│   ├── data/             91 pages
-│   └── numbers/          6 pages (binary, octal, decimal, hexadecimal)
-├── en/                   English version, same structure (en/index.html, en/about.html, en/converters/...)
+├── index.html            language chooser: sends the visitor to ru/ or en/ by browser language
+├── 404.html              redirects old Russian URLs (/converters/..., /about.html) to /ru/
+├── ru/                   Russian version
+│   ├── index.html, about.html
+│   └── converters/       one folder per category, one page for every pair of units
+│       ├── length/           66 pages (meters-feet, miles-km and inches-cm are hand-made, the rest are generated)
+│       ├── area/             66 pages (sqm-sqft, hectares-acres and sotki-sqm are hand-made, the rest are generated)
+│       ├── volume/           78 pages (liters-gallons, ml-cups and liters-ml are hand-made, the rest are generated)
+│       ├── mass/             55 pages
+│       ├── temperature/      10 pages
+│       ├── speed/            28 pages
+│       ├── currency/         66 pages with currency pairs, plus exchange.html (bank rates)
+│       ├── data/             91 pages
+│       └── numbers/          6 pages (binary, octal, decimal, hexadecimal)
+├── en/                   English version, same structure as ru/ (index.html, about.html, converters/...)
 ├── assets/               everything the pages load
 │   ├── css/
 │   │   ├── konvertus.css     all site styles
@@ -86,11 +89,11 @@ konvertus/
 └── README.md, README.ru.md
 ```
 
-Styles, scripts and icons are shared by both language versions. Pages load them through relative paths: from `converters/length/` that is `../../assets/css/konvertus.css`, from `en/converters/length/` it is `../../../assets/css/konvertus.css`. Scripts find icons and data relative to their own location (the `new URL(...)` lines at the top of `currency.js`, `select.js`, `exchange.js`, `rate-chart.js` and `search.js`). If you move folders around, the paths need to be updated in both places.
+Styles, scripts and icons are shared by both language versions. Pages load them through relative paths: from `ru/converters/length/` and `en/converters/length/` that is `../../../assets/css/konvertus.css`. Scripts find icons and data relative to their own location (the `new URL(...)` lines at the top of `currency.js`, `select.js`, `exchange.js`, `rate-chart.js` and `search.js`). If you move folders around, the paths need to be updated in both places.
 
 ## Running locally
 
-You can simply open `index.html` in a browser. It is better to start a local server so everything behaves as it does on the hosting:
+You can simply open `ru/index.html` (or `en/index.html`) in a browser. It is better to start a local server so everything behaves as it does on the hosting:
 
 ```bash
 git clone https://github.com/konvertus/konvertus.git
@@ -125,7 +128,7 @@ For quantities that convert by multiplication (area, volume, speed):
 1. Copy any page from `converters/`, for example `converters/mass/kg-pounds.html`, under a new name.
 2. Change the heading, the `<title>`, both unit lists (`value` is the number of base units) and the tips and facts blocks. The `selected` attribute sets the default units.
 3. Add a link to the "Tools" menu on every page and a card on the home page.
-4. Do the same in `en/converters/` with English text.
+4. Do the same in `en/converters/` with English text (the Russian pages live in `ru/converters/`).
 
 `converter.js` does not need to be changed.
 
@@ -146,7 +149,7 @@ A student project. Send suggestions and bug reports through the repository's Iss
 
 ## Exchange page
 
-The `converters/currency/exchange.html` page (and `en/converters/currency/exchange.html`) compares buy and sell currency rates at banks. Bank rates come from `data/banks.json`, and the Bank of Russia rate used for comparison comes from `data/history.json`.
+The `ru/converters/currency/exchange.html` page (and `en/converters/currency/exchange.html`) compares buy and sell currency rates at banks. Bank rates come from `data/banks.json`, and the Bank of Russia rate used for comparison comes from `data/history.json`.
 
 
 **How to fill in the rates.** Edit `data/banks.json` by hand: type the buy and sell rate for each bank (buy is always lower than sell) and push to GitHub. File format:

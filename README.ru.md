@@ -4,7 +4,7 @@
 
 Итоговый проект по веб-разработке.
 
-**Демо:** https://konvertus.github.io/konvertus/
+**Демо:** https://konvertus.github.io/konvertus/ru/index.html
 
 [English version](README.md)
 
@@ -42,18 +42,21 @@
 
 ```
 konvertus/
-├── index.html, about.html                  страницы русской версии
-├── converters/           страницы конвертеров (русская версия), по папке на категорию, по странице на каждую пару единиц
-│   ├── length/           66 страниц (meters-feet, miles-km и inches-cm написаны вручную, остальные созданы генератором)
-│   ├── area/             66 страниц (sqm-sqft, hectares-acres и sotki-sqm написаны вручную, остальные созданы генератором)
-│   ├── volume/           78 страниц (liters-gallons, ml-cups и liters-ml написаны вручную, остальные созданы генератором)
-│   ├── mass/             55 страниц
-│   ├── temperature/      10 страниц
-│   ├── speed/            28 страниц
-│   ├── currency/         66 страниц с парами валют и exchange.html (курсы банков)
-│   ├── data/             91 страница
-│   └── numbers/          6 страниц (двоичная, восьмеричная, десятичная, шестнадцатеричная)
-├── en/                   английская версия, структура та же (en/index.html, en/about.html, en/converters/...)
+├── index.html            выбор языка: перенаправляет на ru/ или en/ по языку браузера
+├── 404.html              переносит старые русские адреса (/converters/..., /about.html) в /ru/
+├── ru/                   русская версия
+│   ├── index.html, about.html
+│   └── converters/       по папке на категорию, по странице на каждую пару единиц
+│       ├── length/           66 страниц (meters-feet, miles-km и inches-cm написаны вручную, остальные созданы генератором)
+│       ├── area/             66 страниц (sqm-sqft, hectares-acres и sotki-sqm написаны вручную, остальные созданы генератором)
+│       ├── volume/           78 страниц (liters-gallons, ml-cups и liters-ml написаны вручную, остальные созданы генератором)
+│       ├── mass/             55 страниц
+│       ├── temperature/      10 страниц
+│       ├── speed/            28 страниц
+│       ├── currency/         66 страниц с парами валют и exchange.html (курсы банков)
+│       ├── data/             91 страница
+│       └── numbers/          6 страниц (двоичная, восьмеричная, десятичная, шестнадцатеричная)
+├── en/                   английская версия, структура та же, что у ru/ (index.html, about.html, converters/...)
 ├── assets/               всё, что подгружают страницы
 │   ├── css/
 │   │   ├── konvertus.css     все стили сайта
@@ -86,11 +89,11 @@ konvertus/
 └── README.md, README.ru.md
 ```
 
-Стили, скрипты и иконки общие для обеих языковых версий. Страницы подключают их по относительным путям: из `converters/length/` это `../../assets/css/konvertus.css`, из `en/converters/length/` — `../../../assets/css/konvertus.css`. Скрипты находят иконки и данные относительно своего расположения (строки `new URL(...)` в начале `currency.js`, `select.js`, `exchange.js`, `rate-chart.js` и `search.js`). Если перенести папки, пути придётся поправить в обоих местах.
+Стили, скрипты и иконки общие для обеих языковых версий. Страницы подключают их по относительным путям: из `ru/converters/length/` и `en/converters/length/` это `../../../assets/css/konvertus.css`. Скрипты находят иконки и данные относительно своего расположения (строки `new URL(...)` в начале `currency.js`, `select.js`, `exchange.js`, `rate-chart.js` и `search.js`). Если перенести папки, пути придётся поправить в обоих местах.
 
 ## Запуск на своём компьютере
 
-Достаточно открыть `index.html` в браузере. Но лучше поднять локальный сервер, чтобы всё работало как на хостинге:
+Достаточно открыть `ru/index.html` (или `en/index.html`) в браузере. Но лучше поднять локальный сервер, чтобы всё работало как на хостинге:
 
 ```bash
 git clone https://github.com/konvertus/konvertus.git
@@ -125,7 +128,7 @@ python3 -m http.server 8000
 1. Скопируйте любую страницу из `converters/`, например `converters/mass/kg-pounds.html`, под новым именем.
 2. Замените заголовок, `<title>`, оба списка единиц (`value` — это число базовых единиц) и блоки с подсказками и фактами. Атрибут `selected` задаёт единицы по умолчанию.
 3. Добавьте ссылку в меню «Инструменты» на всех страницах и карточку на главной.
-4. Сделайте то же в `en/converters/` с английскими текстами.
+4. Сделайте то же в `en/converters/` с английскими текстами (русские страницы лежат в `ru/converters/`).
 
 Скрипт `converter.js` менять не нужно.
 
@@ -146,7 +149,7 @@ python3 -m http.server 8000
 
 ## Страница «Обмен»
 
-Страница `converters/currency/exchange.html` (и `en/converters/currency/exchange.html`) сравнивает курсы покупки и продажи валюты в банках. Курсы берутся из файла `data/banks.json`, а курс ЦБ для сравнения из `data/history.json`.
+Страница `ru/converters/currency/exchange.html` (и `en/converters/currency/exchange.html`) сравнивает курсы покупки и продажи валюты в банках. Курсы берутся из файла `data/banks.json`, а курс ЦБ для сравнения из `data/history.json`.
 
 
 **Как заполнить курсы.** Отредактируйте `data/banks.json` вручную: впишите покупку и продажу по каждому банку (покупка всегда меньше продажи) и отправьте на GitHub. Формат файла:

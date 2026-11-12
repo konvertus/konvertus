@@ -32,7 +32,7 @@ CATS = {
  "numbers": dict(tmpl="bin-dec", units="bin oct dec hex".split(),
                  existing={"bin-dec": ("bin", "dec"), "dec-hex": ("dec", "hex")}, noun=("систем счисления", "number systems")),
 }
-LANGS = (("ru", "converters"), ("en", "en/converters"))
+LANGS = (("ru", "ru/converters"), ("en", "en/converters"))
 
 def units_of(cat, lang_dir):
     s = rd(ROOT / lang_dir / cat / (CATS[cat]["tmpl"] + ".html"))
@@ -128,7 +128,7 @@ def main():
     js = ("// <pairs> блок создаётся tools/generate_pairs.py, вручную не править\n(function () {\n  var D = " + json.dumps(data, ensure_ascii=False, separators=(",", ":")) +
           ";\n  D.forEach(function (c) {\n    var skip = {};\n    c.x.forEach(function (k) { skip[k] = 1; });\n    for (var i = 0; i < c.u.length; i++) {\n      for (var j = i + 1; j < c.u.length; j++) {\n"
           "        var a = c.u[i], b = c.u[j];\n        if (skip[a[0] + \"|\" + b[0]]) continue;\n        var u = c.d + a[0] + \"-\" + b[0] + \".html\";\n        var k = (a[0] + \" \" + b[0]).replace(/-/g, \" \");\n"
-          "        window.KONVERTUS_SEARCH.push({ l: \"ru\", t: a[1] + \" в \" + b[2], u: \"converters/\" + u, g: c.g[0], c: c.c, k: k });\n"
+          "        window.KONVERTUS_SEARCH.push({ l: \"ru\", t: a[1] + \" в \" + b[2], u: \"ru/converters/\" + u, g: c.g[0], c: c.c, k: k });\n"
           "        window.KONVERTUS_SEARCH.push({ l: \"en\", t: a[3] + \" to \" + b[4], u: \"en/converters/\" + u, g: c.g[1], c: c.c, k: k });\n      }\n    }\n  });\n})();\n// </pairs>\n")
     p = ROOT / "assets/js/core/search-index.js"; s = rd(p)
     s = re.sub(r"\n?// <pairs>.*?// </pairs>\n", "", s, flags=re.S).rstrip("\n") + "\n\n" + js
