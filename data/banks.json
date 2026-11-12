@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-12T00:39:08+03:00",
+  "updated": "2026-11-12T07:51:39+03:00",
   "demo": false,
   "currencies": [
     "USD",
@@ -38,12 +38,12 @@
       "rates": {
         "USD": {
           "cashless": {
-            "buy": 81.05,
-            "sell": 88.45
+            "buy": 81.1,
+            "sell": 88.55
           },
           "cash": {
-            "buy": 80.2,
-            "sell": 87.65
+            "buy": 80.3,
+            "sell": 87.75
           }
         },
         "EUR": {
