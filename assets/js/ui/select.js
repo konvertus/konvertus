@@ -336,7 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sync();
     }
 
-    document.querySelectorAll(".converter-box select").forEach(build);
+    document.querySelectorAll(".converter-box select, .calc-box select").forEach(build);
 
     document.addEventListener("pointerdown", (e) => {
         document.querySelectorAll(".cselect.open").forEach((root) => {

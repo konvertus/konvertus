@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#7a8c77">
+    <link rel="icon" type="image/png" href="../../assets/favicon/favicon-96x96.png?v=18" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="../../assets/favicon/favicon.svg?v=18">
+    <link rel="shortcut icon" href="../../assets/favicon/favicon.ico?v=18">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/favicon/apple-touch-icon.png?v=18">
+    <meta name="apple-mobile-web-app-title" content="konvertus">
+    <link rel="manifest" href="../../assets/favicon/site.webmanifest?v=18">
+    <script src="../../assets/js/core/theme.js?v=18"></script>
+    <script src="../../assets/js/ui/select.js?v=18"></script>
+    <link rel="stylesheet" href="../../assets/css/konvertus.css?v=18">
+    <link rel="stylesheet" href="../../assets/css/calculators.css?v=18">
+
+    <!-- Шрифты и значки -->
+    <link rel="stylesheet" href="../../assets/fonts/fonts.css?v=18">
+    <link rel="preload" href="../../assets/fonts/montserrat-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../../assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../../assets/fonts/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin>
+
+    <title>Калькулятор маткапитала на ипотеку — как изменится платёж и переплата | Конвертус</title>
+    <meta name="description" content="Калькулятор материнского капитала на ипотеку: суммы 2026 года, как маткапитал уменьшает платёж и переплату — как первоначальный взнос или досрочное погашение.">
+    <link rel="canonical" href="https://konvertus.github.io/konvertus/ru/calculators/maternity-capital.html">
+    <link rel="alternate" hreflang="ru" href="https://konvertus.github.io/konvertus/ru/calculators/maternity-capital.html">
+    <link rel="alternate" hreflang="en" href="https://konvertus.github.io/konvertus/en/calculators/maternity-capital.html">
+    <link rel="alternate" hreflang="x-default" href="https://konvertus.github.io/konvertus/ru/calculators/maternity-capital.html">
+</head>
+<body>
+
+    <!-- шапка -->
+    <header class="header">
+
+        <a href="../index.html" class="logo">
+            <span class="material-symbols-outlined arrows_symbol">sync_alt</span>
+            <span>КОНВЕ₽ТУС</span>
+        </a>
+
+        <!-- кнопки слева -->
+        <button type="button" class="nav-toggle" aria-label="Меню" aria-expanded="false" aria-controls="nav-panel"><span></span></button>
+
+            <div class="nav-panel" id="nav-panel">
+            <nav class="menu">
+            <div class="dropdown">
+                <button class="dropbtn">Инструменты <span class="caret" aria-hidden="true">▾</span></button>
+
+                <div class="dropdown-content">
+                    <div class="column">
+                        <h3><span class="cat-icon cat-length" aria-hidden="true"></span>Длина</h3>
+                        <a href="../converters/length/meters-feet.html">Метры в футы</a>
+                        <a href="../converters/length/miles-km.html">Мили в километры</a>
+                    </div>
+                    <div class="column">
+                        <h3><span class="cat-icon cat-area" aria-hidden="true"></span>Площадь</h3>
+                        <a href="../converters/area/hectares-acres.html">Гектары в акры</a>
+                        <a href="../converters/area/sotki-sqm.html">Сотки в кв м</a>
+                    </div>
+                    <div class="column">
+                        <h3><span class="cat-icon cat-volume" aria-hidden="true"></span>Объём</h3>
+                        <a href="../converters/volume/liters-gallons.html">Литры в галлоны</a>
+                        <a href="../converters/volume/ml-cups.html">Миллилитры в чашки</a>
+                    </div>
+                    <div class="column">
+                        <h3><span class="cat-icon cat-calc" aria-hidden="true"></span>Калькуляторы</h3>
+                        <a href="mortgage.html">Ипотечный калькулятор</a>
+                    </div>
+                    <div class="column">
+                        <h3><span class="cat-icon cat-mass" aria-hidden="true"></span>Вес</h3>
+                        <a href="../converters/mass/kg-pounds.html">Килограммы в фунты</a>
+                        <a href="../converters/mass/grams-ounces.html">Граммы в унции</a>
+                    </div>
+                    <div class="column">
+                        <h3><span class="cat-icon cat-temperature" aria-hidden="true"></span>Температура</h3>
+                        <a href="../converters/temperature/celsius-fahrenheit.html">Цельсий в Фаренгейт</a>
+                        <a href="../converters/temperature/celsius-kelvin.html">Цельсий в Кельвин</a>
+                    </div>
+                    <div class="column">
+                        <h3><span class="cat-icon cat-speed" aria-hidden="true"></span>Скорость</h3>
+                        <a href="../converters/speed/kmh-ms.html">Км/ч в м/с</a>
+                        <a href="../converters/speed/kmh-knots.html">Км/ч в узлы</a>
+                    </div>
+                    <div class="column">
+                        <h3><span class="cat-icon cat-currency" aria-hidden="true"></span>Валюты</h3>
+                        <a href="../converters/currency/rub-usd.html">Рубли в доллары</a>
+                    </div>
+                    <div class="column">
+                        <h3><span class="cat-icon cat-data" aria-hidden="true"></span>Данные</h3>
+                        <a href="../converters/data/mb-gb.html">Мегабайты в гигабайты</a>
+                        <a href="../converters/data/mbit-mb.html">Мегабиты в мегабайты</a>
+                    </div>
+                    <div class="column">
+                        <h3><span class="cat-icon cat-binary" aria-hidden="true"></span>Системы счисления</h3>
+                        <a href="../converters/numbers/bin-dec.html">Двоичная в десятичную</a>
+                        <a href="../converters/numbers/dec-hex.html">Десятичная в шестнадцатеричную</a>
+                    </div>
+                </div>
+            </div>
+
+<div class="dropdown">
+    <button class="dropbtn">Финансы <span class="caret" aria-hidden="true">▾</span></button>
+
+    <div class="dropdown-content">
+        <div class="column">
+            <h3><span class="cat-icon cat-currency" aria-hidden="true"></span>Валюты</h3>
+            <a href="../converters/currency/exchange.html">Обмен</a>
+        </div>
+        <div class="column">
+            <h3><span class="cat-icon cat-calc" aria-hidden="true"></span>Калькуляторы</h3>
+            <a href="deposit.html">Калькулятор вкладов</a>
+            <a href="maternity-capital.html">Калькулятор маткапитала</a>
+        </div>
+    </div>
+</div>
+
+            <a href="../about.html">О нас</a>
+        </nav>
+            </div>
+
+    </header>
+
+    <main class="calc-page">
+        <section class="calc">
+            <h1>Калькулятор маткапитала на ипотеку</h1>
+            <div class="cat-badge" aria-hidden="true"><span><span class="cat-icon cat-calc" aria-hidden="true"></span></span></div>
+            <div class="calc-box" id="calc">
+                <div class="calc-field wide"><span>Какой маткапитал (размеры с 1 февраля 2026)</span><select id="scenario"><option value="728921.9">1-й ребёнок — 728 921,90 ₽</option><option value="963243.17">2-й, без капитала на 1-го — 963 243,17 ₽</option><option value="234321.27">2-й, доплата — 234 321,27 ₽</option><option value="custom">Другая сумма (остаток)</option></select></div>
+                <label class="calc-field wide" hidden id="custom-row"><span>Сумма маткапитала, ₽</span><input type="text" id="custom" data-num inputmode="decimal" autocomplete="off" value="500 000"></label>
+                <label class="calc-field"><span>Стоимость жилья, ₽</span><input type="text" id="price" data-num inputmode="decimal" autocomplete="off" value="8 000 000"></label>
+                <label class="calc-field"><span>Первоначальный взнос, ₽</span><input type="text" id="down" data-num inputmode="decimal" autocomplete="off" value="1 600 000"><small class="calc-hint" id="down-hint"></small></label>
+                <label class="calc-field"><span>Срок, лет</span><input type="text" id="years" data-num inputmode="decimal" autocomplete="off" value="20"></label>
+                <label class="calc-field"><span>Ставка, % годовых</span><input type="text" id="rate" data-num inputmode="decimal" autocomplete="off" value="12"></label>
+                <div class="calc-field"><span>Как использовать</span><select id="mode"><option value="down">Первоначальный взнос</option><option value="early">Досрочное погашение</option></select></div>
+                <label class="calc-field" hidden id="after-row"><span>Через сколько месяцев после выдачи</span><input type="text" id="after" data-num inputmode="decimal" autocomplete="off" value="12"></label>
+            </div>
+            <div class="calc-result" id="result" aria-live="polite"></div>
+            <p class="calc-note">Суммы действуют с 1 февраля 2026 года и индексируются раз в год. Актуальный размер смотрите на сайте <a href="https://sfr.gov.ru/" target="_blank" rel="noopener noreferrer">Социального фонда России</a>.</p>
+            <section class="calc-offers">
+                <h2>Подобрать предложение</h2>
+                <ul><li><a href="https://www.banki.ru/products/hypothec/" target="_blank" rel="noopener noreferrer">Ипотечные кредиты на Банки.ру</a></li><li><a href="https://www.banki.ru/hypothec-master/?purposeCode=7" target="_blank" rel="noopener noreferrer">Подбор ипотеки на Банки.ру</a></li></ul>
+                <p>Ссылки ведут на сторонний сайт Банки.ру. Условия предложений уточняйте у банков.</p>
+            </section>
+            <p class="calc-disclaimer">Расчёт ориентировочный: страховка, комиссии и фактические условия зависят от банка. Это не финансовая консультация.</p>
+        </section>
+    </main>
+    <footer class="footer">
+        <a href="../index.html" class="footer-logo">КОНВЕ₽ТУС</a>
+        <nav class="footer-links">
+            <a href="../about.html">О нас</a>
+            <a href="../about.html#contacts">Контакты</a>
+        </nav>
+        <div class="lang-switch">
+                <span class="lang-current">Русский</span>
+                <span class="lang-sep">·</span>
+                <a href="../../en/calculators/maternity-capital.html" hreflang="en" lang="en">English</a>
+            </div>
+            <p>© 2026 Конвертус</p>
+    </footer>
+    <script src="../../assets/js/calculators/common.js?v=18"></script>
+    <script src="../../assets/js/calculators/mortgage-core.js?v=18"></script>
+    <script src="../../assets/js/calculators/maternity.js?v=18"></script>
+    <script src="../../assets/js/core/search-index.js?v=18"></script>
+    <script src="../../assets/js/core/search.js?v=18"></script>
+    <script src="../../assets/js/core/menu.js?v=18"></script>
+    <script src="../../assets/js/core/firebase-config.js?v=18"></script>
+    <script src="../../assets/js/core/account.js?v=18"></script>
+</body>
+</html>

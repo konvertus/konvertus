@@ -6,13 +6,16 @@ A website for quickly converting units of measurement and currencies. No ads, no
 
 Final project for a web development course.
 
-**Live demo:** https://konvertus.github.io/konvertus/en/index.html (Russian version: https://konvertus.github.io/konvertus/)
+**Live demo:** https://konvertus.github.io/konvertus/en/index.html (Russian version: https://konvertus.github.io/konvertus/ru/index.html)
 
 ## Features
 
 | Category | Pages | What's inside |
 |---|---|---|
 | Length | meters to feet, miles to kilometers, inches to centimeters | 12 units: from nanometers to kilometers, miles, nautical miles, yards, feet, inches |
+| Area | square meters to square feet, hectares to acres, ares (sotka) to square meters | 12 units: from square millimeters to square kilometers, hectares, ares (sotka), acres, square miles, yards, feet, inches |
+| Volume | liters to gallons, milliliters to cups, liters to milliliters | 13 units: cubic meters, liters, milliliters, cubic centimeters, US gallons, quarts, pints, cups, fluid ounces, spoons, imperial gallons and pints |
+| Calculators | mortgage with total interest, deposits with tax, maternity capital on a mortgage | Mortgage: annuity and declining payments, extra payments, schedule. Deposit: capitalization, top-ups, tax. Links to Banki.ru offers |
 | Weight | kilograms to pounds, grams to ounces | 11 units: metric tons, quintals, carats, ounces, pounds, stones, poods and more |
 | Temperature | Celsius to Fahrenheit, Celsius to Kelvin | Celsius, Fahrenheit, Kelvin, Rankine, Réaumur |
 | Speed | km/h to m/s, km/h to knots | 8 units: km/h, m/s, mph, knots, ft/s, km/s, cm/s, Mach |
@@ -40,15 +43,20 @@ Also included:
 
 ```
 konvertus/
-├── index.html, about.html                  pages of the Russian version
-├── converters/           converter pages (Russian version), one folder per category, one page for every pair of units
-│   ├── length/           66 pages (meters-feet, miles-km and inches-cm are hand-made, the rest are generated)
-│   ├── mass/             55 pages
-│   ├── temperature/      10 pages
-│   ├── speed/            28 pages
-│   ├── currency/         66 pages with currency pairs, plus exchange.html (bank rates)
-│   ├── data/             91 pages
-│   └── numbers/          6 pages (binary, octal, decimal, hexadecimal)
+├── index.html            old address of the Russian version: redirects to ru/index.html
+├── ru/                   Russian version
+│   ├── index.html, about.html, privacy.html
+│   ├── calculators/      3 pages (mortgage, deposit, maternity-capital); the English ones are in en/calculators/
+│   └── converters/       converter pages, one folder per category, one page for every pair of units
+│       ├── length/           66 pages (meters-feet, miles-km and inches-cm are hand-made, the rest are generated)
+│       ├── area/             66 pages (sqm-sqft, hectares-acres and sotki-sqm are hand-made, the rest are generated)
+│       ├── volume/           78 pages (liters-gallons, ml-cups and liters-ml are hand-made, the rest are generated)
+│       ├── mass/             55 pages
+│       ├── temperature/      10 pages
+│       ├── speed/            28 pages
+│       ├── currency/         66 pages with currency pairs, plus exchange.html (bank rates)
+│       ├── data/             91 pages
+│       └── numbers/          6 pages (binary, octal, decimal, hexadecimal)
 ├── en/                   English version, same structure (en/index.html, en/about.html, en/converters/...)
 ├── assets/               everything the pages load
 │   ├── css/
@@ -82,7 +90,7 @@ konvertus/
 └── README.md, README.ru.md
 ```
 
-Styles, scripts and icons are shared by both language versions. Pages load them through relative paths: from `converters/length/` that is `../../assets/css/konvertus.css`, from `en/converters/length/` it is `../../../assets/css/konvertus.css`. Scripts find icons and data relative to their own location (the `new URL(...)` lines at the top of `currency.js`, `select.js`, `exchange.js`, `rate-chart.js` and `search.js`). If you move folders around, the paths need to be updated in both places.
+Styles, scripts and icons are shared by both language versions. Pages load them through relative paths: from `ru/converters/length/` and from `en/converters/length/` that is `../../../assets/css/konvertus.css`. Scripts find icons and data relative to their own location (the `new URL(...)` lines at the top of `currency.js`, `select.js`, `exchange.js`, `rate-chart.js` and `search.js`). If you move folders around, the paths need to be updated in both places.
 
 ## Running locally
 
@@ -118,7 +126,7 @@ Every pair of units in a category has its own page, so the site search finds "ki
 
 For quantities that convert by multiplication (area, volume, speed):
 
-1. Copy any page from `converters/`, for example `converters/mass/kg-pounds.html`, under a new name.
+1. Copy any page from `ru/converters/`, for example `ru/converters/mass/kg-pounds.html`, under a new name.
 2. Change the heading, the `<title>`, both unit lists (`value` is the number of base units) and the tips and facts blocks. The `selected` attribute sets the default units.
 3. Add a link to the "Tools" menu on every page and a card on the home page.
 4. Do the same in `en/converters/` with English text.
@@ -142,7 +150,7 @@ A student project. Send suggestions and bug reports through the repository's Iss
 
 ## Exchange page
 
-The `converters/currency/exchange.html` page (and `en/converters/currency/exchange.html`) compares buy and sell currency rates at banks. Bank rates come from `data/banks.json`, and the Bank of Russia rate used for comparison comes from `data/history.json`.
+The `ru/converters/currency/exchange.html` page (and `en/converters/currency/exchange.html`) compares buy and sell currency rates at banks. Bank rates come from `data/banks.json`, and the Bank of Russia rate used for comparison comes from `data/history.json`.
 
 
 **How to fill in the rates.** Edit `data/banks.json` by hand: type the buy and sell rate for each bank (buy is always lower than sell) and push to GitHub. File format:
@@ -169,3 +177,18 @@ The `converters/currency/exchange.html` page (and `en/converters/currency/exchan
 ## Input fields
 
 `typing.js` makes the text of the real fields transparent and draws the same characters on top of it one by one: each new character slides in from above. Letters cannot be typed into the result field (only digits of the chosen base on the number-system pages). To turn this off, remove the `typing.js` and `typing.css` includes from the pages.
+
+## Sign-in and personal statistics (optional, Firebase)
+
+The site can show a sign-in button (email and password, or Google). Signed-in users can turn on a consent switch; only then the site counts which categories and pairs they use (never the numbers they enter) and shows them recommended links to Banki.ru offers. While `assets/js/core/firebase-config.js` contains `null`, the button is hidden and the site works exactly as before.
+
+How to turn it on:
+
+1. Create a project at https://console.firebase.google.com and add a **Web app**. Copy the `firebaseConfig` object.
+2. In **Authentication → Sign-in method** enable **Email/Password** and **Google**. In **Authentication → Settings → Authorized domains** add your site domain (for example `konvertus.github.io`).
+3. In **Firestore Database** create a database and paste the rules from `firestore.rules` into the **Rules** tab. Each user can only read and write their own `users/{uid}` document.
+4. In `assets/js/core/firebase-config.js` replace `null` with your config (the example is in the file) and publish the site.
+
+What is stored: email, account ID, consent flag and counters (`stats.cats`, `stats.pairs`, `lastActive`) in `users/{uid}`. Users can reset the counters or delete the account and data in the account window. The privacy page is `ru/privacy.html` / `en/privacy.html`.
+
+Before launching, update the "no ads, no analytics, no sign-up" wording (README, About page, page descriptions) and check the legal requirements for personal data (for Russian users, for example, Federal Law 152-FZ: Firebase servers are outside Russia).

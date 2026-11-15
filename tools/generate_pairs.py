@@ -15,6 +15,10 @@ wr = lambda p, s: p.write_text(s, encoding="utf8", newline="")
 CATS = {
  "length": dict(tmpl="meters-feet", units="kilometers meters decimeters centimeters millimeters micrometers nanometers miles nautical-miles yards feet inches".split(),
                 existing={"meters-feet": ("meters", "feet"), "miles-km": ("miles", "kilometers"), "inches-cm": ("inches", "centimeters")}, noun=("длины", "length")),
+ "area": dict(tmpl="sqm-sqft", units="square-kilometers hectares ares square-meters square-decimeters square-centimeters square-millimeters square-miles acres square-yards square-feet square-inches".split(),
+              existing={"sqm-sqft": ("square-meters", "square-feet"), "hectares-acres": ("hectares", "acres"), "sotki-sqm": ("ares", "square-meters")}, noun=("площади", "area")),
+ "volume": dict(tmpl="liters-gallons", units="cubic-meters liters milliliters cubic-centimeters gallons quarts pints cups fluid-ounces tablespoons teaspoons imperial-gallons imperial-pints".split(),
+                existing={"liters-gallons": ("liters", "gallons"), "ml-cups": ("milliliters", "cups"), "liters-ml": ("liters", "milliliters")}, noun=("объёма", "volume")),
  "mass": dict(tmpl="kg-pounds", units="tonnes quintals kilograms grams milligrams micrograms carats ounces pounds stones poods".split(),
               existing={"kg-pounds": ("kilograms", "pounds"), "grams-ounces": ("grams", "ounces")}, noun=("веса", "weight")),
  "temperature": dict(tmpl="celsius-fahrenheit", units="celsius fahrenheit kelvin rankine reaumur".split(),
@@ -28,7 +32,7 @@ CATS = {
  "numbers": dict(tmpl="bin-dec", units="bin oct dec hex".split(),
                  existing={"bin-dec": ("bin", "dec"), "dec-hex": ("dec", "hex")}, noun=("систем счисления", "number systems")),
 }
-LANGS = (("ru", "converters"), ("en", "en/converters"))
+LANGS = (("ru", "ru/converters"), ("en", "en/converters"))
 
 def units_of(cat, lang_dir):
     s = rd(ROOT / lang_dir / cat / (CATS[cat]["tmpl"] + ".html"))
@@ -124,7 +128,7 @@ def main():
     js = ("// <pairs> блок создаётся tools/generate_pairs.py, вручную не править\n(function () {\n  var D = " + json.dumps(data, ensure_ascii=False, separators=(",", ":")) +
           ";\n  D.forEach(function (c) {\n    var skip = {};\n    c.x.forEach(function (k) { skip[k] = 1; });\n    for (var i = 0; i < c.u.length; i++) {\n      for (var j = i + 1; j < c.u.length; j++) {\n"
           "        var a = c.u[i], b = c.u[j];\n        if (skip[a[0] + \"|\" + b[0]]) continue;\n        var u = c.d + a[0] + \"-\" + b[0] + \".html\";\n        var k = (a[0] + \" \" + b[0]).replace(/-/g, \" \");\n"
-          "        window.KONVERTUS_SEARCH.push({ l: \"ru\", t: a[1] + \" в \" + b[2], u: \"converters/\" + u, g: c.g[0], c: c.c, k: k });\n"
+          "        window.KONVERTUS_SEARCH.push({ l: \"ru\", t: a[1] + \" в \" + b[2], u: \"ru/converters/\" + u, g: c.g[0], c: c.c, k: k });\n"
           "        window.KONVERTUS_SEARCH.push({ l: \"en\", t: a[3] + \" to \" + b[4], u: \"en/converters/\" + u, g: c.g[1], c: c.c, k: k });\n      }\n    }\n  });\n})();\n// </pairs>\n")
     p = ROOT / "assets/js/core/search-index.js"; s = rd(p)
     s = re.sub(r"\n?// <pairs>.*?// </pairs>\n", "", s, flags=re.S).rstrip("\n") + "\n\n" + js
