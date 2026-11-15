@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-10T08:10:28+03:00",
+  "updated": "2026-11-15T21:11:27+03:00",
   "demo": false,
   "currencies": [
     "USD",
@@ -38,22 +38,22 @@
       "rates": {
         "USD": {
           "cashless": {
-            "buy": 81.0,
-            "sell": 88.45
+            "buy": 80.55,
+            "sell": 87.95
           },
           "cash": {
-            "buy": 80.2,
-            "sell": 87.6
+            "buy": 79.75,
+            "sell": 87.15
           }
         },
         "EUR": {
           "cashless": {
-            "buy": 91.45,
-            "sell": 98.7
+            "buy": 89.45,
+            "sell": 96.6
           },
           "cash": {
-            "buy": 88.7,
-            "sell": 97.8
+            "buy": 86.75,
+            "sell": 95.65
           }
         },
         "CNY": {
@@ -62,8 +62,8 @@
             "sell": 12.444
           },
           "cash": {
-            "buy": 12.352,
-            "sell": 12.865
+            "buy": 12.298,
+            "sell": 12.8
           }
         },
         "GBP": {
