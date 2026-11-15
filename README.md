@@ -45,7 +45,7 @@ Also included:
 konvertus/
 ├── index.html            old address of the Russian version: redirects to ru/index.html
 ├── ru/                   Russian version
-│   ├── index.html, about.html, privacy.html
+│   ├── index.html, about.html, finance.html, privacy.html
 │   ├── calculators/      3 pages (mortgage, deposit, maternity-capital); the English ones are in en/calculators/
 │   └── converters/       converter pages, one folder per category, one page for every pair of units
 │       ├── length/           66 pages (meters-feet, miles-km and inches-cm are hand-made, the rest are generated)
