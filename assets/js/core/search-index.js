@@ -50,11 +50,9 @@ window.KONVERTUS_SEARCH = [
   {"l": "en", "t": "Binary to decimal", "u": "en/converters/numbers/bin-dec.html", "g": "Number systems", "c": "binary", "k": "Binary binary Octal octal Decimal decimal Hexadecimal hexadecimal binary 0 1 programming"},
   {"l": "en", "t": "Decimal to hexadecimal", "u": "en/converters/numbers/dec-hex.html", "g": "Number systems", "c": "binary", "k": "Binary binary Octal octal Decimal decimal Hexadecimal hexadecimal hex color programming"},
   {"l": "ru", "t": "Главная", "u": "ru/index.html", "g": "Сайт", "k": "конвертер единиц валют калькулятор"},
-  {"l": "ru", "t": "Финансы", "u": "ru/finance.html", "g": "Разделы", "c": "currency", "k": "деньги валюты калькуляторы ипотека вклады маткапитал курсы"},
   {"l": "ru", "t": "О нас", "u": "ru/about.html", "g": "Сайт", "k": "проект контакты связь почта"},
   {"l": "ru", "t": "Контакты", "u": "ru/about.html#contacts", "g": "Сайт", "k": "связь почта написать"},
   {"l": "en", "t": "Home", "u": "en/index.html", "g": "Site", "k": "unit currency converter calculator"},
-  {"l": "en", "t": "Finance", "u": "en/finance.html", "g": "Sections", "c": "currency", "k": "money currencies calculators mortgage deposits maternity capital rates"},
   {"l": "en", "t": "About", "u": "en/about.html", "g": "Site", "k": "project contacts contact us email"},
   {"l": "en", "t": "Contacts", "u": "en/about.html#contacts", "g": "Site", "k": "contact us email write"}
 ];
