@@ -2210,3 +2210,25 @@ body.search-lock .search-toggle {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* заголовок колонки в меню — ссылка на стандартный конвертер категории */
+.column h3 a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  color: var(--accent);
+}
+
+.column h3 a:hover {
+  text-decoration: underline;
+  transform: none;
+}
+
+@media (max-width: 800px) {
+  .nav-panel .column h3 a {
+    padding: 0;
+    border-top: none;
+    color: var(--accent);
+  }
+}
