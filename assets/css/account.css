@@ -228,3 +228,20 @@
 .account-msg.is-ok {
   color: #2e7d32;
 }
+
+.converter-box, .calc-box { position: relative; }
+.fav-btn {
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  z-index: 2;
+  padding: 0 4px;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--menu-text);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.fav-btn.is-on { color: #f5a623; }
+.fav-btn:hover { transform: scale(1.15); }
