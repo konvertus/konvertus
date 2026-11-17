@@ -31,7 +31,7 @@
     // ---------- стили и кнопка ----------
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = new URL("assets/css/account.css?v=18", BASE).href;
+    css.href = new URL("assets/css/account.css?v=19", BASE).href;
     document.head.append(css);
 
     function makeButton() {
@@ -131,6 +131,9 @@
             <label class="account-check"><input type="checkbox" id="account-consent"${consent ? " checked" : ""}>
                 <span>${t("Разрешить учитывать, какими конвертерами я пользуюсь, для статистики и персональных подборок.", "Allow counting which converters I use for statistics and personalized recommendations.")}
                 <a href="${PRIVACY}">${t("Подробнее", "Details")}</a></span></label>
+            <h3>${t("Избранное", "Favorites")}</h3>
+            ${listHtml(favs(), t("Нажмите ☆ рядом с заголовком любого конвертера.", "Click ☆ next to any converter's title."))}
+            ${consent ? `<h3>${t("Недавние", "Recent")}</h3>${listHtml((profile.recent || []), t("Пока пусто.", "Nothing yet."))}` : ""}
             ${consent ? statsHtml(stats) : `<p class="account-small">${t("Без согласия ничего не считается.", "Nothing is counted without consent.")}</p>`}
             <div class="account-actions">
                 ${consent ? `<button type="button" class="account-link" data-act="reset-stats">${t("Сбросить статистику", "Reset statistics")}</button>` : ""}
@@ -174,6 +177,52 @@
         });
     }
 
+    // ---------- избранное и недавние ----------
+    const PAGE = (location.pathname.match(/(converters\/[^/]+\/[^/]+|calculators\/[^/]+)\.html$/) || [])[1] || null;
+    const pageTitle = () => ((document.getElementById("title") || document.querySelector("h1") || {}).textContent || PAGE).trim();
+    const favs = () => (profile && profile.favs) || [];
+    const isFav = () => favs().some((f) => f.p === PAGE);
+    const pageUrl = (p) => new URL((EN ? "en/" : "ru/") + p + ".html", BASE).href;
+    let star;
+
+    function makeStar() {
+        const h1 = PAGE && (document.getElementById("title") || document.querySelector("h1"));
+        if (!h1) return;
+        star = document.createElement("button");
+        star.type = "button";
+        star.className = "fav-btn";
+        star.hidden = true;
+        star.addEventListener("click", async () => {
+            if (!user) { openDialog(); return; }
+            const item = { p: PAGE, n: pageTitle() };
+            try {
+                await fs.setDoc(userRef(), { favs: isFav() ? favs().filter((f) => f.p !== PAGE) : [...favs(), item].slice(-50) }, { merge: true });
+                await loadProfile();
+            } catch (e) { console.warn("account:", e); }
+            updateStar();
+        });
+        h1.after(star);
+        updateStar();
+    }
+
+    function updateStar() {
+        if (!star) return;
+        star.hidden = false;
+        const on = !!user && isFav();
+        star.classList.toggle("is-on", on);
+        star.textContent = on ? "★" : "☆";
+        const label = !user ? t("Войдите, чтобы сохранять избранное", "Sign in to save favorites")
+            : on ? t("Убрать из избранного", "Remove from favorites") : t("Добавить в избранное", "Add to favorites");
+        star.title = label;
+        star.setAttribute("aria-label", label);
+    }
+
+    function listHtml(items, empty) {
+        return items.length
+            ? `<ul class="account-offers">${items.map((f) => `<li><a href="${pageUrl(f.p)}">${esc(f.n)}</a></li>`).join("")}</ul>`
+            : `<p class="account-small">${empty}</p>`;
+    }
+
     // ---------- данные ----------
     const userRef = () => fs.doc(db, "users", user.uid);
 
@@ -202,6 +251,7 @@
         fs.setDoc(userRef(), {
             stats: { cats: { [cat]: fs.increment(1) }, pairs: { [`${cat}_${page}`]: fs.increment(1) } },
             lastActive: fs.serverTimestamp(),
+            recent: [{ p: PAGE, n: pageTitle() }, ...((profile.recent || []).filter((r) => r.p !== PAGE))].slice(0, 8),
         }, { merge: true }).catch(() => { counted = false; });
     }
 
@@ -256,6 +306,7 @@
     async function start() {
         makeButton();
         if (!button) return;
+        makeStar();
         const [app, a, f] = await Promise.all([import(SDK + "firebase-app.js"), import(SDK + "firebase-auth.js"), import(SDK + "firebase-firestore.js")]);
         const fbApp = app.initializeApp(config);
         authApi = a; fs = f;
@@ -267,6 +318,7 @@
             button.classList.toggle("is-in", !!u);
             if (u) { await loadProfile(); trackUse(); }
             if (u && !message) mode = "in";
+            updateStar();
             render();
         });
     }
