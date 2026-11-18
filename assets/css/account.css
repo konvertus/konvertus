@@ -228,3 +228,25 @@
 .account-msg.is-ok {
   color: #2e7d32;
 }
+
+.converter-box, .calc-box { position: relative; }
+.fav-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  color: var(--menu-text);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.fav-btn svg { display: block; }
+.fav-btn.is-on { color: #f5a623; }
+.fav-btn:hover { transform: scale(1.15); }
+
+#home-favs[hidden], #home-favs-empty[hidden] { display: none !important; }
