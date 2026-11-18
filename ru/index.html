@@ -12,6 +12,7 @@
     <link rel="manifest" href="../assets/favicon/site.webmanifest?v=18">
     <script src="../assets/js/core/theme.js?v=18"></script>
     <link rel="stylesheet" href="../assets/css/konvertus.css?v=19">
+    <link rel="stylesheet" href="../assets/css/calculators.css?v=18">
     <link rel="stylesheet" href="../assets/css/typing.css?v=18">
 
     <!-- Шрифты и значки -->
@@ -119,6 +120,23 @@
         </section>
 
         <!-- Категории -->
+        <section class="block" id="home-favs" hidden>
+            <h2>Избранное</h2>
+            <div class="cards" id="home-favs-list"></div>
+            <p class="account-small" id="home-favs-empty" hidden>Нажмите ☆ в углу любого конвертера или калькулятора, и он появится здесь.</p>
+        </section>
+
+        <section class="block">
+            <h2>Кредитный калькулятор</h2>
+            <div class="calc-box" id="home-credit-box">
+                <label class="calc-field"><span>Сумма, ₽</span><input type="text" id="hc-amount" data-num inputmode="decimal" autocomplete="off" value="500 000"></label>
+                <label class="calc-field"><span>Срок, месяцев</span><input type="text" id="hc-months" data-num inputmode="decimal" autocomplete="off" value="36"></label>
+                <label class="calc-field"><span>Ставка, % годовых</span><input type="text" id="hc-rate" data-num inputmode="decimal" autocomplete="off" value="18"></label>
+            </div>
+            <div class="calc-result" id="home-credit-result" aria-live="polite"></div>
+            <p><a href="calculators/credit.html">Полный калькулятор с графиком платежей →</a></p>
+        </section>
+
         <section class="block">
             <h2>Категории</h2>
             <div class="cards">
@@ -149,6 +167,9 @@
             </div>
             <p>© 2026 Конвертус</p>
     </footer>
+    <script src="../assets/js/calculators/common.js?v=18"></script>
+    <script src="../assets/js/calculators/mortgage-core.js?v=18"></script>
+    <script src="../assets/js/calculators/home-credit.js?v=18"></script>
     <script src="../assets/js/ui/typing.js?v=18"></script>
     <script src="../assets/js/core/search-index.js?v=18"></script>
     <script src="../assets/js/core/search.js?v=18"></script>
