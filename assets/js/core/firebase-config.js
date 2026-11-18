@@ -1,11 +1,6 @@
-// Настройки Firebase для входа и личной статистики.
-// Пока здесь null, кнопка входа на сайте не показывается. Как получить настройки — в README (раздел про вход).
-// Когда получите, замените null на объект из консоли Firebase, например:
-//   window.KONVERTUS_FIREBASE = {
-//       apiKey: "...",
-//       authDomain: "ваш-проект.firebaseapp.com",
-//       projectId: "ваш-проект",
-//       appId: "..."
-//   };
-// Эти значения не секретные: доступ защищают правила в firestore.rules.
-window.KONVERTUS_FIREBASE = null;
+window.KONVERTUS_FIREBASE = {
+    apiKey: "AIzaSyA0blST9UcHW2VJyl1EEz7qBOMJruiC3II",
+    authDomain: "knvrts.firebaseapp.com",
+    projectId: "knvrts",
+    appId: "1:914689081977:web:fd317c458af6f970ddcaa8"
+};
