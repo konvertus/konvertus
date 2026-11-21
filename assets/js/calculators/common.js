@@ -12,12 +12,13 @@
         return Number(s);
     }
 
-    // оставляет цифры, пробелы и один десятичный разделитель (всё остальное, в том числе минус, убирается)
+    // оставляет только цифры и один десятичный разделитель (пробелы и всё остальное, в том числе минус, убираются:
+    // пробелы между группами цифр ставит group)
     function clean(value) {
         let out = "";
         let hasSep = false;
         for (const ch of String(value)) {
-            if ((ch >= "0" && ch <= "9") || /\s/.test(ch)) out += ch;
+            if (ch >= "0" && ch <= "9") out += ch;
             else if ((ch === "." || ch === ",") && !hasSep) { out += ch; hasSep = true; }
         }
         return out;
@@ -51,16 +52,47 @@
         return b === 1 ? one : many;
     }
 
-    // подключает поля: фильтр ввода, форматирование при выходе из поля и пересчёт
+    // подключает поля: маска (группы цифр через пробел, лишние пробелы не вводятся), пересчёт при вводе
     function bind(box, onChange) {
         box.querySelectorAll("input[data-num]").forEach((input) => {
-            input.addEventListener("input", () => {
-                const cleaned = clean(input.value);
-                if (cleaned !== input.value) input.value = cleaned;
+            let previous = "";
+            input.addEventListener("input", (e) => {
+                let value = input.value;
+                let caret = input.selectionStart;
+
+                // Backspace/Delete рядом с пробелом-разделителем: вместе с ним удаляем соседнюю цифру,
+                // иначе пробел сразу вернулся бы на место
+                if (
+                    (e.inputType === "deleteContentBackward" || e.inputType === "deleteContentForward") &&
+                    caret != null && value.length < previous.length &&
+                    value.replace(/\s/g, "") === previous.replace(/\s/g, "")
+                ) {
+                    if (e.inputType === "deleteContentBackward" && caret > 0) {
+                        value = value.slice(0, caret - 1) + value.slice(caret);
+                        caret -= 1;
+                    } else if (e.inputType === "deleteContentForward" && caret < value.length) {
+                        value = value.slice(0, caret) + value.slice(caret + 1);
+                    }
+                }
+
+                const formatted = group(clean(value));
+                if (formatted !== input.value) {
+                    // курсор остаётся после того же числа значащих символов
+                    const significant = caret == null ? formatted.length : clean(value.slice(0, caret)).length;
+                    let seen = 0, position = 0;
+                    while (position < formatted.length && seen < significant) {
+                        if (!/\s/.test(formatted[position])) seen++;
+                        position++;
+                    }
+                    input.value = formatted;
+                    input.setSelectionRange(position, position);
+                }
+                previous = input.value;
                 onChange();
             });
-            input.addEventListener("blur", () => { input.value = group(clean(input.value)); });
+            input.addEventListener("blur", () => { input.value = group(clean(input.value)); previous = input.value; });
             input.value = group(clean(input.value));
+            previous = input.value;
         });
         box.querySelectorAll("select, input[type=checkbox]").forEach((el) => el.addEventListener("change", onChange));
     }

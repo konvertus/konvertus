@@ -207,6 +207,7 @@
             } catch (e) { console.warn("account:", e); }
             updateStar();
         });
+        host.classList.add("has-fav");
         host.prepend(star);
         updateStar();
     }

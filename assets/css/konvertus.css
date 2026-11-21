@@ -1754,6 +1754,13 @@ body.search-lock {
   color: var(--accent);
 }
 
+/* вкладка остаётся открытой, пока курсор в шапке (класс open ставит menu.js) */
+@media (min-width: 801px) {
+  .dropdown.open>.dropbtn {
+    color: var(--accent);
+  }
+}
+
 /* «О нас»: тонкая линия выезжает из центра под текстом */
 .menu>a::after {
   content: "";

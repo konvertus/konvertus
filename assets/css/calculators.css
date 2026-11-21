@@ -247,3 +247,64 @@
 .calc-explain p {
   margin: 10px 0 0;
 }
+
+/* таблица вклада: строки с пополнением подсвечены */
+.calc-table tr.is-topup td {
+  background-color: color-mix(in srgb, var(--header) 30%, transparent);
+}
+
+/* таблица вклада целиком по ширине блока: без горизонтальной и вертикальной прокрутки */
+.calc-table-wrap.is-full {
+  max-height: none;
+  overflow-x: auto;   /* запасной вариант для очень больших сумм */
+  overflow-y: visible;
+}
+
+.calc-table.is-fit {
+  table-layout: auto;
+}
+
+.calc-table.is-fit th,
+.calc-table.is-fit td {
+  padding: 8px 6px;
+  font-size: 14px;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+.calc-table.is-fit th {
+  position: static;
+  line-height: 1.2;
+}
+
+@media (max-width: 600px) {
+  .calc-table.is-fit th,
+  .calc-table.is-fit td {
+    padding: 6px 2px;
+    font-size: 10px;
+  }
+
+  .calc-table.is-fit th {
+    font-size: 9px;
+  }
+
+  .calc-table.is-fit th:first-child,
+  .calc-table.is-fit td:first-child {
+    padding-left: 3px;
+  }
+
+  .calc-table.is-fit th:last-child,
+  .calc-table.is-fit td:last-child {
+    padding-right: 3px;
+  }
+
+  .calc-table.is-fit td {
+    white-space: nowrap;
+  }
+}
+
+.calc-details>.calc-note {
+  margin: 10px 0 0;
+}

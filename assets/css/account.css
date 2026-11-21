@@ -249,4 +249,24 @@
 .fav-btn.is-on { color: #f5a623; }
 .fav-btn:hover { transform: scale(1.15); }
 
+/* телефон: у блока появляется своя строка под звезду, чтобы она не налезала на поля */
+@media (max-width: 600px) {
+  .converter-box.has-fav,
+  .calc-box.has-fav {
+    padding-top: 52px;
+  }
+
+  .has-fav > .fav-btn {
+    top: 14px;
+    left: 20px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .has-fav > .fav-btn svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
 #home-favs[hidden], #home-favs-empty[hidden] { display: none !important; }

@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#7a8c77">
-    <link rel="icon" type="image/png" href="../../assets/favicon/favicon-96x96.png?v=19" sizes="96x96">
-    <link rel="icon" type="image/svg+xml" href="../../assets/favicon/favicon.svg?v=19">
-    <link rel="shortcut icon" href="../../assets/favicon/favicon.ico?v=19">
-    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/favicon/apple-touch-icon.png?v=19">
+    <link rel="icon" type="image/png" href="../../assets/favicon/favicon-96x96.png?v=24" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="../../assets/favicon/favicon.svg?v=24">
+    <link rel="shortcut icon" href="../../assets/favicon/favicon.ico?v=24">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/favicon/apple-touch-icon.png?v=24">
     <meta name="apple-mobile-web-app-title" content="konvertus">
-    <link rel="manifest" href="../../assets/favicon/site.webmanifest?v=19">
-    <script src="../../assets/js/core/theme.js?v=19"></script>
-    <script src="../../assets/js/ui/select.js?v=19"></script>
-    <link rel="stylesheet" href="../../assets/css/konvertus.css?v=19">
-    <link rel="stylesheet" href="../../assets/css/calculators.css?v=19">
+    <link rel="manifest" href="../../assets/favicon/site.webmanifest?v=24">
+    <script src="../../assets/js/core/theme.js?v=24"></script>
+    <script src="../../assets/js/ui/select.js?v=24"></script>
+    <link rel="stylesheet" href="../../assets/css/konvertus.css?v=24">
+    <link rel="stylesheet" href="../../assets/css/calculators.css?v=24">
 
     <!-- Шрифты и значки -->
-    <link rel="stylesheet" href="../../assets/fonts/fonts.css?v=19">
+    <link rel="stylesheet" href="../../assets/fonts/fonts.css?v=24">
     <link rel="preload" href="../../assets/fonts/montserrat-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="../../assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="../../assets/fonts/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin>
@@ -110,11 +110,21 @@
                 <label class="calc-field"><span>Ставка, % годовых</span><input type="text" id="rate" data-num inputmode="decimal" autocomplete="off" value="15"></label>
                 <label class="calc-field"><span>Срок</span><input type="text" id="term" data-num inputmode="decimal" autocomplete="off" value="12"></label>
                 <div class="calc-field"><span>Единица срока</span><select id="unit"><option value="months">месяцы</option><option value="years">годы</option></select></div>
-                <div class="calc-field"><span>Капитализация процентов</span><select id="cap"><option value="end">Нет (в конце срока)</option><option value="monthly">Ежемесячно</option><option value="quarterly">Ежеквартально</option><option value="yearly">Ежегодно</option></select></div>
-                <label class="calc-field"><span>Пополнение каждый месяц, ₽</span><input type="text" id="topup" data-num inputmode="decimal" autocomplete="off" value="0"></label>
+                <div class="calc-field wide"><span>Капитализация процентов</span><select id="cap"><option value="end">Нет (в конце срока)</option><option value="monthly">Ежемесячно</option><option value="quarterly">Ежеквартально</option><option value="yearly">Ежегодно</option></select><small class="calc-hint" id="cap-hint"></small></div>
+                <label class="calc-check"><input type="checkbox" id="refill"><span>Пополняемый вклад (пополнение каждый месяц)</span></label>
+                <label class="calc-field wide" id="topup-field" hidden><span>Сумма пополнения каждый месяц, ₽</span><input type="text" id="topup" data-num inputmode="decimal" autocomplete="off" value="10 000"></label>
                 <label class="calc-check"><input type="checkbox" id="tax"><span>Учесть налог на проценты (НДФЛ)</span></label>
+                <label class="calc-field wide" id="taxrate-field" hidden><span>Ставка НДФЛ, %</span><input type="text" id="taxrate" data-num inputmode="decimal" autocomplete="off" value="13"></label>
             </div>
             <div class="calc-result" id="result" aria-live="polite"></div>
+            <details class="calc-details calc-explain" open>
+                <summary>Что такое капитализация процентов</summary>
+                <p><strong>Капитализация</strong> — это когда начисленные проценты прибавляются к сумме вклада, и дальше проценты считаются уже на увеличенную сумму: «проценты на проценты». Без капитализации проценты копятся отдельно и выплачиваются в конце срока, а новых процентов на них не набегает.</p>
+                <p><strong>Как считает калькулятор.</strong> Годовая ставка делится на 12, и каждый месяц проценты считаются на текущую сумму вклада. При ежемесячной капитализации они сразу прибавляются к вкладу, при ежеквартальной — раз в 3 месяца, при ежегодной — раз в 12 месяцев.</p>
+                <p><strong>Пример.</strong> 100 000 ₽ под 12% на год. Без капитализации — 12 000 ₽ процентов. С ежемесячной: 100 000 × (1 + 0,12 / 12)<sup>12</sup> ≈ 112 683 ₽, то есть 12 683 ₽ процентов. Чем чаще капитализация и чем длиннее срок, тем заметнее разница, поэтому эффективная ставка выше номинальной.</p>
+                <p><strong>Пополняемый вклад.</strong> Если поставить галочку, калькулятор добавляет взнос в конце каждого месяца, кроме последнего. Взнос начинает приносить проценты со следующего месяца: у вклада на год взнос в 4-м месяце работает 8 месяцев. Проценты начисляются и на пополнения, а при капитализации они попадают в «проценты на проценты». В таблице выше видно, когда вносился каждый взнос и сколько месяцев он работал.</p>
+                <p id="cap-example"></p>
+            </details>
             
             <section class="calc-offers">
                 <h2>Подобрать предложение</h2>
@@ -137,13 +147,13 @@
             </div>
             <p>© 2026 Конвертус</p>
     </footer>
-    <script src="../../assets/js/calculators/common.js?v=19"></script>
-    <script src="../../assets/js/calculators/deposit-core.js?v=19"></script>
-    <script src="../../assets/js/calculators/deposit.js?v=19"></script>
-    <script src="../../assets/js/core/search-index.js?v=19"></script>
-    <script src="../../assets/js/core/search.js?v=19"></script>
-    <script src="../../assets/js/core/menu.js?v=19"></script>
-    <script src="../../assets/js/core/firebase-config.js?v=19"></script>
-    <script src="../../assets/js/core/account.js?v=19"></script>
+    <script src="../../assets/js/calculators/common.js?v=24"></script>
+    <script src="../../assets/js/calculators/deposit-core.js?v=24"></script>
+    <script src="../../assets/js/calculators/deposit.js?v=24"></script>
+    <script src="../../assets/js/core/search-index.js?v=24"></script>
+    <script src="../../assets/js/core/search.js?v=24"></script>
+    <script src="../../assets/js/core/menu.js?v=24"></script>
+    <script src="../../assets/js/core/firebase-config.js?v=24"></script>
+    <script src="../../assets/js/core/account.js?v=24"></script>
 </body>
 </html>
