@@ -247,3 +247,12 @@
 .calc-explain p {
   margin: 10px 0 0;
 }
+
+/* таблица вклада: строки с пополнением подсвечены */
+.calc-table tr.is-topup td {
+  background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.calc-details>.calc-note {
+  margin: 10px 0 0;
+}

@@ -16,6 +16,40 @@
     const toDisplay = (text) => (typeof text === "string" && NUMERIC_TEXT.test(text) ? text.replace(/[.,]/, DECIMAL) : text);
     const toCanonical = (text) => text.replace(",", ".");
 
+    // ---------- маска: группы цифр через пробел ----------
+    // Пробелы между группами ставит только скрипт (неразрывные, U+00A0). Вручную пробел ввести нельзя:
+    // все пробелы из набранного и вставленного текста убираются, группы расставляются заново.
+    // Скриптам конвертера поле отдаёт значение без пробелов.
+    const NBSP = "\u00a0";
+    const stripGroups = (text) => text.replace(/\u00a0/g, "");
+
+    function groupDigits(digits, size) {
+        let out = "";
+        for (let i = 0; i < digits.length; i++) {
+            if (i > 0 && (digits.length - i) % size === 0) out += NBSP;
+            out += digits[i];
+        }
+        return out;
+    }
+
+    // число: целая часть по три цифры, дробная часть и экспонента без изменений
+    const NUMBER_PARTS = /^(-?)(\d*)([.,]?)(\d*)((?:e[-+]?\d*)?)$/i;
+    function formatNumber(text) {
+        const m = NUMBER_PARTS.exec(stripGroups(text));
+        return m ? m[1] + groupDigits(m[2], 3) + m[3] + m[4] + m[5] : text;
+    }
+
+    // число в системе счисления: двоичная и шестнадцатеричная по четыре цифры, остальные по три;
+    // если в тексте есть недопустимые символы (поле показывает ошибку), оставляем как есть
+    function formatBase(text, base) {
+        const plain = stripGroups(text);
+        const m = /^(-?)([0-9a-z]+)$/i.exec(plain);
+        if (!m) return plain === text ? text : plain;
+        const allowed = DIGITS.slice(0, base);
+        if (![...m[2]].every((ch) => allowed.includes(ch.toLowerCase()))) return plain;
+        return m[1] + groupDigits(m[2], base === 2 || base === 16 ? 4 : 3);
+    }
+
     const rules = new Map(); // поле → функция, оставляющая в тексте только допустимые символы
     const layers = new Map(); // поле → слой с анимацией
 
@@ -69,7 +103,9 @@
 
     // ---------- слой с анимированными символами ----------
     // options.numeric: значение показывается с разделителем языка страницы;
-    // options.canonical: скриптам при чтении отдаётся число с точкой (для поля ввода)
+    // options.canonical: скриптам при чтении отдаётся число с точкой (для поля ввода);
+    // options.format: маска (группы цифр), применяется к значению, которое задают скрипты;
+    // при чтении пробелы-разделители всегда убираются
     function createLayer(field, options = {}) {
         const rawGet = () => valueProp.get.call(field);
         const wrap = document.createElement("div");
@@ -171,18 +207,26 @@
             enumerable: true,
             get() {
                 const raw = valueProp.get.call(this);
-                return options.canonical ? toCanonical(raw) : raw;
+                const plain = options.format ? stripGroups(raw) : raw;
+                return options.canonical ? toCanonical(plain) : plain;
             },
             set(v) {
-                valueProp.set.call(this, options.numeric ? toDisplay(String(v)) : v);
+                let text = options.numeric ? toDisplay(String(v)) : v;
+                if (options.format) text = options.format(String(text), this);
+                valueProp.set.call(this, text);
                 render(typingIn !== null && typingIn !== field);
             }
         });
 
-        if (options.numeric) valueProp.set.call(field, toDisplay(rawGet()));
+        {
+            let initial = rawGet();
+            if (options.numeric) initial = toDisplay(initial);
+            if (options.format) initial = options.format(initial, field);
+            valueProp.set.call(field, initial);
+        }
         syncMetrics();
         render(false);
-        layers.set(field, { render });
+        layers.set(field, { render, current: () => text, refresh: () => { field.value = field.value; } });
     }
 
     // Сначала очищаем набранное (до обработчиков конвертера), потом перерисовываем:
@@ -197,11 +241,39 @@
 
             const rule = rules.get(field);
             if (rule) {
-                const value = valueProp.get.call(field);
+                let value = valueProp.get.call(field);
+                let caret = field.selectionStart;
+
+                // Backspace/Delete рядом с пробелом-разделителем: пробел вернулся бы на место,
+                // поэтому вместе с ним удаляем и соседнюю цифру
+                const previous = layer.current();
+                if (
+                    (e.inputType === "deleteContentBackward" || e.inputType === "deleteContentForward") &&
+                    caret != null &&
+                    value.length < previous.length &&
+                    stripGroups(value) === stripGroups(previous)
+                ) {
+                    if (e.inputType === "deleteContentBackward" && caret > 0) {
+                        value = value.slice(0, caret - 1) + value.slice(caret);
+                        caret -= 1;
+                    } else if (e.inputType === "deleteContentForward" && caret < value.length) {
+                        value = value.slice(0, caret) + value.slice(caret + 1);
+                    }
+                }
+
                 const cleaned = rule(value);
-                if (cleaned !== value) {
-                    const caret = field.selectionStart;
-                    const position = caret == null ? cleaned.length : rule(value.slice(0, caret)).length;
+                if (cleaned !== valueProp.get.call(field)) {
+                    // курсор ставим после того же числа значащих символов (пробелы-разделители не считаем)
+                    let position = cleaned.length;
+                    if (caret != null) {
+                        const significant = stripGroups(rule(value.slice(0, caret))).length;
+                        let seen = 0;
+                        position = 0;
+                        while (position < cleaned.length && seen < significant) {
+                            if (cleaned[position] !== NBSP) seen++;
+                            position++;
+                        }
+                    }
                     setRaw(field, cleaned);
                     field.setSelectionRange(position, position);
                 }
@@ -222,9 +294,17 @@
         if (!input || !output) return;
 
         // странички систем счисления: в результате допустимы только цифры выбранной системы
+        const selectTop = document.getElementById("select-top");
         const selectBottom = document.getElementById("select-bottom");
-        if (document.querySelector('script[src*="numbers.js"]')) {
-            rules.set(output, (text) => cleanDigits(text, Number(selectBottom.value)));
+        const numeric = !document.querySelector('script[src*="numbers.js"]');
+        if (!numeric) {
+            const baseOf = (field) => Number((field === input ? selectTop : selectBottom).value);
+            const formatDigitsField = (text, field) => formatBase(text, baseOf(field));
+            // в поле ввода неверные символы остаются (конвертер покажет ошибку), но пробелов быть не должно
+            rules.set(input, (text) => formatBase(text.replace(/\s/g, ""), baseOf(input)));
+            rules.set(output, (text) => formatBase(cleanDigits(text, baseOf(output)), baseOf(output)));
+            createLayer(input, { format: formatDigitsField });
+            createLayer(output, { format: formatDigitsField });
         } else {
             // у числовых конвертеров поле ввода раньше было type="number": делаем его текстовым,
             // чтобы видеть и анимировать всё, что набрано (даже незаконченное число вроде «-» или «1.»)
@@ -232,12 +312,20 @@
                 input.type = "text";
                 input.inputMode = "decimal";
             }
-            rules.set(input, (text) => cleanNumber(text, true));
-            rules.set(output, (text) => cleanNumber(text, false));
+            rules.set(input, (text) => formatNumber(cleanNumber(text, true)));
+            rules.set(output, (text) => formatNumber(cleanNumber(text, false)));
+            createLayer(input, { numeric: true, canonical: true, format: formatNumber });
+            createLayer(output, { numeric: true, format: formatNumber });
         }
-        const numeric = !document.querySelector('script[src*="numbers.js"]');
-        createLayer(input, { numeric, canonical: numeric });
-        createLayer(output, { numeric });
+
+        // смена системы счисления или кнопка «поменять местами»: группы пересчитываем заново
+        const refresh = () => [input, output].forEach((field) => layers.get(field)?.refresh());
+        document.addEventListener("change", (e) => {
+            if (e.target === selectTop || e.target === selectBottom) refresh();
+        });
+        document.addEventListener("click", (e) => {
+            if (e.target.closest && e.target.closest("#swap")) refresh();
+        });
     }
 
     // ---------- строка поиска по сайту ----------

@@ -5,19 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#7a8c77">
-    <link rel="icon" type="image/png" href="../../assets/favicon/favicon-96x96.png?v=19" sizes="96x96">
-    <link rel="icon" type="image/svg+xml" href="../../assets/favicon/favicon.svg?v=19">
-    <link rel="shortcut icon" href="../../assets/favicon/favicon.ico?v=19">
-    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/favicon/apple-touch-icon.png?v=19">
+    <link rel="icon" type="image/png" href="../../assets/favicon/favicon-96x96.png?v=20" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="../../assets/favicon/favicon.svg?v=20">
+    <link rel="shortcut icon" href="../../assets/favicon/favicon.ico?v=20">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/favicon/apple-touch-icon.png?v=20">
     <meta name="apple-mobile-web-app-title" content="konvertus">
-    <link rel="manifest" href="../../assets/favicon/site.webmanifest?v=19">
-    <script src="../../assets/js/core/theme.js?v=19"></script>
-    <script src="../../assets/js/ui/select.js?v=19"></script>
-    <link rel="stylesheet" href="../../assets/css/konvertus.css?v=19">
-    <link rel="stylesheet" href="../../assets/css/calculators.css?v=19">
+    <link rel="manifest" href="../../assets/favicon/site.webmanifest?v=20">
+    <script src="../../assets/js/core/theme.js?v=20"></script>
+    <script src="../../assets/js/ui/select.js?v=20"></script>
+    <link rel="stylesheet" href="../../assets/css/konvertus.css?v=20">
+    <link rel="stylesheet" href="../../assets/css/calculators.css?v=20">
 
     <!-- Fonts and icons -->
-    <link rel="stylesheet" href="../../assets/fonts/fonts.css?v=19">
+    <link rel="stylesheet" href="../../assets/fonts/fonts.css?v=20">
     <link rel="preload" href="../../assets/fonts/montserrat-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="../../assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="../../assets/fonts/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin>
@@ -113,11 +113,20 @@
                 <label class="calc-field"><span>Rate, % per year</span><input type="text" id="rate" data-num inputmode="decimal" autocomplete="off" value="15"></label>
                 <label class="calc-field"><span>Term</span><input type="text" id="term" data-num inputmode="decimal" autocomplete="off" value="12"></label>
                 <div class="calc-field"><span>Term unit</span><select id="unit"><option value="months">months</option><option value="years">years</option></select></div>
-                <div class="calc-field"><span>Interest capitalization</span><select id="cap"><option value="end">None (at the end)</option><option value="monthly">Monthly</option><option value="quarterly">Quarterly</option><option value="yearly">Yearly</option></select></div>
-                <label class="calc-field"><span>Top-up each month, ₽</span><input type="text" id="topup" data-num inputmode="decimal" autocomplete="off" value="0"></label>
+                <div class="calc-field wide"><span>Interest capitalization</span><select id="cap"><option value="end">None (at the end)</option><option value="monthly">Monthly</option><option value="quarterly">Quarterly</option><option value="yearly">Yearly</option></select><small class="calc-hint" id="cap-hint"></small></div>
+                <label class="calc-check"><input type="checkbox" id="refill"><span>Refillable deposit (top-up every month)</span></label>
+                <label class="calc-field wide" id="topup-field" hidden><span>Monthly top-up amount, ₽</span><input type="text" id="topup" data-num inputmode="decimal" autocomplete="off" value="10 000"></label>
                 <label class="calc-check"><input type="checkbox" id="tax"><span>Include income tax on interest</span></label>
             </div>
             <div class="calc-result" id="result" aria-live="polite"></div>
+            <details class="calc-details calc-explain" open>
+                <summary>What is interest capitalization</summary>
+                <p><strong>Capitalization</strong> means the interest you have earned is added to the deposit, and from then on interest is calculated on the larger amount: “interest on interest”. Without capitalization the interest builds up separately and is paid at the end of the term, and it earns nothing itself.</p>
+                <p><strong>How the calculator works.</strong> The annual rate is divided by 12, and each month interest is calculated on the current deposit amount. With monthly capitalization it is added to the deposit at once, with quarterly capitalization every 3 months, with yearly capitalization every 12 months.</p>
+                <p><strong>Example.</strong> ₽100,000 at 12% for a year. Without capitalization the interest is ₽12,000. With monthly capitalization: 100,000 × (1 + 0.12 / 12)<sup>12</sup> ≈ ₽112,683, so the interest is ₽12,683. The more often interest is capitalized and the longer the term, the bigger the difference, which is why the effective rate is higher than the nominal one.</p>
+                <p><strong>Refillable deposit.</strong> If you tick the box, the calculator adds a top-up at the end of every month except the last. A top-up starts earning from the next month: on a one-year deposit, a top-up in month 4 works for 8 months. Top-ups earn interest too, and with capitalization that interest earns interest as well. The table above shows when each top-up was made and how many months it worked.</p>
+                <p id="cap-example"></p>
+            </details>
             
             <section class="calc-offers">
                 <h2>Find an offer</h2>
@@ -140,14 +149,14 @@
         </div>
         <p>© 2026 Konvertus</p>
     </footer>
-    <script src="../../assets/js/calculators/common.js?v=19"></script>
-    <script src="../../assets/js/calculators/deposit-core.js?v=19"></script>
-    <script src="../../assets/js/calculators/deposit.js?v=19"></script>
-    <script src="../../assets/js/core/search-index.js?v=19"></script>
-    <script src="../../assets/js/core/search.js?v=19"></script>
-    <script src="../../assets/js/core/menu.js?v=19"></script>
-    <script src="../../assets/js/core/firebase-config.js?v=19"></script>
-    <script src="../../assets/js/core/account.js?v=19"></script>
+    <script src="../../assets/js/calculators/common.js?v=20"></script>
+    <script src="../../assets/js/calculators/deposit-core.js?v=20"></script>
+    <script src="../../assets/js/calculators/deposit.js?v=20"></script>
+    <script src="../../assets/js/core/search-index.js?v=20"></script>
+    <script src="../../assets/js/core/search.js?v=20"></script>
+    <script src="../../assets/js/core/menu.js?v=20"></script>
+    <script src="../../assets/js/core/firebase-config.js?v=20"></script>
+    <script src="../../assets/js/core/account.js?v=20"></script>
 </body>
 
 </html>

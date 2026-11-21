@@ -20,15 +20,31 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.target.closest("a")) setOpen(false);
     });
 
-    // Выпадающие вкладки («Инструменты», «Финансы»): открыта может быть только одна
+    // Выпадающие вкладки («Инструменты», «Финансы»): открыта может быть только одна.
+    // На компьютере вкладка открывается при наведении и остаётся открытой, пока курсор в пределах шапки
+    // (логотип, поиск, кнопки, сама панель). Закрывается, только когда курсор уходит ниже, на страницу.
+    const desktop = window.matchMedia("(min-width: 801px) and (hover: hover)");
+    const closeAll = () => dropdowns.forEach((dropdown) => dropdown.classList.remove("open"));
+
     dropdowns.forEach((dropdown) => {
-        dropdown.querySelector(".dropbtn")?.addEventListener("click", () => {
+        dropdown.addEventListener("mouseenter", () => {
+            if (!desktop.matches) return;
+            dropdowns.forEach((other) => other !== dropdown && other.classList.remove("open"));
+            dropdown.classList.add("open");
+        });
+        dropdown.querySelector(".dropbtn")?.addEventListener("click", (e) => {
+            // мышью на компьютере управляет наведение; клавиатура (detail 0) и телефон переключают по нажатию
+            if (desktop.matches && e.detail > 0) return;
             dropdowns.forEach((other) => other !== dropdown && other.classList.remove("open"));
             dropdown.classList.toggle("open");
         });
     });
+    // выпадающая панель лежит внутри шапки, поэтому mouseleave срабатывает только при выходе из шапки и панели
+    header.addEventListener("mouseleave", () => {
+        if (desktop.matches) closeAll();
+    });
     document.addEventListener("click", (e) => {
-        if (!e.target.closest(".dropdown")) dropdowns.forEach((dropdown) => dropdown.classList.remove("open"));
+        if (!e.target.closest(".header")) closeAll();
     });
 
     document.addEventListener("keydown", (e) => {
