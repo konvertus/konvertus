@@ -1,0 +1,55 @@
+/* Заставка с логотипом при первом заходе за сессию */
+html.intro-on body { visibility: hidden; }
+html.intro-hold .header .logo { visibility: hidden; }
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg);
+  font-family: 'Montserrat', Arial, sans-serif;
+}
+
+.intro-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  font-size: 56px;
+  font-weight: 800;
+  letter-spacing: 0.0833em;
+  color: var(--text);
+  transform-origin: 0 0;
+  white-space: nowrap;
+}
+
+.intro-logo .intro-arrows {
+  font-size: 1em;
+  animation: intro-spin 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.intro-letter {
+  display: inline-block;
+  opacity: 0;
+  animation: intro-letter 0.45s ease-out forwards;
+}
+
+@keyframes intro-spin {
+  from { transform: rotate(-180deg) scale(0); opacity: 0; }
+  to   { transform: rotate(0) scale(1); opacity: 1; }
+}
+
+@keyframes intro-letter {
+  from { opacity: 0; transform: translateY(0.4em); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .intro-logo { font-size: 40px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro { display: none; }
+}
