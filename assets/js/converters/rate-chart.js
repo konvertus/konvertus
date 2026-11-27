@@ -117,38 +117,87 @@ document.addEventListener("DOMContentLoaded", () => {
     // (выходные, праздники), помечаются как «курса не было», и по ним не делается ни одного запроса
     let snap = null;
     let snapJob = null;
+    const FAST = (() => {
+        try { return localStorage.getItem("konvertus-chart-fast") !== "off"; } catch { return true; }
+    })(); // «Быстрые графики» в подвале: выключено — без сохранённой копии и раннего старта
+    const SNAP_KEY = "konvertus-snapshot-v1"; // копия data/history.json: график рисуется сразу, без ожидания сети
+
+    // разбирает файл истории и подмешивает его дни в history; возвращает { first, last } либо null
+    function applySnapshot(data) {
+        if (!data || !data.codes || !data.rates) return null;
+        const index = CODES.map((c) => data.codes.indexOf(c));
+        const dates = Object.keys(data.rates).sort();
+        if (dates.length < 2) return null;
+
+        for (const date of dates) {
+            const row = data.rates[date];
+            const r = { RUB: 1 };
+            CODES.forEach((c, i) => {
+                const v = index[i] >= 0 ? row[index[i]] : null;
+                if (v) r[c] = v;
+            });
+            if (history[date] === undefined || history[date] === 0) history[date] = { d: date, r };
+            snapKeys.add(date);
+        }
+        const first = dates[0];
+        const last = dates[dates.length - 1];
+        for (let ms = toMs(first); ms <= toMs(last); ms += DAY) {
+            const iso = toISO(ms);
+            if (history[iso] === undefined) {
+                history[iso] = 0;
+                snapKeys.add(iso);
+            }
+        }
+        return { first, last };
+    }
+
+    function saveSnapshot(data) {
+        if (!FAST) return;
+        try {
+            localStorage.setItem(SNAP_KEY, JSON.stringify(data));
+        } catch {
+            // хранилище переполнено или запрещено — просто не будет мгновенного показа
+        }
+    }
+
+    async function fetchSnapshot() {
+        const response = await fetch(RATE_HISTORY_URL); // обычный кэш браузера: так подхватывается preload из <head>
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        return response.json();
+    }
+
+    // готовая история одним файлом: { first, last } либо null, если файла нет или он не загрузился.
+    // Если на устройстве уже есть сохранённая копия, берём её мгновенно, а свежий файл проверяем в фоне
     function loadSnapshot() {
         if (!snapJob) {
             snapJob = (async () => {
                 if (!RATE_HISTORY_URL) return null;
+                let cached = null;
                 try {
-                    const response = await fetch(RATE_HISTORY_URL, { cache: "no-cache" });
-                    if (!response.ok) throw new Error("HTTP " + response.status);
-                    const data = await response.json();
-                    const index = CODES.map((c) => data.codes.indexOf(c));
-                    const dates = Object.keys(data.rates).sort();
-                    if (dates.length < 2) return null;
-
-                    for (const date of dates) {
-                        const row = data.rates[date];
-                        const r = { RUB: 1 };
-                        CODES.forEach((c, i) => {
-                            const v = index[i] >= 0 ? row[index[i]] : null;
-                            if (v) r[c] = v;
-                        });
-                        if (history[date] === undefined || history[date] === 0) history[date] = { d: date, r };
-                        snapKeys.add(date);
-                    }
-                    const first = dates[0];
-                    const last = dates[dates.length - 1];
-                    for (let ms = toMs(first); ms <= toMs(last); ms += DAY) {
-                        const iso = toISO(ms);
-                        if (history[iso] === undefined) {
-                            history[iso] = 0;
-                            snapKeys.add(iso);
-                        }
-                    }
-                    return { first, last };
+                    cached = FAST ? JSON.parse(localStorage.getItem(SNAP_KEY)) : null;
+                } catch {
+                    cached = null;
+                }
+                const fromCache = applySnapshot(cached);
+                if (fromCache) {
+                    fetchSnapshot()
+                        .then((data) => {
+                            if (data.updated === cached.updated) return;
+                            const fresh = applySnapshot(data);
+                            if (!fresh) return;
+                            saveSnapshot(data);
+                            snap = fresh;
+                            snapJob = Promise.resolve(fresh);
+                            if (started) run(); // файл обновился: перерисуем график со свежими днями
+                        })
+                        .catch(() => {});
+                    return fromCache;
+                }
+                try {
+                    const data = await fetchSnapshot();
+                    const loaded = applySnapshot(data);
+                    if (loaded) saveSnapshot(data);
+                    return loaded;
                 } catch {
                     return null; // нет файла: работаем через архив ЦБ, как раньше
                 }
@@ -730,6 +779,9 @@ document.addEventListener("DOMContentLoaded", () => {
     setRange("30");
     box.classList.add("loading");
 
+    // файл истории начинаем готовить сразу (из сохранённой копии или из сети), не дожидаясь прокрутки к графику
+    if (FAST) loadSnapshot();
+
     // график ниже конвертера: пока его не видно, ничего не качаем, чтобы страница открывалась быстрее
     if ("IntersectionObserver" in window) {
         const observer = new IntersectionObserver(
@@ -738,7 +790,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 observer.disconnect();
                 run();
             },
-            { rootMargin: "500px 0px" }
+            { rootMargin: "1000px 0px" }
         );
         observer.observe(section);
     } else {

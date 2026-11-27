@@ -592,6 +592,40 @@ input[type="number"] {
   opacity: 0.6;
 }
 
+/* Быстрые графики: включение и удаление сохранённых данных */
+.chart-cache {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.chart-cache-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.chart-cache-clear {
+  font: inherit;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  padding: 2px 10px;
+  cursor: pointer;
+}
+
+.chart-cache-clear:hover {
+  color: var(--accent);
+}
+
+.chart-cache-status {
+  opacity: 0.75;
+}
+
 
 /* ===== Адаптация под телефоны и планшеты ===== */
 
@@ -2037,6 +2071,30 @@ body.search-lock .search-toggle {
 
 .chart-box.loading {
   opacity: 0.55;
+}
+
+/* заглушка вместо пустого графика, пока данные ещё грузятся */
+.chart-box.loading:has(svg:empty) {
+  opacity: 1;
+}
+
+.chart-box svg:empty {
+  height: 250px;
+  border-radius: 10px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 100' preserveAspectRatio='none'%3E%3Cpath d='M0 70 C25 60 40 80 70 55 S115 35 140 50 S190 80 215 45 S270 20 300 30' fill='none' stroke='%23888' stroke-opacity='.35' stroke-width='3' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 90% 60% no-repeat,
+    linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.25) 50%, transparent 70%) 0 0 / 200% 100%,
+    repeating-linear-gradient(to bottom, transparent 0, transparent 49px, rgba(128, 128, 128, 0.15) 49px, rgba(128, 128, 128, 0.15) 50px);
+  animation: chart-shimmer 1.4s linear infinite;
+}
+
+@keyframes chart-shimmer {
+  from { background-position: center, 100% 0, 0 0; }
+  to   { background-position: center, -100% 0, 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chart-box svg:empty { animation: none; }
 }
 
 .chart-box svg {
