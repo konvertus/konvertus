@@ -9,7 +9,11 @@ html.intro-hold .header .logo { visibility: hidden; }
   display: flex;
   align-items: center;
   justify-content: center;
+<<<<<<< HEAD
   background-color: var(--header);
+=======
+  background-color: var(--bg);
+>>>>>>> 2f81f56454f39689ea1d231d5f8f7f4ff54cac87
   font-family: 'Montserrat', Arial, sans-serif;
 }
 

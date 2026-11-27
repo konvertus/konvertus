@@ -117,9 +117,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // (выходные, праздники), помечаются как «курса не было», и по ним не делается ни одного запроса
     let snap = null;
     let snapJob = null;
+<<<<<<< HEAD
     const FAST = (() => {
         try { return localStorage.getItem("konvertus-chart-fast") !== "off"; } catch { return true; }
     })(); // «Быстрые графики» в подвале: выключено — без сохранённой копии и раннего старта
+=======
+>>>>>>> 2f81f56454f39689ea1d231d5f8f7f4ff54cac87
     const SNAP_KEY = "konvertus-snapshot-v1"; // копия data/history.json: график рисуется сразу, без ожидания сети
 
     // разбирает файл истории и подмешивает его дни в history; возвращает { first, last } либо null
@@ -152,7 +155,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function saveSnapshot(data) {
+<<<<<<< HEAD
         if (!FAST) return;
+=======
+>>>>>>> 2f81f56454f39689ea1d231d5f8f7f4ff54cac87
         try {
             localStorage.setItem(SNAP_KEY, JSON.stringify(data));
         } catch {
@@ -174,7 +180,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!RATE_HISTORY_URL) return null;
                 let cached = null;
                 try {
+<<<<<<< HEAD
                     cached = FAST ? JSON.parse(localStorage.getItem(SNAP_KEY)) : null;
+=======
+                    cached = JSON.parse(localStorage.getItem(SNAP_KEY));
+>>>>>>> 2f81f56454f39689ea1d231d5f8f7f4ff54cac87
                 } catch {
                     cached = null;
                 }
@@ -780,7 +790,11 @@ document.addEventListener("DOMContentLoaded", () => {
     box.classList.add("loading");
 
     // файл истории начинаем готовить сразу (из сохранённой копии или из сети), не дожидаясь прокрутки к графику
+<<<<<<< HEAD
     if (FAST) loadSnapshot();
+=======
+    loadSnapshot();
+>>>>>>> 2f81f56454f39689ea1d231d5f8f7f4ff54cac87
 
     // график ниже конвертера: пока его не видно, ничего не качаем, чтобы страница открывалась быстрее
     if ("IntersectionObserver" in window) {

@@ -22,21 +22,32 @@
     document.addEventListener("DOMContentLoaded", async () => {
         try { sessionStorage.setItem(KEY, "1"); } catch (e) { /* ничего */ }
 
+<<<<<<< HEAD
         const target = document.querySelector(".header .logo");
         const label = target && target.querySelector("span:last-child");
         const word = (label && label.textContent.trim()) || "KONVERTUS";
 
+=======
+>>>>>>> 2f81f56454f39689ea1d231d5f8f7f4ff54cac87
         // ждём шрифты сайта, чтобы заставка выглядела так же, как шапка (но не дольше секунды)
         try {
             await Promise.race([
                 Promise.all([
+<<<<<<< HEAD
                     document.fonts.load("800 56px Montserrat", word),
+=======
+                    document.fonts.load("800 56px Montserrat", "KONVERTUS"),
+>>>>>>> 2f81f56454f39689ea1d231d5f8f7f4ff54cac87
                     document.fonts.load("600 24px 'Material Symbols Outlined'", "sync_alt")
                 ]),
                 new Promise((r) => setTimeout(r, 1000))
             ]);
         } catch (e) { /* ничего */ }
 
+<<<<<<< HEAD
+=======
+        const word = "KONVERTUS";
+>>>>>>> 2f81f56454f39689ea1d231d5f8f7f4ff54cac87
         const overlay = document.createElement("div");
         overlay.className = "intro";
         overlay.setAttribute("aria-hidden", "true");
@@ -52,6 +63,10 @@
         const lettersDone = 0.35 + word.length * 0.06 + 0.45;
         await new Promise((r) => setTimeout(r, (lettersDone + 0.25) * 1000));
 
+<<<<<<< HEAD
+=======
+        const target = document.querySelector(".header .logo");
+>>>>>>> 2f81f56454f39689ea1d231d5f8f7f4ff54cac87
         if (!target || !logo.animate) { clearTimeout(failsafe); finish(overlay); return; }
 
         const a = logo.getBoundingClientRect();
@@ -60,9 +75,13 @@
 
         root.classList.remove("intro-on"); // сайт становится видимым под заставкой
         const opts = { duration: 650, easing: "cubic-bezier(0.65, 0, 0.35, 1)", fill: "forwards" };
+<<<<<<< HEAD
         // зелёная заставка сжимается до полосы шапки, открывая страницу под собой
         const rest = Math.max(0, window.innerHeight - Math.round(target.closest(".header").getBoundingClientRect().bottom));
         overlay.animate([{ clipPath: "inset(0 0 0 0)" }, { clipPath: "inset(0 0 " + rest + "px 0)" }], opts);
+=======
+        overlay.animate([{ backgroundColor: getComputedStyle(overlay).backgroundColor }, { backgroundColor: "rgba(0,0,0,0)" }], opts);
+>>>>>>> 2f81f56454f39689ea1d231d5f8f7f4ff54cac87
         const fly = logo.animate([
             { transform: "translate(0,0) scale(1)" },
             { transform: "translate(" + dx + "px," + dy + "px) scale(" + s + ")" }
